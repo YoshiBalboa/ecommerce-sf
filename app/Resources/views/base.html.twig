@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+    <head>
+			<meta charset="utf-8">
+			<meta http-equiv="X-UA-Compatible" content="IE=edge">
+			<meta name="viewport" content="width=device-width, initial-scale=1">
+			{# The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags #}
+
+			<link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}" />
+			<title>{% block head_title %}Yoshi's Lair{% endblock %}</title>
+
+			{# CSS #}
+			<link href="{{ asset('css/bootstrap-3.3.5.min.css') }}" rel="stylesheet">
+			<link href="{{ asset('css/bootstrap-theme-3.3.5.min.css') }}" rel="stylesheet">
+			<link href="{{ asset('css/base.css') }}" rel="stylesheet">
+		{% block stylesheets %}{% endblock %}
+
+		<!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+		<!--[if lt IE 9]>
+			<script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+			<script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+		<![endif]-->
+	</head>
+
+	<body role="document">
+		{# TITRE / MENU #}
+		<nav class="navbar navbar-inverse navbar-fixed-top">
+			<div class="container">
+				<div class="navbar-header">
+					<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+						<span class="sr-only">Toggle navigation</span>
+						<span class="icon-bar"></span>
+						<span class="icon-bar"></span>
+						<span class="icon-bar"></span>
+					</button>
+					<a class="navbar-brand" href="#">Yoshi's Lair</a>
+				</div>
+
+				<div id="navbar" class="navbar-collapse collapse">
+					<ul class="nav navbar-nav">
+						<li class="active"><a href="{{ path('home') }}" title="Home">Home</a></li>
+						{% if not is_granted('IS_AUTHENTICATED_FULLY') and not is_granted('IS_AUTHENTICATED_REMEMBERED') %}
+							<li><a href="{{ path('login') }}" title="Login">Login</a></li>
+						{% else %}
+							<li class="dropdown">
+								<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Account <span class="caret"></span></a>
+								<ul class="dropdown-menu">
+									<li><a href="#">Details</a></li>
+									<li role="separator" class="divider"></li>
+									<li><a href="#">Edit Details</a></li>
+									<li><a href="#">Edit Email</a></li>
+									<li><a href="#">Edit Password</a></li>
+									<li><a href="#">Edit Addresses</a></li>
+								</ul>
+							</li>
+							<li><a href="{{ path('logout') }}">Logout</a></li>
+						{% endif %}
+					</ul>
+				</div>
+			</div>
+		</nav>
+
+		{# BODY #}
+		<div class="container theme-showcase" role="main">
+			{% block body %}{% endblock %}
+		</div>
+
+		{# JAVASCRIPTS #}
+		<script src="{{ asset('js/jquery-2.1.4.min.js') }}"></script>
+		<script src="{{ asset('js/bootstrap-3.3.5.min.js') }}"></script>
+		<script src="{{ asset('js/docs-2.6.0-min.js') }}"></script>
+		{% block javascripts %}{% endblock %}
+	</body>
+</html>

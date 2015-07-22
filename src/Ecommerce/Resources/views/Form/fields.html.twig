@@ -1,0 +1,14 @@
+{% use "bootstrap_3_horizontal_layout.html.twig" %}
+
+{% block gender_widget %}
+    {% spaceless %}
+		<div class="control-group">
+            {%- for child in form %}
+                {{- form_widget(child, {
+                    parent_label_class: label_attr.class|default(''),
+                    translation_domain: choice_translation_domain,
+                }) -}}
+            {% endfor -%}
+        </div>
+    {% endspaceless %}
+{% endblock %}

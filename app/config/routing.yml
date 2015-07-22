@@ -1,0 +1,39 @@
+app:
+    resource: "@Ecommerce/Controller/"
+    type:     annotation
+
+#***************************************************************************
+# INDEX CONTROLLER
+#***************************************************************************
+
+home:
+    path:		/
+    defaults:	{ _controller: Ecommerce:Index:index }
+
+#***************************************************************************
+# ACCOUNT CONTROLLER
+#***************************************************************************
+
+account:
+    path:		/account
+    defaults:	{ _controller: Ecommerce:Account:index }
+
+account_create:
+    path:		/account/create
+    defaults:	{ _controller: Ecommerce:Account:create }
+
+#***************************************************************************
+# SECURITY CONTROLLER
+#***************************************************************************
+
+login:
+    path:		/login
+    defaults:	{ _controller: Ecommerce:Security:login }
+
+login_check:
+    path:		/login_check
+    defaults:	{ _controller: Ecommerce:Security:loginCheck }
+
+logout:
+    path:		/logout
+    defaults:	{ _controller: Ecommerce:Security:logout }

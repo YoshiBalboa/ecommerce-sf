@@ -1,0 +1,15 @@
+# Learn more about services, parameters and containers at
+# http://symfony.com/doc/current/book/service_container.html
+
+parameters:
+    genders:
+        m: Mr
+        f: Mme
+
+services:
+    Ecommerce.form.type.gender:
+        class: Ecommerce\Form\Type\GenderType
+        arguments:
+            - "%genders%"
+        tags:
+            - { name: form.type, alias: gender }
