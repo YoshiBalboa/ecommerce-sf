@@ -8,13 +8,12 @@ use Doctrine\ORM\Mapping as ORM;
  * CustomerGroup
  *
  * @ORM\Table(name="customer_group")
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="Ecommerce\Entity\CustomerGroupRepository")
  */
 class CustomerGroup
 {
     /**
      * @var integer
-     *
      * @ORM\Column(name="group_id", type="smallint", nullable=false)
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="IDENTITY")
@@ -23,7 +22,6 @@ class CustomerGroup
 
     /**
      * @var string
-     *
      * @ORM\Column(name="group_code", type="string", length=32, nullable=false)
      */
     private $groupCode = '';
@@ -32,8 +30,7 @@ class CustomerGroup
 
     /**
      * Get groupId
-     *
-     * @return integer 
+     * @return integer
      */
     public function getGroupId()
     {
@@ -42,7 +39,6 @@ class CustomerGroup
 
     /**
      * Set groupCode
-     *
      * @param string $groupCode
      * @return CustomerGroup
      */
@@ -56,7 +52,7 @@ class CustomerGroup
     /**
      * Get groupCode
      *
-     * @return string 
+     * @return string
      */
     public function getGroupCode()
     {

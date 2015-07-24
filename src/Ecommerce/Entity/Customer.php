@@ -177,10 +177,10 @@ class Customer implements AdvancedUserInterface, \Serializable
 
 	/**
 	 * Set group
-	 * @param smallint $group
+	 * @param CustomerGroup $group
 	 * @return Customer
 	 */
-	public function setGroup($group = 1)
+	public function setGroup(CustomerGroup $group)
 	{
 		$this->group = $group;
 		return $this;
@@ -188,9 +188,18 @@ class Customer implements AdvancedUserInterface, \Serializable
 
 	/**
 	 * Get group
-	 * @return smallint
+	 * @return CustomerGroup
 	 */
 	public function getGroup()
+	{
+		return $this->group;
+	}
+
+	/**
+	 * Get group_id
+	 * @return smallint
+	 */
+	public function getGroupId()
 	{
 		return $this->group->getGroupId();
 	}
@@ -263,7 +272,7 @@ class Customer implements AdvancedUserInterface, \Serializable
 			}
 			elseif($prop->getName() == 'group')
 			{
-				$return['group_id'] = $this->getGroup();
+				$return['group_id'] = $this->getGroupId();
 			}
 			else
 			{

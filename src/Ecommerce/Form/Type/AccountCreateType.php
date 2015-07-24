@@ -2,10 +2,11 @@
 
 namespace Ecommerce\Form\Type;
 
-use Ecommerce\Form\Type\GenderType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Validator\Constraints\Length;
+use Symfony\Component\Validator\Constraints\NotBlank;
 
 class AccountCreateType extends AbstractType
 {
@@ -22,6 +23,10 @@ class AccountCreateType extends AbstractType
 				'options' => array('required' => true),
 				'first_options'  => array('label' => 'Password:'),
 				'second_options' => array('label' => 'Confirm password:'),
+				'constraints' => array(
+					new NotBlank(),
+					new Length(array('min' => 6))
+				)
 			))
 			->add('Create', 'submit')
 		;
