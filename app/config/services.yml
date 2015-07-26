@@ -5,6 +5,10 @@ parameters:
     genders:
         m: Mr
         f: Mme
+    knp_menu.renderer.twig.options:
+        allow_safe_labels: true
+        currentClass: active
+        ancestorClass: active
 
 services:
     Ecommerce.form.type.gender:
@@ -13,3 +17,28 @@ services:
             - "%genders%"
         tags:
             - { name: form.type, alias: gender }
+
+    Ecommerce.menu_builder:
+        class: Ecommerce\Menu\MenuBuilder
+        arguments: ["@knp_menu.factory"]
+
+    Ecommerce.menu_main:
+        class: Knp\Menu\MenuItem
+        factory: ["@Ecommerce.menu_builder", createMainMenu]
+        arguments: ["@request_stack", "@security.context"]
+        tags:
+            - { name: knp_menu.menu, alias: main }
+
+    Ecommerce.menu_breadcrumb:
+        class: Knp\Menu\MenuItem
+        factory: ["@Ecommerce.menu_builder", createBreadcrumbsMenu]
+        arguments: ["@request_stack"]
+        tags:
+            - { name: knp_menu.menu, alias: breadcrumbs }
+
+    Ecommerce.voter.request:
+        class: Ecommerce\Menu\MenuVoter
+        arguments: ["@service_container"]
+        tags:
+            - { name: knp_menu.voter }
+

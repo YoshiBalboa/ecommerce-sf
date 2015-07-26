@@ -111,14 +111,22 @@ class AccountController extends Controller
 	 */
 	public function editEmailAction()
 	{
+		if(!$this->isLoggedIn())
+		{
+			return $this->redirectToRoute('login');
+		}
 
 	}
 
 	/*
 	 * Edit name's data of an account on POST
 	 */
-	public function editNameAction()
+	public function editDetailsAction()
 	{
+		if(!$this->isLoggedIn())
+		{
+			return $this->redirectToRoute('login');
+		}
 
 	}
 
@@ -127,6 +135,10 @@ class AccountController extends Controller
 	 */
 	public function editPasswordAction()
 	{
+		if(!$this->isLoggedIn())
+		{
+			return $this->redirectToRoute('login');
+		}
 
 		//on success
 
@@ -136,6 +148,30 @@ class AccountController extends Controller
 		$encoded = $encoder->encodePassword($user, $plainPassword);
 
 		$user->setPassword($encoded);
+	}
+
+	/*
+	 * Display addresses's data of an account
+	 */
+	public function addressesAction()
+	{
+		if(!$this->isLoggedIn())
+		{
+			return $this->redirectToRoute('login');
+		}
+
+	}
+
+	/*
+	 * Edit an address's data of an account on POST
+	 */
+	public function editAddressAction($address_id)
+	{
+		if(!$this->isLoggedIn())
+		{
+			return $this->redirectToRoute('login');
+		}
+
 	}
 
 	/**

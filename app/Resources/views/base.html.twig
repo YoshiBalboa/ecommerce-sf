@@ -60,6 +60,8 @@
 			</div>
 		</nav>
 
+		{{ knp_menu_render('main') }}
+
 		{# BODY #}
 		<div class="container theme-showcase" role="main">
 			{% for label, flashes in app.session.flashbag.all %}

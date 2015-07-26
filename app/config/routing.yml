@@ -18,9 +18,29 @@ account:
     path:		/account
     defaults:	{ _controller: Ecommerce:Account:index }
 
+account_addresses:
+    path:		/account/addresses
+    defaults:	{ _controller: Ecommerce:Account:Addresses }
+
 account_create:
     path:		/account/create
     defaults:	{ _controller: Ecommerce:Account:create }
+
+account_edit_address:
+    path:		/account/edit/addresses/{address_id}
+    defaults:	{ _controller: Ecommerce:Account:editAddress }
+
+account_edit_details:
+    path:		/account/edit/details
+    defaults:	{ _controller: Ecommerce:Account:editDetails }
+
+account_edit_email:
+    path:		/account/edit/email
+    defaults:	{ _controller: Ecommerce:Account:editEmail }
+
+account_edit_password:
+    path:		/account/edit/password
+    defaults:	{ _controller: Ecommerce:Account:editPassword }
 
 #***************************************************************************
 # SECURITY CONTROLLER
