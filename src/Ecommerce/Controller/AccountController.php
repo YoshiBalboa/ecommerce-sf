@@ -61,7 +61,6 @@ class AccountController extends Controller
 					return $this->redirectToRoute('account');
 				}
 
-				//success (green) - info (blue) - warning (orange) - danger (red)
 				$this->addFlash('danger', 'This email already exists');
 
 				return $this->redirectToRoute('account_create');
@@ -114,6 +113,7 @@ class AccountController extends Controller
 
 		$view = array(
 			'head_title' => 'Account Create',
+			'h1_title' => 'Create a new account',
 			'create_form' => $create_form->createView(),
 		);
 
@@ -142,6 +142,54 @@ class AccountController extends Controller
 			return $this->redirectToRoute('login');
 		}
 
+		$form_attributes = array(
+			'action' => $this->generateUrl('account_edit_email'),
+			'method' => 'POST',
+			'attr' => array('autocomplete' => 'off'),
+		);
+
+		$email_form = $this->createFormBuilder(array(),	$form_attributes)
+			->add('email', 'email', array('label' => 'New Email:'))
+			->add('password', 'e_password')
+			->add('save', 'submit')
+			->getForm();
+
+		$email_form->handleRequest($request);
+
+		if($request->isMethod('POST') and $email_form->isValid())
+		{
+			$form_data = $email_form->getData();
+			$encoder = $this->container->get('security.password_encoder');
+
+			if(!$encoder->isPasswordValid($this->getUser(), $form_data['password']))
+			{
+				$this->addFlash('danger', 'Your password is invalid');
+				return $this->redirectToRoute('account_edit_email');
+			}
+
+			$date = new \DateTime();
+			$this->getUser()->setEmail($form_data['email']);
+			$this->getUser()->setUpdatedAt($date);
+
+			$em = $this->getDoctrine()->getManager();
+			$em->flush();
+
+			$token = new UsernamePasswordToken($this->getUser(), $this->getUser()->getPassword(), 'secured_area', $this->getUser()->getRoles());
+			$this->container->get('security.context')->setToken($token);
+
+			$this->addFlash('success', 'Your new email was saved');
+
+			return $this->redirectToRoute('account_edit_email');
+		}
+
+		$view = array(
+			'head_title' => 'Account Edit Email',
+			'h1_title' => 'Edit Email',
+			'email_form' => $email_form->createView(),
+			'current_email' => $this->getUser()->getEmail(),
+		);
+
+		return $this->render('account/edit_email.html.twig', $view);
 	}
 
 	/*
