@@ -16,7 +16,13 @@ services:
         arguments:
             - "%genders%"
         tags:
-            - { name: form.type, alias: gender }
+            - { name: form.type, alias: e_gender }
+
+    Ecommerce.form.type.password:
+        class: Ecommerce\Form\Type\PasswordType
+        arguments:
+        tags:
+            - { name: form.type, alias: e_password }
 
     Ecommerce.menu_builder:
         class: Ecommerce\Menu\MenuBuilder

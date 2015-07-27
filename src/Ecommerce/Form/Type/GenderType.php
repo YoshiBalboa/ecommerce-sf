@@ -31,6 +31,6 @@ class GenderType extends AbstractType
 
 	public function getName()
 	{
-		return 'gender';
+		return 'e_gender';
 	}
 }
