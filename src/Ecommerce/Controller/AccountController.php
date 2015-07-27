@@ -121,13 +121,65 @@ class AccountController extends Controller
 	/*
 	 * Edit name's data of an account on POST
 	 */
-	public function editDetailsAction()
+	public function editDetailsAction(Request $request)
 	{
 		if(!$this->isLoggedIn())
 		{
 			return $this->redirectToRoute('login');
 		}
 
+		$customer_details_repository = $this->getDoctrine()->getRepository('Ecommerce:CustomerDetails');
+		$customer_details = $customer_details_repository->findOneByCustomer($this->getUser());
+
+		$initial_data = array(
+			'prefix' => $customer_details->getPrefix(),
+			'firstname' => $customer_details->getFirstname(),
+			'lastname' => $customer_details->getLastname(),
+			'birthday' => $customer_details->getBirthday(),
+		);
+
+		$form_attributes = array(
+			'action' => $this->generateUrl('account_edit_details'),
+			'method' => 'POST',
+		);
+
+		$details_form = $this->createFormBuilder($initial_data, $form_attributes)
+			->add('prefix', 'e_gender')
+			->add('firstname', 'text', array('label' => 'Firstname:'))
+			->add('lastname', 'text', array('label' => 'Lastname:'))
+			->add('birthday', 'birthday', array(
+				'label' => 'Birthday:',
+				'format' => 'yyyy-MMMM-dd',
+			))
+			->add('save', 'submit')
+			->getForm();
+
+		$details_form->handleRequest($request);
+
+		if($request->isMethod('POST') and $details_form->isValid())
+		{
+			$form_data = $details_form->getData();
+
+			$customer_details->setPrefix($form_data['prefix']);
+			$customer_details->setFirstname($form_data['firstname']);
+			$customer_details->setLastname($form_data['lastname']);
+			$customer_details->setBirthday($form_data['birthday']);
+
+			$em = $this->getDoctrine()->getManager();
+			$em->flush();
+
+			$this->addFlash('success', 'Your new details were saved');
+
+			return $this->redirectToRoute('account_edit_details');
+		}
+
+		$view = array(
+			'head_title' => 'Account Edit Details',
+			'h1_title' => 'Edit Details',
+			'details_form' => $details_form->createView(),
+		);
+
+		return $this->render('account/edit_details.html.twig', $view);
 	}
 
 	/*
@@ -146,7 +198,7 @@ class AccountController extends Controller
 			'attr' => array('autocomplete' => 'off'),
 		);
 
-		$email_form = $this->createFormBuilder(array(),	$form_attributes)
+		$email_form = $this->createFormBuilder(array(), $form_attributes)
 			->add('email', 'email', array('label' => 'New Email:'))
 			->add('password', 'e_password')
 			->add('save', 'submit')
@@ -205,7 +257,7 @@ class AccountController extends Controller
 			'attr' => array('autocomplete' => 'off'),
 		);
 
-		$password_form = $this->createFormBuilder(array(),	$form_attributes)
+		$password_form = $this->createFormBuilder(array(), $form_attributes)
 			->add('new_password', 'password', array(
 				'label' => 'New password:',
 				'constraints' => array(

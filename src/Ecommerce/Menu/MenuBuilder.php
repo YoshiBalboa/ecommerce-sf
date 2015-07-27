@@ -58,6 +58,7 @@ class MenuBuilder
 			$menu['Account']->addChild('Details', array('route' => 'account'));
 			$menu['Account']->addChild('Addresses', array('route' => 'account_addresses'));
 			$menu['Account']->addChild('-', array('attributes' => array('role' => 'separator', 'class' => 'divider')));
+			$menu['Account']->addChild('Edit Details', array('route' => 'account_edit_details'));
 			$menu['Account']->addChild('Edit Email', array('route' => 'account_edit_email'));
 			$menu['Account']->addChild('Edit Password', array('route' => 'account_edit_password'));
 
