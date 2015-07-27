@@ -56,8 +56,7 @@ class AccountController extends Controller
 			{
 				if($encoder->isPasswordValid($customer, $form_data['password']))
 				{
-					$token = new UsernamePasswordToken($customer, $customer->getPassword(), 'secured_area', $customer->getRoles());
-					$this->container->get('security.context')->setToken($token);
+					$this->updateSecurityToken($customer);
 					return $this->redirectToRoute('account');
 				}
 
@@ -105,8 +104,7 @@ class AccountController extends Controller
 
 			//5 - Login
 
-			$token = new UsernamePasswordToken($customer, $customer->getPassword(), 'secured_area', $customer->getRoles());
-			$this->container->get('security.context')->setToken($token);
+			$this->updateSecurityToken($customer);
 
 			return $this->redirectToRoute('account');
 		}
@@ -174,8 +172,7 @@ class AccountController extends Controller
 			$em = $this->getDoctrine()->getManager();
 			$em->flush();
 
-			$token = new UsernamePasswordToken($this->getUser(), $this->getUser()->getPassword(), 'secured_area', $this->getUser()->getRoles());
-			$this->container->get('security.context')->setToken($token);
+			$this->updateSecurityToken($this->getUser());
 
 			$this->addFlash('success', 'Your new email was saved');
 
@@ -195,21 +192,67 @@ class AccountController extends Controller
 	/*
 	 * Edit password's data of an account on POST
 	 */
-	public function editPasswordAction()
+	public function editPasswordAction(Request $request)
 	{
 		if(!$this->isLoggedIn())
 		{
 			return $this->redirectToRoute('login');
 		}
 
-		//on success
+		$form_attributes = array(
+			'action' => $this->generateUrl('account_edit_password'),
+			'method' => 'POST',
+			'attr' => array('autocomplete' => 'off'),
+		);
 
-		$user = new AppBundle\Entity\User();
-		$plainPassword = 'ryanpass';
-		$encoder = $this->container->get('security.password_encoder');
-		$encoded = $encoder->encodePassword($user, $plainPassword);
+		$password_form = $this->createFormBuilder(array(),	$form_attributes)
+			->add('new_password', 'password', array(
+				'label' => 'New password:',
+				'constraints' => array(
+					new \Symfony\Component\Validator\Constraints\NotBlank(),
+					new \Symfony\Component\Validator\Constraints\Length(array('min' => 6))
+				)
+			))
+			->add('password', 'e_password', array(
+				'first_options'  => array('label' => 'Current password:'),
+				'second_options' => array('label' => 'Confirm current password:'),
+			))
+			->add('save', 'submit')
+			->getForm();
 
-		$user->setPassword($encoded);
+		$password_form->handleRequest($request);
+
+		if($request->isMethod('POST') and $password_form->isValid())
+		{
+			$form_data = $password_form->getData();
+			$encoder = $this->container->get('security.password_encoder');
+
+			if(!$encoder->isPasswordValid($this->getUser(), $form_data['password']))
+			{
+				$this->addFlash('danger', 'Your password is invalid');
+				return $this->redirectToRoute('account_edit_password');
+			}
+
+			$encoded = $encoder->encodePassword($this->getUser(), $form_data['new_password']);
+			$this->getUser()->setPassword($encoded);
+
+			$em = $this->getDoctrine()->getManager();
+			$em->flush();
+
+			$this->updateSecurityToken($this->getUser());
+
+			$this->addFlash('success', 'Your new password was saved');
+
+			return $this->redirectToRoute('account_edit_password');
+		}
+
+		$view = array(
+			'head_title' => 'Account Edit Password',
+			'h1_title' => 'Edit Password',
+			'password_form' => $password_form->createView(),
+		);
+
+		return $this->render('account/edit_password.html.twig', $view);
 	}
 
 	/*
@@ -244,5 +287,17 @@ class AccountController extends Controller
 	private function isLoggedIn()
 	{
 		return $this->get('security.authorization_checker')->isGranted('IS_AUTHENTICATED_FULLY');
+	}
+
+	/**
+	 * Update security token
+	 * Enable login/relogin after email or password modification
+	 *
+	 * @param \Ecommerce\Entity\Customer $customer
+	 */
+	private function updateSecurityToken(\Ecommerce\Entity\Customer $customer)
+	{
+		$token = new UsernamePasswordToken($customer, $customer->getPassword(), 'secured_area', $customer->getRoles());
+		$this->container->get('security.context')->setToken($token);
 	}
 }
