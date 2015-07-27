@@ -45,16 +45,16 @@ class AccountController extends Controller
 
 		if($request->isMethod('POST') and $create_form->isValid())
 		{
-			$data = $create_form->getData();
+			$form_data = $create_form->getData();
 			$customer_repository = $this->getDoctrine()->getRepository('Ecommerce:Customer');
 			$encoder = $this->container->get('security.password_encoder');
 
 			//1 - Check if this email already exists
 
-			$customer = $customer_repository->findOneByEmail($data['_username']);
+			$customer = $customer_repository->findOneByEmail($form_data['email']);
 			if(!empty($customer))
 			{
-				if($encoder->isPasswordValid($customer, $data['_password']))
+				if($encoder->isPasswordValid($customer, $form_data['password']))
 				{
 					$token = new UsernamePasswordToken($customer, $customer->getPassword(), 'secured_area', $customer->getRoles());
 					$this->container->get('security.context')->setToken($token);
@@ -70,9 +70,9 @@ class AccountController extends Controller
 			//2 - Create a new Customer row
 
 			$customer = new \Ecommerce\Entity\Customer();
-			$customer->setEmail($data['_username']);
+			$customer->setEmail($form_data['email']);
 
-			$encoded = $encoder->encodePassword($customer, $data['_password']);
+			$encoded = $encoder->encodePassword($customer, $form_data['password']);
 			$customer->setPassword($encoded);
 
 			$customer_group_repository = $this->getDoctrine()->getRepository('Ecommerce:CustomerGroup');
@@ -85,12 +85,26 @@ class AccountController extends Controller
 
 			$customer->setIsActive(TRUE);
 
-			//3 - Insert in the database
+			//3 - Create the new customer row in the database
+
 			$em = $this->getDoctrine()->getManager();
 			$em->persist($customer);
 			$em->flush();
 
-			//4 - Login
+			//4 - Save details
+
+			$customer_details = new \Ecommerce\Entity\CustomerDetails();
+			$customer_details->setCustomer($customer);
+			$customer_details->setPrefix($form_data['prefix']);
+			$customer_details->setFirstname($form_data['firstname']);
+			$customer_details->setLastname($form_data['lastname']);
+			$customer_details->setLocale('fr_FR');
+			$customer_details->setCguValidatedAt($date);
+
+			$em->persist($customer_details);
+			$em->flush();
+
+			//5 - Login
 
 			$token = new UsernamePasswordToken($customer, $customer->getPassword(), 'secured_area', $customer->getRoles());
 			$this->container->get('security.context')->setToken($token);
@@ -107,9 +121,9 @@ class AccountController extends Controller
 	}
 
 	/*
-	 * Edit email's data of an account on POST
+	 * Edit name's data of an account on POST
 	 */
-	public function editEmailAction()
+	public function editDetailsAction()
 	{
 		if(!$this->isLoggedIn())
 		{
@@ -119,9 +133,9 @@ class AccountController extends Controller
 	}
 
 	/*
-	 * Edit name's data of an account on POST
+	 * Edit email's data of an account on POST
 	 */
-	public function editDetailsAction()
+	public function editEmailAction(Request $request)
 	{
 		if(!$this->isLoggedIn())
 		{

@@ -16,8 +16,8 @@ class AccountCreateType extends AbstractType
 			->add('prefix', 'gender', array('data' => $options['data']['prefix']))
 			->add('firstname', 'text', array('label' => 'Firstname:'))
 			->add('lastname', 'text', array('label' => 'Lastname:'))
-			->add('_username', 'email', array('label' => 'Email:'))
-			->add('_password', 'repeated', array(
+			->add('email', 'email', array('label' => 'Email:'))
+			->add('password', 'repeated', array(
 				'type' => 'password',
 				'invalid_message' => 'Passwords do not match',
 				'options' => array('required' => true),
