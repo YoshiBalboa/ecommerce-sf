@@ -89,8 +89,14 @@ Ecommerce.searchInAutoComplete = function ($display_field, $hidden_field)
 Ecommerce.addressForm = function ($reload_subdivision, $reload_location)
 {
 	//Event on country, it affects state and subdivision fields
-	$('#ecommerce_address_country').on('change blur', function ()
+	$('#e_address_country').on('change', function ()
 	{
+		//reset state and city field
+		$('#e_address_state').val('');
+		$('#e_address_subdivision').val('');
+		$('#e_address_city').val('');
+		$('#e_address_location').val('');
+
 		var $country_id = $(this).children('option:selected').val();
 
 		if($country_id.length <= 0)
@@ -98,7 +104,7 @@ Ecommerce.addressForm = function ($reload_subdivision, $reload_location)
 			return false;
 		}
 
-		$('#ecommerce_address_state').prop('disabled', true);
+		$('#e_address_state').prop('disabled', true);
 
 		$.ajax({
 			url: $reload_subdivision,
@@ -109,11 +115,11 @@ Ecommerce.addressForm = function ($reload_subdivision, $reload_location)
 			},
 			error: function (jqXHR, textStatus, errorThrown)
 			{
-				$('#ecommerce_address_state').prop('disabled', false);
+				$('#e_address_state').prop('disabled', false);
 			},
 			success: function (data)
 			{
-				$container = $('#ecommerce_address_state');
+				$container = $('#e_address_state');
 				$container.html('');
 				$container.prop('disabled', false);
 
@@ -130,7 +136,7 @@ Ecommerce.addressForm = function ($reload_subdivision, $reload_location)
 				else if(typeof (data.success) !== 'undefined')
 				{
 					//country_id was valid but no subdivision was found
-					$('#ecommerce_address_subdivision').val('-1');
+					$('#e_address_subdivision').val('-1');
 					return;
 				}
 				else
@@ -138,7 +144,7 @@ Ecommerce.addressForm = function ($reload_subdivision, $reload_location)
 					//country_id was valid and subdivisions were found.
 					Ecommerce.reloadAutoCompleteField(
 						$container,
-						$('#ecommerce_address_subdivision'),
+						$('#e_address_subdivision'),
 						data
 						);
 				}
@@ -150,32 +156,43 @@ Ecommerce.addressForm = function ($reload_subdivision, $reload_location)
 
 
 	//Event on state, it affects city field
-	$('#ecommerce_address_state').on('focus', function ()
+	$('#e_address_state').on('focus', function ()
 	{
+		$this = $(this);
 		//On field focus, reset the subdivision and open the existing autocomplete
-		if(typeof ($(this).autocomplete("instance")) !== 'undefined')
+		if(typeof ($this.autocomplete("instance")) !== 'undefined')
 		{
-			$('#ecommerce_address_subdivision').val('');
-			$(this).autocomplete('search', $(this).val());
+			$('#e_address_subdivision').val('');
+			if($this.val().length > 0)
+			{
+				$this.autocomplete('search', $this.val());
+			}
 		}
 
 		return false;
 	});
 
-	$('#ecommerce_address_state').on('change', function ()
+	$('#e_address_state').on('change', function ()
 	{
 		//On field blur, try to find the user input in the autocomplete list
-		Ecommerce.searchInAutoComplete($('#ecommerce_address_state'), $('#ecommerce_address_subdivision'));
+		Ecommerce.searchInAutoComplete($('#e_address_state'), $('#e_address_subdivision'));
 
-		var $country_id = $('#ecommerce_address_country').children('option:selected').val();
-		var $subdivision_id = $('#ecommerce_address_subdivision').val();
+		var $country_id = $('#e_address_country').children('option:selected').val();
+		var $subdivision_id = $('#e_address_subdivision').val();
+
+		//reset city field
+		if($subdivision_id != -1)
+		{
+			$('#e_address_city').val('');
+			$('#e_address_location').val('');
+		}
 
 		if($country_id.length <= 0 || $subdivision_id.length <= 0)
 		{
 			return false;
 		}
 
-		$('#ecommerce_address_city').prop('disabled', true);
+		$('#e_address_city').prop('disabled', true);
 
 		$.ajax({
 			url: $reload_location,
@@ -187,11 +204,11 @@ Ecommerce.addressForm = function ($reload_subdivision, $reload_location)
 			},
 			error: function (jqXHR, textStatus, errorThrown)
 			{
-				$('#ecommerce_address_city').prop('disabled', false);
+				$('#e_address_city').prop('disabled', false);
 			},
 			success: function (data)
 			{
-				$container = $('#ecommerce_address_city');
+				$container = $('#e_address_city');
 				$container.html('');
 				$container.prop('disabled', false);
 
@@ -215,7 +232,7 @@ Ecommerce.addressForm = function ($reload_subdivision, $reload_location)
 					//country_id and subdivision_id were valid and locations were found.
 					Ecommerce.reloadAutoCompleteField(
 						$container,
-						$('#ecommerce_address_location'),
+						$('#e_address_location'),
 						data
 						);
 				}
@@ -227,29 +244,33 @@ Ecommerce.addressForm = function ($reload_subdivision, $reload_location)
 
 
 	//Event on city, it affects location field
-	$('#ecommerce_address_city').on('focus', function ()
+	$('#e_address_city').on('focus', function ()
 	{
+		$this = $(this);
 		//On field focus, reset the subdivision and open the existing autocomplete
-		if(typeof ($(this).autocomplete("instance")) !== 'undefined')
+		if(typeof ($this.autocomplete("instance")) !== 'undefined')
 		{
-			$('#ecommerce_address_location').val('');
-			$(this).autocomplete('search', $(this).val());
+			$('#e_address_location').val('');
+			if($this.val().length > 0)
+			{
+				$this.autocomplete('search', $this.val());
+			}
 		}
 
 		return false;
 	});
 
-	$('#ecommerce_address_city').on('change', function ()
+	$('#e_address_city').on('change', function ()
 	{
 		//On field blur, try to find the user input in the autocomplete list
-		Ecommerce.searchInAutoComplete($('#ecommerce_address_city'), $('#ecommerce_address_location'));
+		Ecommerce.searchInAutoComplete($('#e_address_city'), $('#e_address_location'));
 
 		return false;
 	});
 
 
 	//Check validity of simple input
-	$('#ecommerce_address').on('change', 'input[type="text"]:not(#ecommerce_address_state, #ecommerce_address_city)', function ()
+	$('#ecommerce_address').on('change', 'input[type="text"]:not(#e_address_state, #e_address_city)', function ()
 	{
 		$this = $(this);
 		if(this.checkValidity() === true)
@@ -258,7 +279,7 @@ Ecommerce.addressForm = function ($reload_subdivision, $reload_location)
 		}
 		else
 		{
-			if($this.attr('id') === 'ecommerce_address_telephone')
+			if($this.attr('id') === 'e_address_telephone')
 			{
 				Ecommerce.formAddErrorMessage($(this), 'Wrong format. Allowed characters are "digits", " ", ".", "-", "+"');
 			}
@@ -274,8 +295,8 @@ Ecommerce.addressForm = function ($reload_subdivision, $reload_location)
 	//Initialize the form
 	$document.ready(function ()
 	{
-		$('#ecommerce_address_country').change();
-		$('#ecommerce_address_state').change();
+		$('#e_address_country').change();
+		$('#e_address_state').change();
 	});
 };
 

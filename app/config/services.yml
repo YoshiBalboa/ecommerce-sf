@@ -24,6 +24,12 @@ services:
         tags:
             - { name: form.type, alias: e_password }
 
+    Ecommerce.form.type.address:
+        class: Ecommerce\Form\Type\AddressType
+        arguments: ["@doctrine.orm.entity_manager"]
+        tags:
+            - { name: form.type, alias: e_address }
+
     Ecommerce.menu_builder:
         class: Ecommerce\Menu\MenuBuilder
         arguments: ["@knp_menu.factory"]

@@ -48,7 +48,7 @@ class AddressController extends Controller
 		);
 
 		$address_form = $this->createForm(
-			new Type\AddressType(),
+			'e_address',
 			$initial_data,
 			$form_attributes
 		);
@@ -57,6 +57,8 @@ class AddressController extends Controller
 
 		if($request->isMethod('POST') and $address_form->isValid())
 		{
+			$form_data = $address_form->getData();
+			var_dump($form_data);
 			die('Line:' . __LINE__);
 		}
 
