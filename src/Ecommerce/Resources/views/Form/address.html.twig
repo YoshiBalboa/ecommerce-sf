@@ -1,0 +1,13 @@
+{% block display_address_form %}
+	{{ form_start(address_form) }}
+	{{ form_widget(address_form) }}
+	{{ form_end(address_form) }}
+{% endblock %}
+
+{% block javascripts %}
+	<script type="text/javascript">
+	//<![CDATA[
+		Ecommerce.addressForm('{{ path('address_subdivisions') }}', '{{ path('address_locations') }}');
+	//]]>
+	</script>
+{% endblock %}

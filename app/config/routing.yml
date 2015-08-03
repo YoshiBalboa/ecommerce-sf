@@ -43,6 +43,34 @@ account_edit_password:
     defaults:	{ _controller: Ecommerce:Account:editPassword }
 
 #***************************************************************************
+# ADDRESS CONTROLLER
+#***************************************************************************
+
+address_create:
+    path:		/address/create
+    defaults:	{ _controller: Ecommerce:Address:create }
+
+address_edit:
+    path:		/address/edit/{address_id}
+    defaults:	{ _controller: Ecommerce:Address:edit }
+
+address_set_billing:
+    path:		/address/set/billing/{address_id}
+    defaults:	{ _controller: Ecommerce:Address:setBilling }
+
+address_set_shipping:
+    path:		/address/set/shipping/{address_id}
+    defaults:	{ _controller: Ecommerce:Address:setShipping }
+
+address_subdivisions:
+    path:		/address/subdivisions
+    defaults:	{ _controller: Ecommerce:Address:subdivisions }
+
+address_locations:
+    path:		/address/locations
+    defaults:	{ _controller: Ecommerce:Address:locations }
+
+#***************************************************************************
 # SECURITY CONTROLLER
 #***************************************************************************
 

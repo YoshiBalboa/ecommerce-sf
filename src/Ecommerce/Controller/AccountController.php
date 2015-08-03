@@ -317,6 +317,12 @@ class AccountController extends Controller
 			return $this->redirectToRoute('login');
 		}
 
+		$view = array(
+			'head_title' => 'Account Addresses',
+			'h1_title' => 'Your Addresses',
+		);
+
+		return $this->render('account/addresses.html.twig', $view);
 	}
 
 	/*
@@ -338,7 +344,15 @@ class AccountController extends Controller
 	 */
 	private function isLoggedIn()
 	{
-		return $this->get('security.authorization_checker')->isGranted('IS_AUTHENTICATED_FULLY');
+		if($this->get('security.authorization_checker')->isGranted('IS_AUTHENTICATED_FULLY'))
+		{
+			return TRUE;
+		}
+		else
+		{
+			$this->addFlash('warning', 'You must login to proceed');
+			return FALSE;
+		}
 	}
 
 	/**

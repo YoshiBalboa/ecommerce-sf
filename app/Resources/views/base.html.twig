@@ -1,19 +1,30 @@
 <!DOCTYPE html>
 <html>
     <head>
-			<meta charset="utf-8">
-			<meta http-equiv="X-UA-Compatible" content="IE=edge">
-			<meta name="viewport" content="width=device-width, initial-scale=1">
-			{# The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags #}
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		{# The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags #}
 
-			<link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}" />
-			<title>{% block head_title %}Yoshi's Lair{% endblock %}</title>
+		<link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}" />
+		<title>{% block head_title %}Yoshi's Lair{% endblock %}</title>
 
-			{# CSS #}
-			<link href="{{ asset('css/bootstrap-3.3.5.min.css') }}" rel="stylesheet">
-			<link href="{{ asset('css/bootstrap-theme-3.3.5.min.css') }}" rel="stylesheet">
-			<link href="{{ asset('css/base.css') }}" rel="stylesheet">
+		{# CSS #}
+		<link href="{{ asset('css/bootstrap-3.3.5.min.css') }}" rel="stylesheet">
+		<link href="{{ asset('css/bootstrap-theme-3.3.5.min.css') }}" rel="stylesheet">
+		<link href="{{ asset('jquery-ui-1.11.4.smoothness/jquery-ui.min.css') }}" rel="stylesheet">
+		<link href="{{ asset('jquery-ui-1.11.4.smoothness/jquery-ui.structure.min.css') }}" rel="stylesheet">
+		<link href="{{ asset('jquery-ui-1.11.4.smoothness/jquery-ui.theme.min.css') }}" rel="stylesheet">
+		<link href="{{ asset('css/base.css') }}" rel="stylesheet">
 		{% block stylesheets %}{% endblock %}
+
+		{# JAVASCRIPTS #}
+		<script src="{{ asset('js/jquery-2.1.4.min.js') }}"></script>
+		<script src="{{ asset('jquery-ui-1.11.4.smoothness/jquery-ui.min.js') }}"></script>
+		<script src="{{ asset('js/bootstrap-3.3.5.min.js') }}"></script>
+		<script src="{{ asset('js/docs-2.6.0-min.js') }}"></script>
+		<script src="{{ asset('js/underscore-1.8.3-min.js') }}"></script>
+		<script src="{{ asset('js/base.js') }}"></script>
 
 		<!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
 		<!--[if lt IE 9]>
@@ -76,9 +87,6 @@
 		</div>
 
 		{# JAVASCRIPTS #}
-		<script src="{{ asset('js/jquery-2.1.4.min.js') }}"></script>
-		<script src="{{ asset('js/bootstrap-3.3.5.min.js') }}"></script>
-		<script src="{{ asset('js/docs-2.6.0-min.js') }}"></script>
 		{% block javascripts %}{% endblock %}
 	</body>
 </html>
