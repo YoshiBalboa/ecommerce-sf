@@ -88,7 +88,7 @@ Ecommerce.searchInAutoComplete = function ($display_field, $hidden_field)
 
 Ecommerce.addressForm = function ($reload_subdivision, $reload_location)
 {
-	//Event on country, it affect state and subdivision fields
+	//Event on country, it affects state and subdivision fields
 	$('#ecommerce_address_country').on('change blur', function ()
 	{
 		var $country_id = $(this).children('option:selected').val();
@@ -149,9 +149,20 @@ Ecommerce.addressForm = function ($reload_subdivision, $reload_location)
 	});
 
 
-	//Event on state, it affect city and location fields
-	//It's launch when country and state field are selected
-	$('#ecommerce_address_state').on('change blur', function ()
+	//Event on state, it affects city field
+	$('#ecommerce_address_state').on('focus', function ()
+	{
+		//On field focus, reset the subdivision and open the existing autocomplete
+		if(typeof ($(this).autocomplete("instance")) !== 'undefined')
+		{
+			$('#ecommerce_address_subdivision').val('');
+			$(this).autocomplete('search', $(this).val());
+		}
+
+		return false;
+	});
+
+	$('#ecommerce_address_state').on('change', function ()
 	{
 		//On field blur, try to find the user input in the autocomplete list
 		Ecommerce.searchInAutoComplete($('#ecommerce_address_state'), $('#ecommerce_address_subdivision'));
@@ -215,18 +226,50 @@ Ecommerce.addressForm = function ($reload_subdivision, $reload_location)
 	});
 
 
-	$('#ecommerce_address_state').on('focus', function ()
+	//Event on city, it affects location field
+	$('#ecommerce_address_city').on('focus', function ()
 	{
 		//On field focus, reset the subdivision and open the existing autocomplete
 		if(typeof ($(this).autocomplete("instance")) !== 'undefined')
 		{
-			$('#ecommerce_address_subdivision').val('');
+			$('#ecommerce_address_location').val('');
 			$(this).autocomplete('search', $(this).val());
 		}
 
 		return false;
 	});
 
+	$('#ecommerce_address_city').on('change', function ()
+	{
+		//On field blur, try to find the user input in the autocomplete list
+		Ecommerce.searchInAutoComplete($('#ecommerce_address_city'), $('#ecommerce_address_location'));
+
+		return false;
+	});
+
+
+	//Check validity of simple input
+	$('#ecommerce_address').on('change', 'input[type="text"]:not(#ecommerce_address_state, #ecommerce_address_city)', function ()
+	{
+		$this = $(this);
+		if(this.checkValidity() === true)
+		{
+			Ecommerce.formRemoveErrorMessage($this);
+		}
+		else
+		{
+			if($this.attr('id') === 'ecommerce_address_telephone')
+			{
+				Ecommerce.formAddErrorMessage($(this), 'Wrong format. Allowed characters are "digits", " ", ".", "-", "+"');
+			}
+			else
+			{
+				Ecommerce.formAddErrorMessage($(this), 'This field is required');
+			}
+		}
+
+		return false;
+	});
 
 	//Initialize the form
 	$document.ready(function ()

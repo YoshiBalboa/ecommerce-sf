@@ -44,7 +44,8 @@ class AddressType extends AbstractType
 			->add('telephone', 'text', array(
 				'label'	 => 'Telephone:',
 				'attr'	 => array(
-					'pattern' => '^\\+?[0-9]{9,12}$'
+					'pattern' => '^\+?[0-9][0-9- .]+$',
+					'placeholder' => '+1 202-456-1111',
 				)
 			))
 			->add('address_id', 'hidden')
