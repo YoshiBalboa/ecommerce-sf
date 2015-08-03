@@ -8,7 +8,7 @@ use Doctrine\ORM\Mapping as ORM;
  * GeoLocation
  *
  * @ORM\Table(name="geo_location", uniqueConstraints={@ORM\UniqueConstraint(name="uk_row", columns={"code", "subdivision_id"})}, indexes={@ORM\Index(name="fk_geo_location_subdivision", columns={"subdivision_id"}), @ORM\Index(name="fk_geo_location_country", columns={"country_id"})})
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="Ecommerce\Entity\GeoLocationRepository")
  */
 class GeoLocation
 {
@@ -74,7 +74,7 @@ class GeoLocation
     /**
      * Get id
      *
-     * @return integer 
+     * @return integer
      */
     public function getId()
     {
@@ -97,7 +97,7 @@ class GeoLocation
     /**
      * Get code
      *
-     * @return string 
+     * @return string
      */
     public function getCode()
     {
@@ -120,7 +120,7 @@ class GeoLocation
     /**
      * Get label
      *
-     * @return string 
+     * @return string
      */
     public function getLabel()
     {
@@ -143,7 +143,7 @@ class GeoLocation
     /**
      * Get latitude
      *
-     * @return string 
+     * @return string
      */
     public function getLatitude()
     {
@@ -166,7 +166,7 @@ class GeoLocation
     /**
      * Get longitude
      *
-     * @return string 
+     * @return string
      */
     public function getLongitude()
     {
@@ -189,7 +189,7 @@ class GeoLocation
     /**
      * Get country
      *
-     * @return \Ecommerce\Entity\GeoCountry 
+     * @return \Ecommerce\Entity\GeoCountry
      */
     public function getCountry()
     {
@@ -212,7 +212,7 @@ class GeoLocation
     /**
      * Get subdivision
      *
-     * @return \Ecommerce\Entity\GeoSubdivision 
+     * @return \Ecommerce\Entity\GeoSubdivision
      */
     public function getSubdivision()
     {

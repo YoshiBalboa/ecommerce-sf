@@ -8,7 +8,7 @@ use Doctrine\ORM\Mapping as ORM;
  * GeoCountry
  *
  * @ORM\Table(name="geo_country", uniqueConstraints={@ORM\UniqueConstraint(name="uk_row", columns={"code"})})
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="Ecommerce\Entity\GeoCountryRepository")
  */
 class GeoCountry
 {
@@ -40,7 +40,7 @@ class GeoCountry
     /**
      * Get id
      *
-     * @return integer 
+     * @return integer
      */
     public function getId()
     {
@@ -63,7 +63,7 @@ class GeoCountry
     /**
      * Get code
      *
-     * @return string 
+     * @return string
      */
     public function getCode()
     {
@@ -86,7 +86,7 @@ class GeoCountry
     /**
      * Get label
      *
-     * @return string 
+     * @return string
      */
     public function getLabel()
     {
