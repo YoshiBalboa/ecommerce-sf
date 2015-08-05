@@ -10,6 +10,7 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class Customer
 {
+
 	/**
 	 * @var integer
 	 *
@@ -63,4 +64,5 @@ class Customer
 	 * })
 	 */
 	private $group;
+
 }

@@ -3,7 +3,7 @@
 {% block head_title %}{{ head_title }}{% endblock %}
 
 {% block body %}
-    <div class="page-header">
+	<div class="page-header">
 		<h1>{{ h1_title }}</h1>
 	</div>
 
@@ -12,7 +12,6 @@
 	{% else %}
 		{% for address in addresses %}
 			{{ dump(address) }}
-			{{ address.getPrefix() }}
 		{% endfor %}
 	{% endif %}
 {% endblock %}

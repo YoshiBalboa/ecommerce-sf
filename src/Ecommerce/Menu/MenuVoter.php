@@ -8,6 +8,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 
 class MenuVoter implements VoterInterface
 {
+
 	/**
 	 * @var SymfonyComponentDependencyInjectionContainerInterface
 	 */
@@ -46,4 +47,5 @@ class MenuVoter implements VoterInterface
 
 		return null;
 	}
+
 }

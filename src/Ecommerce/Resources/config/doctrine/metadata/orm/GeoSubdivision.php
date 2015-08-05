@@ -10,6 +10,7 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class GeoSubdivision
 {
+
 	/**
 	 * @var integer
 	 *
@@ -42,4 +43,5 @@ class GeoSubdivision
 	 * })
 	 */
 	private $country;
+
 }

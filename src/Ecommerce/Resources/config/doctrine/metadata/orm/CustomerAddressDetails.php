@@ -10,6 +10,7 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class CustomerAddressDetails
 {
+
 	/**
 	 * @var string
 	 *
@@ -83,4 +84,5 @@ class CustomerAddressDetails
 	 * })
 	 */
 	private $country;
+
 }

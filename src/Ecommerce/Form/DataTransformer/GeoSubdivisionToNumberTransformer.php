@@ -9,6 +9,7 @@ use Ecommerce\Entity\GeoSubdivision;
 
 class GeoSubdivisionToNumberTransformer implements DataTransformerInterface
 {
+
 	/**
 	 * @var ObjectManager
 	 */
@@ -67,4 +68,5 @@ class GeoSubdivisionToNumberTransformer implements DataTransformerInterface
 
 		return $subdivision;
 	}
+
 }

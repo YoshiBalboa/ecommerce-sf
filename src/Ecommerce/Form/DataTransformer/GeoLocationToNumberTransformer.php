@@ -9,6 +9,7 @@ use Ecommerce\Entity\GeoLocation;
 
 class GeoLocationToNumberTransformer implements DataTransformerInterface
 {
+
 	/**
 	 * @var ObjectManager
 	 */
@@ -67,4 +68,5 @@ class GeoLocationToNumberTransformer implements DataTransformerInterface
 
 		return $location;
 	}
+
 }

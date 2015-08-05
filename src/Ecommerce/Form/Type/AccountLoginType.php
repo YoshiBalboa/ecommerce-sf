@@ -8,6 +8,7 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class AccountLoginType extends AbstractType
 {
+
 	public function buildForm(FormBuilderInterface $builder, array $options)
 	{
 		$builder
@@ -20,9 +21,9 @@ class AccountLoginType extends AbstractType
 	public function configureOptions(OptionsResolver $resolver)
 	{
 		$resolver->setDefaults(array(
-			'csrf_protection'	=> true,
-			'csrf_field_name'	=> '_token',
-			'intention'			=> 'ecommerce_account_login_item',
+			'csrf_protection'	 => true,
+			'csrf_field_name'	 => '_token',
+			'intention'			 => 'ecommerce_account_login_item',
 		));
 	}
 
@@ -30,5 +31,5 @@ class AccountLoginType extends AbstractType
 	{
 		return 'ecommerce_account_login';
 	}
-}
 
+}

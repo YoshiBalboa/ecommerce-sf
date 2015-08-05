@@ -10,6 +10,7 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class CustomerDetails
 {
+
 	/**
 	 * @var string
 	 *
@@ -85,7 +86,7 @@ class CustomerDetails
 	 *
 	 * @ORM\ManyToOne(targetEntity="CustomerAddress")
 	 * @ORM\JoinColumns({
-	 *	 @ORM\JoinColumn(name="default_billing_id", referencedColumnName="address_id")
+	 * 	 @ORM\JoinColumn(name="default_billing_id", referencedColumnName="address_id")
 	 * })
 	 */
 	private $defaultBilling;
@@ -97,7 +98,7 @@ class CustomerDetails
 	 * @ORM\GeneratedValue(strategy="NONE")
 	 * @ORM\OneToOne(targetEntity="Customer")
 	 * @ORM\JoinColumns({
-	 *	 @ORM\JoinColumn(name="customer_id", referencedColumnName="customer_id")
+	 * 	 @ORM\JoinColumn(name="customer_id", referencedColumnName="customer_id")
 	 * })
 	 */
 	private $customer;
@@ -107,8 +108,9 @@ class CustomerDetails
 	 *
 	 * @ORM\ManyToOne(targetEntity="CustomerAddress")
 	 * @ORM\JoinColumns({
-	 *	 @ORM\JoinColumn(name="default_shipping_id", referencedColumnName="address_id")
+	 * 	 @ORM\JoinColumn(name="default_shipping_id", referencedColumnName="address_id")
 	 * })
 	 */
 	private $defaultShipping;
+
 }

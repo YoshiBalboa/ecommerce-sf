@@ -5,45 +5,46 @@ namespace Ecommerce\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- *	@ORM\NamedNativeQueries({
- *		@ORM\NamedNativeQuery(
- *			name = "fetchCustomerDetails",
- *			resultSetMapping = "mappingCustomerDetails",
- *			query = "
- *				SELECT c.customer_id, c.email, c.group_id, c.created_at, c.updated_at
- *					, cd.prefix, cd.firstname, cd.lastname, cd.locale, cd.default_billing_id, cd.default_shipping_id
- *				FROM customer AS c
- *				INNER JOIN customer_details AS cs ON cd.customer_id = c.customer_id
- *				WHERE c.is_active = 1
- *				AND c.customer_id = ?"
- *		),
- *	})
- *	@ORM\SqlResultSetMappings({
- *		@ORM\SqlResultSetMapping(
- *			name = "mappingCustomerDetails",
- *			entities= {
- *				@ORM\EntityResult(
- *					entityClass = "__CLASS__",
- *					fields = {
- *						@ORM\FieldResult(name = "customer_id"),
- *						@ORM\FieldResult(name = "email"),
- *						@ORM\FieldResult(name = "group_id"),
- *						@ORM\FieldResult(name = "created_at"),
- *						@ORM\FieldResult(name = "updated_at"),
- *						@ORM\FieldResult(name = "prefix"),
- *						@ORM\FieldResult(name = "firstname"),
- *						@ORM\FieldResult(name = "lastname"),
- *						@ORM\FieldResult(name = "locale"),
- *						@ORM\FieldResult(name = "default_billing_id"),
- *						@ORM\FieldResult(name = "default_shipping_id"),
- *					}
- *				)
- *			}
- *		)
- *	})
+ * 	@ORM\NamedNativeQueries({
+ * 		@ORM\NamedNativeQuery(
+ * 			name = "fetchCustomerDetails",
+ * 			resultSetMapping = "mappingCustomerDetails",
+ * 			query = "
+ * 				SELECT c.customer_id, c.email, c.group_id, c.created_at, c.updated_at
+ * 					, cd.prefix, cd.firstname, cd.lastname, cd.locale, cd.default_billing_id, cd.default_shipping_id
+ * 				FROM customer AS c
+ * 				INNER JOIN customer_details AS cs ON cd.customer_id = c.customer_id
+ * 				WHERE c.is_active = 1
+ * 				AND c.customer_id = ?"
+ * 		),
+ * 	})
+ * 	@ORM\SqlResultSetMappings({
+ * 		@ORM\SqlResultSetMapping(
+ * 			name = "mappingCustomerDetails",
+ * 			entities= {
+ * 				@ORM\EntityResult(
+ * 					entityClass = "__CLASS__",
+ * 					fields = {
+ * 						@ORM\FieldResult(name = "customer_id"),
+ * 						@ORM\FieldResult(name = "email"),
+ * 						@ORM\FieldResult(name = "group_id"),
+ * 						@ORM\FieldResult(name = "created_at"),
+ * 						@ORM\FieldResult(name = "updated_at"),
+ * 						@ORM\FieldResult(name = "prefix"),
+ * 						@ORM\FieldResult(name = "firstname"),
+ * 						@ORM\FieldResult(name = "lastname"),
+ * 						@ORM\FieldResult(name = "locale"),
+ * 						@ORM\FieldResult(name = "default_billing_id"),
+ * 						@ORM\FieldResult(name = "default_shipping_id"),
+ * 					}
+ * 				)
+ * 			}
+ * 		)
+ * 	})
  */
 class chocolat
 {
+
 	/** @ORM\Id @ORM\Column(type="integer") @ORM\GeneratedValue(strategy="AUTO") */
 	protected $customer_id;
 
@@ -76,4 +77,5 @@ class chocolat
 
 	/** @ORM\Column(type="integer") */
 	protected $default_shipping_id;
+
 }

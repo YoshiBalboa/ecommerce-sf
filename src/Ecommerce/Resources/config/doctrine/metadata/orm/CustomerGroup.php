@@ -10,6 +10,7 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class CustomerGroup
 {
+
 	/**
 	 * @var integer
 	 *
@@ -25,4 +26,5 @@ class CustomerGroup
 	 * @ORM\Column(name="group_code", type="string", length=32, nullable=false)
 	 */
 	private $groupCode = '';
+
 }

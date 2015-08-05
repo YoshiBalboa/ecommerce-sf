@@ -6,6 +6,7 @@ use Doctrine\ORM\EntityRepository;
 
 class GeoCountryRepository extends EntityRepository
 {
+
 	const COUNTRY_FRANCE = 75;
 
 	public function getCountries($return_builder = FALSE)
@@ -23,7 +24,7 @@ class GeoCountryRepository extends EntityRepository
 
 	public function supportsClass($class)
 	{
-		return $this->getEntityName() === $class
-			|| is_subclass_of($class, $this->getEntityName());
+		return $this->getEntityName() === $class || is_subclass_of($class, $this->getEntityName());
 	}
+
 }

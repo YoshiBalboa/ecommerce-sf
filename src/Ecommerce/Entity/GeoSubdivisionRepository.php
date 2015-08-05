@@ -7,6 +7,7 @@ use Doctrine\ORM\EntityRepository;
 
 class GeoSubdivisionRepository extends EntityRepository
 {
+
 	public function getSubdivisions(GeoCountry $country, $return_builder = FALSE)
 	{
 		$subdivisions = $this->createQueryBuilder('gs')
@@ -19,7 +20,7 @@ class GeoSubdivisionRepository extends EntityRepository
 
 	public function supportsClass($class)
 	{
-		return $this->getEntityName() === $class
-			|| is_subclass_of($class, $this->getEntityName());
+		return $this->getEntityName() === $class || is_subclass_of($class, $this->getEntityName());
 	}
+
 }

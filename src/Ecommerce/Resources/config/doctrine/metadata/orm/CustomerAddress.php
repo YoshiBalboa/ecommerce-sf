@@ -10,6 +10,7 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class CustomerAddress
 {
+
 	/**
 	 * @var integer
 	 *
@@ -49,4 +50,5 @@ class CustomerAddress
 	 * })
 	 */
 	private $customer;
+
 }

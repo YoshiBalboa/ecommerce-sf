@@ -10,6 +10,7 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class GeoLocation
 {
+
 	/**
 	 * @var integer
 	 *
@@ -66,4 +67,5 @@ class GeoLocation
 	 * })
 	 */
 	private $subdivision;
+
 }

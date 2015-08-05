@@ -1,10 +1,12 @@
 <?php
+
 namespace Ecommerce\Entity;
 
 use Doctrine\ORM\EntityRepository;
 
 class CustomerGroupRepository extends EntityRepository
 {
+
 	const GROUP_DEFAULT = 1;
 	const GROUP_UNSUBSCRIBE = 2;
 	const GROUP_PRO = 3;
@@ -56,7 +58,7 @@ class CustomerGroupRepository extends EntityRepository
 
 	public function supportsClass($class)
 	{
-		return $this->getEntityName() === $class
-			|| is_subclass_of($class, $this->getEntityName());
+		return $this->getEntityName() === $class || is_subclass_of($class, $this->getEntityName());
 	}
+
 }

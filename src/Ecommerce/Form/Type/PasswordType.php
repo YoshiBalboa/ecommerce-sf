@@ -9,15 +9,16 @@ use Symfony\Component\Validator\Constraints\NotBlank;
 
 class PasswordType extends AbstractType
 {
+
 	public function configureOptions(OptionsResolver $resolver)
 	{
 		$resolver->setDefaults(array(
-			'type' => 'password',
-			'invalid_message' => 'Passwords do not match',
-			'options' => array('required' => true),
-			'first_options'  => array('label' => 'Password:'),
-			'second_options' => array('label' => 'Confirm password:'),
-			'constraints' => array(
+			'type'				 => 'password',
+			'invalid_message'	 => 'Passwords do not match',
+			'options'			 => array('required' => true),
+			'first_options'		 => array('label' => 'Password:'),
+			'second_options'	 => array('label' => 'Confirm password:'),
+			'constraints'		 => array(
 				new NotBlank(),
 				new Length(array('min' => 6))
 			)
@@ -33,4 +34,5 @@ class PasswordType extends AbstractType
 	{
 		return 'e_password';
 	}
+
 }

@@ -14,6 +14,7 @@ use Symfony\Component\Serializer\NameConverter\CamelCaseToSnakeCaseNameConverter
  */
 class Customer implements AdvancedUserInterface, \Serializable
 {
+
 	/**
 	 * @var integer
 	 * @ORM\Column(name="customer_id", type="integer", nullable=false)
@@ -62,9 +63,7 @@ class Customer implements AdvancedUserInterface, \Serializable
 	 */
 	private $group;
 
-
 	//GETTERS AND SETTERS
-
 	/**
 	 * Get customerId
 	 * @return integer
@@ -222,7 +221,6 @@ class Customer implements AdvancedUserInterface, \Serializable
 		return null;
 	}
 
-
 	//FUNCTIONS
 
 	public function isAccountNonExpired()
@@ -247,6 +245,7 @@ class Customer implements AdvancedUserInterface, \Serializable
 
 	public function eraseCredentials()
 	{
+
 	}
 
 	/**
@@ -302,6 +301,7 @@ class Customer implements AdvancedUserInterface, \Serializable
 			$this->email,
 			$this->password,
 			$this->isActive,
-		) = unserialize($serialized);
+			) = unserialize($serialized);
 	}
+
 }

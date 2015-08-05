@@ -7,6 +7,7 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class GenderType extends AbstractType
 {
+
 	private $genderChoices;
 
 	public function __construct(array $genderChoices)
@@ -17,10 +18,10 @@ class GenderType extends AbstractType
 	public function configureOptions(OptionsResolver $resolver)
 	{
 		$resolver->setDefaults(array(
-			'choices' => $this->genderChoices,
-			'multiple' => FALSE,
-			'expanded' => TRUE,
-			'preferred_choices' => array('f')
+			'choices'			 => $this->genderChoices,
+			'multiple'			 => FALSE,
+			'expanded'			 => TRUE,
+			'preferred_choices'	 => array('f')
 		));
 	}
 
@@ -33,4 +34,5 @@ class GenderType extends AbstractType
 	{
 		return 'e_gender';
 	}
+
 }

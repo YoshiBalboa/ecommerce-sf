@@ -10,6 +10,7 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class GeoCountry
 {
+
 	/**
 	 * @var integer
 	 *
@@ -32,4 +33,5 @@ class GeoCountry
 	 * @ORM\Column(name="label", type="string", length=255, nullable=false)
 	 */
 	private $label;
+
 }

@@ -12,6 +12,7 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class AddressType extends AbstractType
 {
+
 	/**
 	 * @var ObjectManager
 	 */
@@ -89,4 +90,5 @@ class AddressType extends AbstractType
 	{
 		return 'e_address';
 	}
+
 }

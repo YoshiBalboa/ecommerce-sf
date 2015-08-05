@@ -8,6 +8,7 @@ use Symfony\Component\HttpFoundation\Request;
 
 class SecurityController extends Controller
 {
+
 	public function loginAction(Request $request)
 	{
 		$authenticationUtils = $this->get('security.authentication_utils');
@@ -19,18 +20,16 @@ class SecurityController extends Controller
 		$lastUsername = $authenticationUtils->getLastUsername();
 
 		$login_form = $this->createForm(
-			new Type\AccountLoginType(),
-			array('_username' => $lastUsername),
-			array(
-				'action' => $this->generateUrl('login_check'),
-				'method' => 'POST'
+			new Type\AccountLoginType(), array('_username' => $lastUsername), array(
+			'action' => $this->generateUrl('login_check'),
+			'method' => 'POST'
 			)
 		);
 
 		$view = array(
 			'head_title' => 'Account Login',
 			'login_form' => $login_form->createView(),
-			'error' => $error,
+			'error'		 => $error,
 		);
 
 		return $this->render('security/login.html.twig', $view);
@@ -41,4 +40,5 @@ class SecurityController extends Controller
 		// this controller will not be executed,
 		// as the route is handled by the Security system
 	}
+
 }

@@ -33,7 +33,7 @@ class AccountController extends Controller
 	 */
 	public function createAction(Request $request)
 	{
-		$initial_data = array('prefix'	 => 'f');
+		$initial_data = array('prefix' => 'f');
 
 		$form_attributes = array(
 			'action' => $this->generateUrl('account_create'),

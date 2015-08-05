@@ -9,8 +9,10 @@ use Symfony\Component\HttpFoundation\Request;
 
 class IndexController extends Controller
 {
+
 	public function indexAction()
 	{
 		return $this->render('index/index.html.twig');
 	}
+
 }

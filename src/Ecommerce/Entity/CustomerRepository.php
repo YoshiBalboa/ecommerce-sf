@@ -1,4 +1,5 @@
 <?php
+
 namespace Ecommerce\Entity;
 
 use Symfony\Component\Security\Core\User\UserInterface;
@@ -9,6 +10,7 @@ use Doctrine\ORM\EntityRepository;
 
 class CustomerRepository extends EntityRepository implements UserProviderInterface
 {
+
 	public function loadUserByUsername($email)
 	{
 		$user = $this->createQueryBuilder('u')
@@ -20,8 +22,7 @@ class CustomerRepository extends EntityRepository implements UserProviderInterfa
 		if(null === $user)
 		{
 			$message = sprintf(
-				'Unable to find an active admin AppBundle:User object identified by "%s".',
-				$email
+				'Unable to find an active admin AppBundle:User object identified by "%s".', $email
 			);
 
 			throw new UsernameNotFoundException($message);
@@ -36,10 +37,9 @@ class CustomerRepository extends EntityRepository implements UserProviderInterfa
 		if(!$this->supportsClass($class))
 		{
 			throw new UnsupportedUserException(
-				sprintf(
-					'Instances of "%s" are not supported.',
-					$class
-				)
+			sprintf(
+				'Instances of "%s" are not supported.', $class
+			)
 			);
 		}
 
@@ -48,7 +48,7 @@ class CustomerRepository extends EntityRepository implements UserProviderInterfa
 
 	public function supportsClass($class)
 	{
-		return $this->getEntityName() === $class
-			|| is_subclass_of($class, $this->getEntityName());
+		return $this->getEntityName() === $class || is_subclass_of($class, $this->getEntityName());
 	}
+
 }
