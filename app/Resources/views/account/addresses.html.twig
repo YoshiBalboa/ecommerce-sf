@@ -7,12 +7,12 @@
 		<h1>{{ h1_title }}</h1>
 	</div>
 
-	<p>
-		Afficher la liste des adresses avec un bouton d'edition pour chacune<br>
-		Il faudrait aussi un systeme pour definir les adresses par defaut depuis cette page
-	</p>
-
-	{% if true %}
+	{% if addresses is empty %}
 		<p>Nothing to display. <a href="{{ path('address_create') }}" title="Add an address">Add an address</a></p>
+	{% else %}
+		{% for address in addresses %}
+			{{ dump(address) }}
+			{{ address.getPrefix() }}
+		{% endfor %}
 	{% endif %}
 {% endblock %}

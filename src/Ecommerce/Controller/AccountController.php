@@ -9,6 +9,7 @@ use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 
 class AccountController extends Controller
 {
+
 	/*
 	 * Resume informations on an account
 	 */
@@ -20,7 +21,7 @@ class AccountController extends Controller
 		}
 
 		$view = array(
-			'customer' => $this->getUser()->toArray(),
+			'customer'	 => $this->getUser()->toArray(),
 			'head_title' => 'Account Index',
 		);
 
@@ -32,13 +33,15 @@ class AccountController extends Controller
 	 */
 	public function createAction(Request $request)
 	{
+		$initial_data = array('prefix'	 => 'f');
+
+		$form_attributes = array(
+			'action' => $this->generateUrl('account_create'),
+			'method' => 'POST',
+		);
+
 		$create_form = $this->createForm(
-			new Type\AccountCreateType(),
-			array('prefix' => 'f'),
-			array(
-				'action' => $this->generateUrl('account_create'),
-				'method' => 'POST',
-			)
+			new Type\AccountCreateType(), $initial_data, $form_attributes
 		);
 
 		$create_form->handleRequest($request);
@@ -110,9 +113,9 @@ class AccountController extends Controller
 		}
 
 		$view = array(
-			'head_title' => 'Account Create',
-			'h1_title' => 'Create a new account',
-			'create_form' => $create_form->createView(),
+			'head_title'	 => 'Account Create',
+			'h1_title'		 => 'Create a new account',
+			'create_form'	 => $create_form->createView(),
 		);
 
 		return $this->render('account/create.html.twig', $view);
@@ -132,10 +135,10 @@ class AccountController extends Controller
 		$customer_details = $customer_details_repository->findOneByCustomer($this->getUser());
 
 		$initial_data = array(
-			'prefix' => $customer_details->getPrefix(),
-			'firstname' => $customer_details->getFirstname(),
-			'lastname' => $customer_details->getLastname(),
-			'birthday' => $customer_details->getBirthday(),
+			'prefix'	 => $customer_details->getPrefix(),
+			'firstname'	 => $customer_details->getFirstname(),
+			'lastname'	 => $customer_details->getLastname(),
+			'birthday'	 => $customer_details->getBirthday(),
 		);
 
 		$form_attributes = array(
@@ -148,7 +151,7 @@ class AccountController extends Controller
 			->add('firstname', 'text', array('label' => 'Firstname:'))
 			->add('lastname', 'text', array('label' => 'Lastname:'))
 			->add('birthday', 'birthday', array(
-				'label' => 'Birthday:',
+				'label'	 => 'Birthday:',
 				'format' => 'yyyy-MMMM-dd',
 			))
 			->add('save', 'submit')
@@ -174,9 +177,9 @@ class AccountController extends Controller
 		}
 
 		$view = array(
-			'head_title' => 'Account Edit Details',
-			'h1_title' => 'Edit Details',
-			'details_form' => $details_form->createView(),
+			'head_title'	 => 'Account Edit Details',
+			'h1_title'		 => 'Edit Details',
+			'details_form'	 => $details_form->createView(),
 		);
 
 		return $this->render('account/edit_details.html.twig', $view);
@@ -195,7 +198,7 @@ class AccountController extends Controller
 		$form_attributes = array(
 			'action' => $this->generateUrl('account_edit_email'),
 			'method' => 'POST',
-			'attr' => array('autocomplete' => 'off'),
+			'attr'	 => array('autocomplete' => 'off'),
 		);
 
 		$email_form = $this->createFormBuilder(array(), $form_attributes)
@@ -232,10 +235,10 @@ class AccountController extends Controller
 		}
 
 		$view = array(
-			'head_title' => 'Account Edit Email',
-			'h1_title' => 'Edit Email',
-			'email_form' => $email_form->createView(),
-			'current_email' => $this->getUser()->getEmail(),
+			'head_title'	 => 'Account Edit Email',
+			'h1_title'		 => 'Edit Email',
+			'email_form'	 => $email_form->createView(),
+			'current_email'	 => $this->getUser()->getEmail(),
 		);
 
 		return $this->render('account/edit_email.html.twig', $view);
@@ -254,19 +257,19 @@ class AccountController extends Controller
 		$form_attributes = array(
 			'action' => $this->generateUrl('account_edit_password'),
 			'method' => 'POST',
-			'attr' => array('autocomplete' => 'off'),
+			'attr'	 => array('autocomplete' => 'off'),
 		);
 
 		$password_form = $this->createFormBuilder(array(), $form_attributes)
 			->add('new_password', 'password', array(
-				'label' => 'New password:',
-				'constraints' => array(
+				'label'			 => 'New password:',
+				'constraints'	 => array(
 					new \Symfony\Component\Validator\Constraints\NotBlank(),
 					new \Symfony\Component\Validator\Constraints\Length(array('min' => 6))
 				)
 			))
 			->add('password', 'e_password', array(
-				'first_options'  => array('label' => 'Current password:'),
+				'first_options'	 => array('label' => 'Current password:'),
 				'second_options' => array('label' => 'Confirm current password:'),
 			))
 			->add('save', 'submit')
@@ -299,9 +302,9 @@ class AccountController extends Controller
 		}
 
 		$view = array(
-			'head_title' => 'Account Edit Password',
-			'h1_title' => 'Edit Password',
-			'password_form' => $password_form->createView(),
+			'head_title'	 => 'Account Edit Password',
+			'h1_title'		 => 'Edit Password',
+			'password_form'	 => $password_form->createView(),
 		);
 
 		return $this->render('account/edit_password.html.twig', $view);
@@ -319,22 +322,27 @@ class AccountController extends Controller
 
 		$view = array(
 			'head_title' => 'Account Addresses',
-			'h1_title' => 'Your Addresses',
+			'h1_title'	 => 'Your Addresses',
 		);
 
-		return $this->render('account/addresses.html.twig', $view);
-	}
+		$address_repository = $this->getDoctrine()->getRepository('Ecommerce:CustomerAddress');
+		$active_addresses = $address_repository->findBy(
+			array('customer' => $this->getUser(), 'isActive' => TRUE));
 
-	/*
-	 * Edit an address's data of an account on POST
-	 */
-	public function editAddressAction($address_id)
-	{
-		if(!$this->isLoggedIn())
+		if(!empty($active_addresses))
 		{
-			return $this->redirectToRoute('login');
+			$address_details_repository = $this->getDoctrine()->getRepository('Ecommerce:CustomerAddressDetails');
+
+			$addresses = array();
+			foreach($active_addresses as $address)
+			{
+				$addresses[$address->getAddressId()] = $address_details_repository->findOneByAddress($address);
+			}
+
+			$view['addresses'] = $addresses;
 		}
 
+		return $this->render('account/addresses.html.twig', $view);
 	}
 
 	/**
@@ -366,4 +374,5 @@ class AccountController extends Controller
 		$token = new UsernamePasswordToken($customer, $customer->getPassword(), 'secured_area', $customer->getRoles());
 		$this->container->get('security.context')->setToken($token);
 	}
+
 }

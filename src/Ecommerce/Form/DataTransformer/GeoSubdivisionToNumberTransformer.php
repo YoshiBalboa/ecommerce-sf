@@ -47,7 +47,7 @@ class GeoSubdivisionToNumberTransformer implements DataTransformerInterface
 	 */
 	public function reverseTransform($id)
 	{
-		if(!$id)
+		if(!$id or $id == '-1')
 		{
 			return null;
 		}

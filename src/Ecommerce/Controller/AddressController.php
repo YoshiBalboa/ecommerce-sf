@@ -3,13 +3,11 @@
 namespace Ecommerce\Controller;
 
 use Ecommerce\Entity\GeoCountryRepository;
-use Ecommerce\Form\Type;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\Form\Form;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
-use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Component\Serializer\Encoder\JsonEncoder;
 use Symfony\Component\Serializer\Normalizer\GetSetMethodNormalizer;
 use Symfony\Component\Serializer\Serializer;
@@ -29,17 +27,13 @@ class AddressController extends Controller
 
 		$country_repository = $this->getDoctrine()->getRepository('Ecommerce:GeoCountry');
 		$customer_details_repository = $this->getDoctrine()->getRepository('Ecommerce:CustomerDetails');
-		//$customer_details = $customer_details_repository->findOneByCustomer($this->getUser());
-
-		$customer_repository = $this->getDoctrine()->getRepository('Ecommerce:Customer');
-		$tmp_customer = $customer_repository->loadUserByUsername('bouyouyouyou@gmail.com');
-		$customer_details = $customer_details_repository->findOneByCustomer($tmp_customer);
+		$customer_details = $customer_details_repository->findOneByCustomer($this->getUser());
 
 		$initial_data = array(
-			'prefix' => $customer_details->getPrefix(),
-			'firstname' => $customer_details->getFirstname(),
-			'lastname' => $customer_details->getLastname(),
-			'country' => $country_repository->findOneById(GeoCountryRepository::COUNTRY_FRANCE),
+			'prefix'	 => $customer_details->getPrefix(),
+			'firstname'	 => $customer_details->getFirstname(),
+			'lastname'	 => $customer_details->getLastname(),
+			'country'	 => $country_repository->findOneById(GeoCountryRepository::COUNTRY_FRANCE),
 		);
 
 		$form_attributes = array(
@@ -48,24 +42,28 @@ class AddressController extends Controller
 		);
 
 		$address_form = $this->createForm(
-			'e_address',
-			$initial_data,
-			$form_attributes
+			'e_address', $initial_data, $form_attributes
 		);
 
 		$address_form->handleRequest($request);
 
 		if($request->isMethod('POST') and $address_form->isValid())
 		{
-			$form_data = $address_form->getData();
-			var_dump($form_data);
-			die('Line:' . __LINE__);
+			$address = $this->saveAddress($address_form);
+
+			if(!empty($address))
+			{
+				$this->addFlash('success', 'Your new address was saved');
+				return $this->redirectToRoute('account_addresses');
+			}
+
+			$this->addFlash('danger', 'An error occured, please try again');
 		}
 
 		$view = array(
-			'head_title' => 'Address Create',
-			'h1_title' => 'Create an address',
-			'address_form' => $address_form->createView(),
+			'head_title'	 => 'Address Create',
+			'h1_title'		 => 'Create an address',
+			'address_form'	 => $address_form->createView(),
 		);
 
 		return $this->render('address/default.html.twig', $view);
@@ -83,7 +81,7 @@ class AddressController extends Controller
 
 		$view = array(
 			'head_title' => 'Address Edit',
-			'h1_title' => 'Edit an address',
+			'h1_title'	 => 'Edit an address',
 		);
 
 		return $this->render('address/default.html.twig', $view);
@@ -168,6 +166,60 @@ class AddressController extends Controller
 	}
 
 	/**
+	 * Add or update an address after the POST of a valid address form
+	 * @param Form $form
+	 * @return boolean
+	 */
+	private function saveAddress(Form $form)
+	{
+		$data = $form->getData();
+		$date = new \DateTime();
+
+		//1 - Look for the existing address
+		if(!empty($data['address_id']))
+		{
+			$address_repository = $this->getDoctrine()->getRepository('Ecommerce:CustomerAddress');
+			$address = $address_repository->checkAddress($data['address_id'], $this->getUser());
+		}
+
+		//2 - If no address was found, create a new CustomerAddress row
+		if(empty($address))
+		{
+			$address = new \Ecommerce\Entity\CustomerAddress();
+			$address->setCustomer($this->getUser());
+			$address->setCreatedAt($date);
+			$address->setIsActive(TRUE);
+		}
+
+		$address->setUpdatedAt($date);
+
+		//3 - Create the new customer_address row in the database
+
+		$em = $this->getDoctrine()->getManager();
+		$em->persist($address);
+		$em->flush();
+
+		//4 - Save details
+
+		$address_details = new \Ecommerce\Entity\CustomerAddressDetails();
+		$address_details->setAddress($address);
+		$address_details->setPrefix($data['prefix']);
+		$address_details->setFirstname($data['firstname']);
+		$address_details->setLastname($data['lastname']);
+		$address_details->setStreet($data['street']);
+		$address_details->setPostcode($data['postcode']);
+		$address_details->setLocation($data['location']);
+		$address_details->setSubdivision($data['subdivision']);
+		$address_details->setCountry($data['country']);
+		$address_details->setTelephone($data['telephone']);
+
+		$em->persist($address_details);
+		$em->flush();
+
+		return $address_details->getAddress();
+	}
+
+	/**
 	 * Check if the user is logged in
 	 * It's easier to write that way
 	 * @return boolean
@@ -184,4 +236,5 @@ class AddressController extends Controller
 			return FALSE;
 		}
 	}
+
 }
