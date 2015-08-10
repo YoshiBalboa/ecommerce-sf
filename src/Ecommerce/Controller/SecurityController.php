@@ -4,12 +4,11 @@ namespace Ecommerce\Controller;
 
 use Ecommerce\Form\Type;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Symfony\Component\HttpFoundation\Request;
 
 class SecurityController extends Controller
 {
 
-	public function loginAction(Request $request)
+	public function loginAction()
 	{
 		$authenticationUtils = $this->get('security.authentication_utils');
 
@@ -27,7 +26,8 @@ class SecurityController extends Controller
 		);
 
 		$view = array(
-			'head_title' => 'Account Login',
+			'head_title' => $this->get('translator')->trans('head_title.security.login'),
+			'h1_title' => $this->get('translator')->trans('h1_title.security.login'),
 			'login_form' => $login_form->createView(),
 			'error'		 => $error,
 		);

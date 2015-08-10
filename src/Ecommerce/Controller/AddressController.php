@@ -53,16 +53,16 @@ class AddressController extends Controller
 
 			if(!empty($address))
 			{
-				$this->addFlash('success', 'Your new address was saved');
+				$this->addFlash('success', $this->get('translator')->trans('flash.new-address-saved'));
 				return $this->redirectToRoute('account_addresses');
 			}
 
-			$this->addFlash('danger', 'An error occured, please try again');
+			$this->addFlash('danger', $this->get('translator')->trans('flash.error-try-again'));
 		}
 
 		$view = array(
-			'head_title'	 => 'Address Create',
-			'h1_title'		 => 'Create an address',
+			'head_title'	 => $this->get('translator')->trans('head_title.address.create'),
+			'h1_title'		 => $this->get('translator')->trans('h1_title.address.create'),
 			'address_form'	 => $address_form->createView(),
 		);
 
@@ -80,8 +80,8 @@ class AddressController extends Controller
 		}
 
 		$view = array(
-			'head_title' => 'Address Edit',
-			'h1_title'	 => 'Edit an address',
+			'head_title' => $this->get('translator')->trans('head_title.address.edit'),
+			'h1_title'	 => $this->get('translator')->trans('h1_title.address.edit'),
 		);
 
 		return $this->render('address/default.html.twig', $view);
@@ -232,7 +232,7 @@ class AddressController extends Controller
 		}
 		else
 		{
-			$this->addFlash('warning', 'You must login to proceed');
+			$this->addFlash('warning', $this->get('translator')->trans('flash.login2proceed'));
 			return FALSE;
 		}
 	}

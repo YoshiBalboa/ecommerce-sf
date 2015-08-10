@@ -11,6 +11,12 @@ parameters:
         ancestorClass: active
 
 services:
+    Ecommerce.form.type.address:
+        class: Ecommerce\Form\Type\AddressType
+        arguments: ["@doctrine.orm.entity_manager"]
+        tags:
+            - { name: form.type, alias: e_address }
+
     Ecommerce.form.type.gender:
         class: Ecommerce\Form\Type\GenderType
         arguments:
@@ -24,11 +30,18 @@ services:
         tags:
             - { name: form.type, alias: e_password }
 
-    Ecommerce.form.type.address:
-        class: Ecommerce\Form\Type\AddressType
-        arguments: ["@doctrine.orm.entity_manager"]
+    Ecommerce.locale_listener:
+        class: Ecommerce\EventListener\LocaleListener
+        arguments: ["@doctrine.orm.entity_manager", "@service_container"]
         tags:
-            - { name: form.type, alias: e_address }
+            - { name: kernel.event_subscriber }
+
+    Ecommerce.menu_breadcrumb:
+        class: Knp\Menu\MenuItem
+        factory: ["@Ecommerce.menu_builder", createBreadcrumbsMenu]
+        arguments: ["@request_stack"]
+        tags:
+            - { name: knp_menu.menu, alias: breadcrumbs }
 
     Ecommerce.menu_builder:
         class: Ecommerce\Menu\MenuBuilder
@@ -37,16 +50,15 @@ services:
     Ecommerce.menu_main:
         class: Knp\Menu\MenuItem
         factory: ["@Ecommerce.menu_builder", createMainMenu]
-        arguments: ["@request_stack", "@security.context"]
+        arguments: ["@request_stack", "@security.authorization_checker"]
         tags:
             - { name: knp_menu.menu, alias: main }
 
-    Ecommerce.menu_breadcrumb:
-        class: Knp\Menu\MenuItem
-        factory: ["@Ecommerce.menu_builder", createBreadcrumbsMenu]
-        arguments: ["@request_stack"]
+    Ecommerce.security_listener:
+        class: Ecommerce\Listener\SecurityListener
+        arguments: ["@doctrine.orm.entity_manager"]
         tags:
-            - { name: knp_menu.menu, alias: breadcrumbs }
+            - { name: kernel.event_listener, event: security.interactive_login, method: onSecurityInteractiveLogin }
 
     Ecommerce.voter.request:
         class: Ecommerce\Menu\MenuVoter

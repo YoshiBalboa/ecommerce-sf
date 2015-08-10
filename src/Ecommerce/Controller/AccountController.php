@@ -22,7 +22,7 @@ class AccountController extends Controller
 
 		$view = array(
 			'customer'	 => $this->getUser()->toArray(),
-			'head_title' => 'Account Index',
+			'head_title' => $this->get('translator')->trans('head_title.account.index'),
 		);
 
 		return $this->render('account/index.html.twig', $view);
@@ -63,7 +63,7 @@ class AccountController extends Controller
 					return $this->redirectToRoute('account');
 				}
 
-				$this->addFlash('danger', 'This email already exists');
+				$this->addFlash('danger', $this->get('translator')->trans('flash.email-exists'));
 
 				return $this->redirectToRoute('account_create');
 			}
@@ -113,8 +113,8 @@ class AccountController extends Controller
 		}
 
 		$view = array(
-			'head_title'	 => 'Account Create',
-			'h1_title'		 => 'Create a new account',
+			'head_title'	 => $this->get('translator')->trans('head_title.account.create'),
+			'h1_title'		 => $this->get('translator')->trans('h1_title.account.create'),
 			'create_form'	 => $create_form->createView(),
 		);
 
@@ -148,10 +148,10 @@ class AccountController extends Controller
 
 		$details_form = $this->createFormBuilder($initial_data, $form_attributes)
 			->add('prefix', 'e_gender')
-			->add('firstname', 'text', array('label' => 'Firstname:'))
-			->add('lastname', 'text', array('label' => 'Lastname:'))
+			->add('firstname', 'text', array('label' => 'label.firstname'))
+			->add('lastname', 'text', array('label' => 'label.lastname'))
 			->add('birthday', 'birthday', array(
-				'label'	 => 'Birthday:',
+				'label'	 => 'label.birthday',
 				'format' => 'yyyy-MMMM-dd',
 			))
 			->add('save', 'submit')
@@ -171,14 +171,14 @@ class AccountController extends Controller
 			$em = $this->getDoctrine()->getManager();
 			$em->flush();
 
-			$this->addFlash('success', 'Your new details were saved');
+			$this->addFlash('success', 'flash.details-saved');
 
 			return $this->redirectToRoute('account_edit_details');
 		}
 
 		$view = array(
-			'head_title'	 => 'Account Edit Details',
-			'h1_title'		 => 'Edit Details',
+			'head_title'	 => $this->get('translator')->trans('head_title.account.edit-details'),
+			'h1_title'		 => $this->get('translator')->trans('h1_title.account.edit-details'),
 			'details_form'	 => $details_form->createView(),
 		);
 
@@ -216,7 +216,7 @@ class AccountController extends Controller
 
 			if(!$encoder->isPasswordValid($this->getUser(), $form_data['password']))
 			{
-				$this->addFlash('danger', 'Your password is invalid');
+				$this->addFlash('danger', $this->get('translator')->trans('flash.invalid-password'));
 				return $this->redirectToRoute('account_edit_email');
 			}
 
@@ -229,14 +229,14 @@ class AccountController extends Controller
 
 			$this->updateSecurityToken($this->getUser());
 
-			$this->addFlash('success', 'Your new email was saved');
+			$this->addFlash('success', $this->get('translator')->trans('flash.email-saved'));
 
 			return $this->redirectToRoute('account_edit_email');
 		}
 
 		$view = array(
-			'head_title'	 => 'Account Edit Email',
-			'h1_title'		 => 'Edit Email',
+			'head_title'	 => $this->get('translator')->trans('head_title.account.edit-email'),
+			'h1_title'		 => $this->get('translator')->trans('h1_title.account.edit-email'),
 			'email_form'	 => $email_form->createView(),
 			'current_email'	 => $this->getUser()->getEmail(),
 		);
@@ -262,15 +262,15 @@ class AccountController extends Controller
 
 		$password_form = $this->createFormBuilder(array(), $form_attributes)
 			->add('new_password', 'password', array(
-				'label'			 => 'New password:',
+				'label'			 => $this->get('translator')->trans('label.new-password'),
 				'constraints'	 => array(
 					new \Symfony\Component\Validator\Constraints\NotBlank(),
 					new \Symfony\Component\Validator\Constraints\Length(array('min' => 6))
 				)
 			))
 			->add('password', 'e_password', array(
-				'first_options'	 => array('label' => 'Current password:'),
-				'second_options' => array('label' => 'Confirm current password:'),
+				'first_options'	 => array('label' => $this->get('translator')->trans('label.current-password')),
+				'second_options' => array('label' => $this->get('translator')->trans('label.current-password-confirm')),
 			))
 			->add('save', 'submit')
 			->getForm();
@@ -284,7 +284,7 @@ class AccountController extends Controller
 
 			if(!$encoder->isPasswordValid($this->getUser(), $form_data['password']))
 			{
-				$this->addFlash('danger', 'Your password is invalid');
+				$this->addFlash('danger', $this->get('translator')->trans('flash.invalid-password'));
 				return $this->redirectToRoute('account_edit_password');
 			}
 
@@ -296,14 +296,14 @@ class AccountController extends Controller
 
 			$this->updateSecurityToken($this->getUser());
 
-			$this->addFlash('success', 'Your new password was saved');
+			$this->addFlash('success', $this->get('translator')->trans('flash.new-password-saved'));
 
 			return $this->redirectToRoute('account_edit_password');
 		}
 
 		$view = array(
-			'head_title'	 => 'Account Edit Password',
-			'h1_title'		 => 'Edit Password',
+			'head_title'	 => $this->get('translator')->trans('head_title.account.edit-password'),
+			'h1_title'		 => $this->get('translator')->trans('h1_title.account.edit-password'),
 			'password_form'	 => $password_form->createView(),
 		);
 
@@ -321,8 +321,8 @@ class AccountController extends Controller
 		}
 
 		$view = array(
-			'head_title' => 'Account Addresses',
-			'h1_title'	 => 'Your Addresses',
+			'head_title' => $this->get('translator')->trans('head_title.account.addresses'),
+			'h1_title'	 => $this->get('translator')->trans('h1_title.account.your-addresses'),
 		);
 
 		$address_repository = $this->getDoctrine()->getRepository('Ecommerce:CustomerAddress');
@@ -358,7 +358,7 @@ class AccountController extends Controller
 		}
 		else
 		{
-			$this->addFlash('warning', 'You must login to proceed');
+			$this->addFlash('warning', $this->get('translator')->trans('flash.login2proceed'));
 			return FALSE;
 		}
 	}
@@ -372,7 +372,7 @@ class AccountController extends Controller
 	private function updateSecurityToken(\Ecommerce\Entity\Customer $customer)
 	{
 		$token = new UsernamePasswordToken($customer, $customer->getPassword(), 'secured_area', $customer->getRoles());
-		$this->container->get('security.context')->setToken($token);
+		$this->container->get('security.token_storage')->setToken($token);
 	}
 
 }
