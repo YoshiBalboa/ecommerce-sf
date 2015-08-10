@@ -12,7 +12,12 @@ class IndexController extends Controller
 
 	public function indexAction()
 	{
-		return $this->render('index/index.html.twig');
+		$view = array(
+			'head_title' => $this->get('translator')->trans('head_title.index.home'),
+			'h1_title'	 => $this->get('translator')->trans('h1_title.index.home'),
+		);
+
+		return $this->render('index/index.html.twig', $view);
 	}
 
 }

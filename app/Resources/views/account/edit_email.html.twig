@@ -7,7 +7,7 @@
 		<h1>{{ h1_title }}</h1>
 	</div>
 
-	<p>Your current email is <u>{{ current_email }}</u><p>
+	<p>{{ 'view.your-current-email'|trans({'%email%': current_email})|raw }}<p>
 
 	{{ form_start(email_form) }}
 	{{ form_widget(email_form) }}

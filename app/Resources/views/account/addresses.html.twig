@@ -8,10 +8,11 @@
 	</div>
 
 	{% if addresses is empty %}
-		<p>Nothing to display. <a href="{{ path('address_create') }}" title="Add an address">Add an address</a></p>
+		<p>{{ 'view.nothing2display'|trans }} <a href="{{ path('address_create') }}" title="{{ 'view.add-address'|trans }}">{{ 'view.add-address'|trans }}</a></p>
 	{% else %}
 		{% for address in addresses %}
 			{{ dump(address) }}
 		{% endfor %}
+		<p><a href="{{ path('address_create') }}" title="{{ 'view.add-address'|trans }}">{{ 'view.add-address'|trans }}</a></p>
 	{% endif %}
 {% endblock %}

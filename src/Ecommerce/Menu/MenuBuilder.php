@@ -7,23 +7,26 @@ use Knp\Menu\Matcher\Matcher;
 use Knp\Menu\Matcher\Voter\UriVoter;
 use Knp\Menu\Renderer\ListRenderer;
 use Symfony\Component\HttpFoundation\RequestStack;
-use Symfony\Component\Security\Core\SecurityContext;
+use Symfony\Component\Security\Core\Authorization\AuthorizationChecker;
+use Symfony\Component\Translation\DataCollectorTranslator;
 
 class MenuBuilder
 {
 
 	private $factory;
 	private $request_uri;
+	private $translator;
 
 	/**
 	 * @param FactoryInterface $factory
 	 */
-	public function __construct(FactoryInterface $factory)
+	public function __construct(FactoryInterface $factory, DataCollectorTranslator $translator)
 	{
 		$this->factory = $factory;
+		$this->translator = $translator;
 	}
 
-	public function createMainMenu(RequestStack $requestStack, SecurityContext $security)
+	public function createMainMenu(RequestStack $requestStack, AuthorizationChecker $authorization_checker)
 	{
 		$this->request_uri = $requestStack->getCurrentRequest()->getRequestUri();
 
@@ -36,11 +39,11 @@ class MenuBuilder
 		$menu->setChildrenAttribute('class', 'nav navbar-nav');
 
 		//Home
-		$menu->addChild('Home', array('route' => 'home'));
+		$menu->addChild($this->translator->trans('menu.home'), array('route' => 'home'));
 
-		if(!$security->isGranted('IS_AUTHENTICATED_FULLY'))
+		if(!$authorization_checker->isGranted('IS_AUTHENTICATED_FULLY'))
 		{
-			$menu->addChild('Login', array('route' => 'login'));
+			$menu->addChild($this->translator->trans('menu.login'), array('route' => 'login'));
 		}
 		else
 		{
@@ -56,19 +59,24 @@ class MenuBuilder
 				'aria-expanded'	 => 'false',
 			));
 
-			$menu['Account']->addChild('Details', array('route' => 'account'));
-			$menu['Account']->addChild('Addresses', array('route' => 'account_addresses'));
+			$menu['Account']->addChild($this->translator->trans('menu.account.index'), array(
+				'route' => 'account'));
+			$menu['Account']->addChild($this->translator->trans('menu.account.addresses'), array(
+				'route' => 'account_addresses'));
 			$menu['Account']->addChild('-', array('attributes' => array('role'	 => 'separator',
 					'class'	 => 'divider')));
-			$menu['Account']->addChild('Edit Details', array('route' => 'account_edit_details'));
-			$menu['Account']->addChild('Edit Email', array('route' => 'account_edit_email'));
-			$menu['Account']->addChild('Edit Password', array('route' => 'account_edit_password'));
+			$menu['Account']->addChild($this->translator->trans('menu.account.edit-details'), array(
+				'route' => 'account_edit_details'));
+			$menu['Account']->addChild($this->translator->trans('menu.account.edit-email'), array(
+				'route' => 'account_edit_email'));
+			$menu['Account']->addChild($this->translator->trans('menu.account.edit-password'), array(
+				'route' => 'account_edit_password'));
 
 			$menu['Account']->setChildrenAttribute('class', 'dropdown-menu');
-			$menu['Account']->setLabel('Account <span class="caret"></span>');
+			$menu['Account']->setLabel($this->translator->trans('menu.account.base') . ' <span class="caret"></span>');
 
 			//Logout
-			$menu->addChild('Logout', array('route' => 'logout'));
+			$menu->addChild($this->translator->trans('menu.logout'), array('route' => 'logout'));
 		}
 
 		return $menu;

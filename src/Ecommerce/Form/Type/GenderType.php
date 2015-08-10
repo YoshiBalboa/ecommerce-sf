@@ -21,6 +21,7 @@ class GenderType extends AbstractType
 			'choices'			 => $this->genderChoices,
 			'multiple'			 => FALSE,
 			'expanded'			 => TRUE,
+			'label'				 => 'label.prefix',
 			'preferred_choices'	 => array('f')
 		));
 	}

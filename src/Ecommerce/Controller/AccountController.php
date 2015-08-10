@@ -23,6 +23,7 @@ class AccountController extends Controller
 		$view = array(
 			'customer'	 => $this->getUser()->toArray(),
 			'head_title' => $this->get('translator')->trans('head_title.account.index'),
+			'h1_title' => $this->get('translator')->trans('h1_title.account.index'),
 		);
 
 		return $this->render('account/index.html.twig', $view);
@@ -154,7 +155,7 @@ class AccountController extends Controller
 				'label'	 => 'label.birthday',
 				'format' => 'yyyy-MMMM-dd',
 			))
-			->add('save', 'submit')
+			->add('save', 'submit', array('label' => 'button.save'))
 			->getForm();
 
 		$details_form->handleRequest($request);
@@ -202,9 +203,9 @@ class AccountController extends Controller
 		);
 
 		$email_form = $this->createFormBuilder(array(), $form_attributes)
-			->add('email', 'email', array('label' => 'New Email:'))
+			->add('email', 'email', array('label' => 'label.new-email'))
 			->add('password', 'e_password')
-			->add('save', 'submit')
+			->add('save', 'submit', array('label' => 'button.save'))
 			->getForm();
 
 		$email_form->handleRequest($request);
@@ -262,17 +263,17 @@ class AccountController extends Controller
 
 		$password_form = $this->createFormBuilder(array(), $form_attributes)
 			->add('new_password', 'password', array(
-				'label'			 => $this->get('translator')->trans('label.new-password'),
+				'label'			 => 'label.new-password',
 				'constraints'	 => array(
 					new \Symfony\Component\Validator\Constraints\NotBlank(),
 					new \Symfony\Component\Validator\Constraints\Length(array('min' => 6))
 				)
 			))
 			->add('password', 'e_password', array(
-				'first_options'	 => array('label' => $this->get('translator')->trans('label.current-password')),
-				'second_options' => array('label' => $this->get('translator')->trans('label.current-password-confirm')),
+				'first_options'	 => array('label' => 'label.current-password'),
+				'second_options' => array('label' => 'label.current-password-confirm'),
 			))
-			->add('save', 'submit')
+			->add('save', 'submit', array('label' => 'button.save'))
 			->getForm();
 
 		$password_form->handleRequest($request);
@@ -322,7 +323,7 @@ class AccountController extends Controller
 
 		$view = array(
 			'head_title' => $this->get('translator')->trans('head_title.account.addresses'),
-			'h1_title'	 => $this->get('translator')->trans('h1_title.account.your-addresses'),
+			'h1_title'	 => $this->get('translator')->trans('h1_title.account.addresses'),
 		);
 
 		$address_repository = $this->getDoctrine()->getRepository('Ecommerce:CustomerAddress');

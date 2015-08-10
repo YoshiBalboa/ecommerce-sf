@@ -35,11 +35,11 @@ class AddressType extends AbstractType
 			->add('prefix', 'e_gender', array(
 				'data' => $options['data']['prefix']))
 			->add('firstname', 'text', array(
-				'label' => 'Firstname:'))
+				'label' => 'label.firstname'))
 			->add('lastname', 'text', array(
-				'label' => 'Lastname:'))
+				'label' => 'label.lastname'))
 			->add('country', 'entity', array(
-				'label'			 => 'Country:',
+				'label'			 => 'label.country',
 				'class'			 => 'Ecommerce:GeoCountry',
 				'property'		 => 'label',
 				'query_builder'	 => function(GeoCountryRepository $gcr)
@@ -48,18 +48,18 @@ class AddressType extends AbstractType
 				},
 			))
 			->add('state', 'text', array(
-				'label' => 'State/Department:',
+				'label' => 'label.state',
 			))
 			->add('postcode', 'text', array(
-				'label' => 'Postcode:',
+				'label' => 'label.postcode',
 			))
 			->add('city', 'text', array(
-				'label' => 'City:',
+				'label' => 'label.city',
 			))
 			->add('street', 'text', array(
-				'label' => 'Street:'))
+				'label' => 'label.street'))
 			->add('telephone', 'text', array(
-				'label'	 => 'Telephone:',
+				'label'	 => 'label.telephone',
 				'attr'	 => array(
 					'pattern'		 => '^\+?[0-9][0-9- .]+$',
 					'placeholder'	 => '+1 202-456-1111',
@@ -73,7 +73,8 @@ class AddressType extends AbstractType
 			->add(
 				$builder->create('location', 'hidden')
 				->addModelTransformer($location_transformer))
-			->add('Save', 'submit')
+			->add('Save', 'submit', array(
+				'label' => 'button.save',))
 		;
 	}
 

@@ -45,7 +45,7 @@ services:
 
     Ecommerce.menu_builder:
         class: Ecommerce\Menu\MenuBuilder
-        arguments: ["@knp_menu.factory"]
+        arguments: ["@knp_menu.factory", "@translator"]
 
     Ecommerce.menu_main:
         class: Knp\Menu\MenuItem

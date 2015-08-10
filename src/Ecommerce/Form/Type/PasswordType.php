@@ -16,8 +16,8 @@ class PasswordType extends AbstractType
 			'type'				 => 'password',
 			'invalid_message'	 => 'Passwords do not match',
 			'options'			 => array('required' => true),
-			'first_options'		 => array('label' => 'Password:'),
-			'second_options'	 => array('label' => 'Confirm password:'),
+			'first_options'		 => array('label' => 'label.password'),
+			'second_options'	 => array('label' => 'label.password-confirm'),
 			'constraints'		 => array(
 				new NotBlank(),
 				new Length(array('min' => 6))
