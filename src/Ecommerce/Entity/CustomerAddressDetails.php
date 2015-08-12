@@ -272,6 +272,14 @@ class CustomerAddressDetails
 	}
 
 	/**
+	 * alias for setLocation
+	 */
+	public function setCity(\Ecommerce\Entity\GeoLocation $location = null)
+	{
+		return $this->setLocation($location);
+	}
+
+	/**
 	 * Get location
 	 *
 	 * @return \Ecommerce\Entity\GeoLocation
@@ -279,6 +287,14 @@ class CustomerAddressDetails
 	public function getLocation()
 	{
 		return $this->location;
+	}
+
+	/**
+	 * alias for getLocation
+	 */
+	public function getCity()
+	{
+		return $this->getLocation();
 	}
 
 	/**
@@ -295,6 +311,14 @@ class CustomerAddressDetails
 	}
 
 	/**
+	 * alias for setSubdivision
+	 */
+	public function setState(\Ecommerce\Entity\GeoSubdivision $subdivision = null)
+	{
+		return $this->setSubdivision($subdivision);
+	}
+
+	/**
 	 * Get subdivision
 	 *
 	 * @return \Ecommerce\Entity\GeoSubdivision
@@ -302,6 +326,14 @@ class CustomerAddressDetails
 	public function getSubdivision()
 	{
 		return $this->subdivision;
+	}
+
+	/**
+	 * alias for getSubdivision
+	 */
+	public function getState()
+	{
+		return $this->getSubdivision();
 	}
 
 	/**

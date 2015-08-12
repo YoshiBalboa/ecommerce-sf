@@ -12,376 +12,386 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class CustomerDetails
 {
-    /**
-     * @var string
-     *
-     * @ORM\Column(name="prefix", type="string", length=5, nullable=true)
-     */
-    private $prefix;
 
-    /**
-     * @var string
-     *
-     * @ORM\Column(name="firstname", type="string", length=255, nullable=true)
-     */
-    private $firstname;
+	/**
+	 * @var string
+	 *
+	 * @ORM\Column(name="prefix", type="string", length=5, nullable=true)
+	 */
+	private $prefix;
 
-    /**
-     * @var string
-     *
-     * @ORM\Column(name="lastname", type="string", length=255, nullable=true)
-     */
-    private $lastname;
+	/**
+	 * @var string
+	 *
+	 * @ORM\Column(name="firstname", type="string", length=255, nullable=true)
+	 */
+	private $firstname;
 
-    /**
-     * @var string
-     *
-     * @ORM\Column(name="crypt_current_vector", type="string", length=255, nullable=true)
-     */
-    private $cryptCurrentVector;
+	/**
+	 * @var string
+	 *
+	 * @ORM\Column(name="lastname", type="string", length=255, nullable=true)
+	 */
+	private $lastname;
 
-    /**
-     * @var string
-     *
-     * @ORM\Column(name="locale", type="string", length=5, nullable=true)
-     */
-    private $locale = 'fr_FR';
+	/**
+	 * @var string
+	 *
+	 * @ORM\Column(name="crypt_current_vector", type="string", length=255, nullable=true)
+	 */
+	private $cryptCurrentVector;
 
-    /**
-     * @var string
-     *
-     * @ORM\Column(name="sponsorship_key", type="string", length=255, nullable=true)
-     */
-    private $sponsorshipKey;
+	/**
+	 * @var string
+	 *
+	 * @ORM\Column(name="locale", type="string", length=5, nullable=true)
+	 */
+	private $locale = 'fr_FR';
 
-    /**
-     * @var string
-     *
-     * @ORM\Column(name="facebook_user_id", type="string", length=255, nullable=true)
-     */
-    private $facebookUserId;
+	/**
+	 * @var string
+	 *
+	 * @ORM\Column(name="sponsorship_key", type="string", length=255, nullable=true)
+	 */
+	private $sponsorshipKey;
 
-    /**
-     * @var \DateTime
-     *
-     * @ORM\Column(name="cgu_validated_at", type="datetime", nullable=true)
-     */
-    private $cguValidatedAt;
+	/**
+	 * @var string
+	 *
+	 * @ORM\Column(name="facebook_user_id", type="string", length=255, nullable=true)
+	 */
+	private $facebookUserId;
 
-    /**
-     * @var \DateTime
-     *
-     * @ORM\Column(name="birthday", type="date", nullable=true)
-     */
-    private $birthday;
+	/**
+	 * @var \DateTime
+	 *
+	 * @ORM\Column(name="cgu_validated_at", type="datetime", nullable=true)
+	 */
+	private $cguValidatedAt;
 
-    /**
-     * @var \CustomerAddress
-     *
-     * @ORM\ManyToOne(targetEntity="CustomerAddress")
-     * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="default_billing_id", referencedColumnName="address_id")
-     * })
-     */
-    private $defaultBilling;
+	/**
+	 * @var \DateTime
+	 *
+	 * @ORM\Column(name="birthday", type="date", nullable=true)
+	 */
+	private $birthday;
 
-    /**
-     * @var \Customer
-     *
-     * @ORM\Id
-     * @ORM\GeneratedValue(strategy="NONE")
-     * @ORM\OneToOne(targetEntity="Customer")
-     * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="customer_id", referencedColumnName="customer_id")
-     * })
-     */
-    private $customer;
+	/**
+	 * @var \CustomerAddress
+	 *
+	 * @ORM\ManyToOne(targetEntity="CustomerAddress")
+	 * @ORM\JoinColumns({
+	 *   @ORM\JoinColumn(name="default_billing_id", referencedColumnName="address_id")
+	 * })
+	 */
+	private $defaultBilling;
 
-    /**
-     * @var \CustomerAddress
-     *
-     * @ORM\ManyToOne(targetEntity="CustomerAddress")
-     * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="default_shipping_id", referencedColumnName="address_id")
-     * })
-     */
-    private $defaultShipping;
+	/**
+	 * @var \Customer
+	 *
+	 * @ORM\Id
+	 * @ORM\GeneratedValue(strategy="NONE")
+	 * @ORM\OneToOne(targetEntity="Customer")
+	 * @ORM\JoinColumns({
+	 *   @ORM\JoinColumn(name="customer_id", referencedColumnName="customer_id")
+	 * })
+	 */
+	private $customer;
 
+	/**
+	 * @var \CustomerAddress
+	 *
+	 * @ORM\ManyToOne(targetEntity="CustomerAddress")
+	 * @ORM\JoinColumns({
+	 *   @ORM\JoinColumn(name="default_shipping_id", referencedColumnName="address_id")
+	 * })
+	 */
+	private $defaultShipping;
 
+	/**
+	 * Set prefix
+	 *
+	 * @param string $prefix
+	 * @return CustomerDetails
+	 */
+	public function setPrefix($prefix)
+	{
+		$this->prefix = $prefix;
 
-    /**
-     * Set prefix
-     *
-     * @param string $prefix
-     * @return CustomerDetails
-     */
-    public function setPrefix($prefix)
-    {
-        $this->prefix = $prefix;
+		return $this;
+	}
 
-        return $this;
-    }
+	/**
+	 * Get prefix
+	 *
+	 * @return string
+	 */
+	public function getPrefix()
+	{
+		return $this->prefix;
+	}
 
-    /**
-     * Get prefix
-     *
-     * @return string 
-     */
-    public function getPrefix()
-    {
-        return $this->prefix;
-    }
+	/**
+	 * Set firstname
+	 *
+	 * @param string $firstname
+	 * @return CustomerDetails
+	 */
+	public function setFirstname($firstname)
+	{
+		$this->firstname = $firstname;
 
-    /**
-     * Set firstname
-     *
-     * @param string $firstname
-     * @return CustomerDetails
-     */
-    public function setFirstname($firstname)
-    {
-        $this->firstname = $firstname;
+		return $this;
+	}
 
-        return $this;
-    }
+	/**
+	 * Get firstname
+	 *
+	 * @return string
+	 */
+	public function getFirstname()
+	{
+		return $this->firstname;
+	}
 
-    /**
-     * Get firstname
-     *
-     * @return string 
-     */
-    public function getFirstname()
-    {
-        return $this->firstname;
-    }
+	/**
+	 * Set lastname
+	 *
+	 * @param string $lastname
+	 * @return CustomerDetails
+	 */
+	public function setLastname($lastname)
+	{
+		$this->lastname = $lastname;
 
-    /**
-     * Set lastname
-     *
-     * @param string $lastname
-     * @return CustomerDetails
-     */
-    public function setLastname($lastname)
-    {
-        $this->lastname = $lastname;
+		return $this;
+	}
 
-        return $this;
-    }
+	/**
+	 * Get lastname
+	 *
+	 * @return string
+	 */
+	public function getLastname()
+	{
+		return $this->lastname;
+	}
 
-    /**
-     * Get lastname
-     *
-     * @return string 
-     */
-    public function getLastname()
-    {
-        return $this->lastname;
-    }
+	/**
+	 * Set cryptCurrentVector
+	 *
+	 * @param string $cryptCurrentVector
+	 * @return CustomerDetails
+	 */
+	public function setCryptCurrentVector($cryptCurrentVector)
+	{
+		$this->cryptCurrentVector = $cryptCurrentVector;
 
-    /**
-     * Set cryptCurrentVector
-     *
-     * @param string $cryptCurrentVector
-     * @return CustomerDetails
-     */
-    public function setCryptCurrentVector($cryptCurrentVector)
-    {
-        $this->cryptCurrentVector = $cryptCurrentVector;
+		return $this;
+	}
 
-        return $this;
-    }
+	/**
+	 * Get cryptCurrentVector
+	 *
+	 * @return string
+	 */
+	public function getCryptCurrentVector()
+	{
+		return $this->cryptCurrentVector;
+	}
 
-    /**
-     * Get cryptCurrentVector
-     *
-     * @return string 
-     */
-    public function getCryptCurrentVector()
-    {
-        return $this->cryptCurrentVector;
-    }
+	/**
+	 * Set locale
+	 *
+	 * @param string $locale
+	 * @return CustomerDetails
+	 */
+	public function setLocale($locale)
+	{
+		$this->locale = $locale;
 
-    /**
-     * Set locale
-     *
-     * @param string $locale
-     * @return CustomerDetails
-     */
-    public function setLocale($locale)
-    {
-        $this->locale = $locale;
+		return $this;
+	}
 
-        return $this;
-    }
+	/**
+	 * Get locale
+	 *
+	 * @return string
+	 */
+	public function getLocale()
+	{
+		return $this->locale;
+	}
 
-    /**
-     * Get locale
-     *
-     * @return string 
-     */
-    public function getLocale()
-    {
-        return $this->locale;
-    }
+	/**
+	 * Set sponsorshipKey
+	 *
+	 * @param string $sponsorshipKey
+	 * @return CustomerDetails
+	 */
+	public function setSponsorshipKey($sponsorshipKey)
+	{
+		$this->sponsorshipKey = $sponsorshipKey;
 
-    /**
-     * Set sponsorshipKey
-     *
-     * @param string $sponsorshipKey
-     * @return CustomerDetails
-     */
-    public function setSponsorshipKey($sponsorshipKey)
-    {
-        $this->sponsorshipKey = $sponsorshipKey;
+		return $this;
+	}
 
-        return $this;
-    }
+	/**
+	 * Get sponsorshipKey
+	 *
+	 * @return string
+	 */
+	public function getSponsorshipKey()
+	{
+		return $this->sponsorshipKey;
+	}
 
-    /**
-     * Get sponsorshipKey
-     *
-     * @return string 
-     */
-    public function getSponsorshipKey()
-    {
-        return $this->sponsorshipKey;
-    }
+	/**
+	 * Set facebookUserId
+	 *
+	 * @param string $facebookUserId
+	 * @return CustomerDetails
+	 */
+	public function setFacebookUserId($facebookUserId)
+	{
+		$this->facebookUserId = $facebookUserId;
 
-    /**
-     * Set facebookUserId
-     *
-     * @param string $facebookUserId
-     * @return CustomerDetails
-     */
-    public function setFacebookUserId($facebookUserId)
-    {
-        $this->facebookUserId = $facebookUserId;
+		return $this;
+	}
 
-        return $this;
-    }
+	/**
+	 * Get facebookUserId
+	 *
+	 * @return string
+	 */
+	public function getFacebookUserId()
+	{
+		return $this->facebookUserId;
+	}
 
-    /**
-     * Get facebookUserId
-     *
-     * @return string 
-     */
-    public function getFacebookUserId()
-    {
-        return $this->facebookUserId;
-    }
+	/**
+	 * Set cguValidatedAt
+	 *
+	 * @param \DateTime $cguValidatedAt
+	 * @return CustomerDetails
+	 */
+	public function setCguValidatedAt($cguValidatedAt)
+	{
+		$this->cguValidatedAt = $cguValidatedAt;
 
-    /**
-     * Set cguValidatedAt
-     *
-     * @param \DateTime $cguValidatedAt
-     * @return CustomerDetails
-     */
-    public function setCguValidatedAt($cguValidatedAt)
-    {
-        $this->cguValidatedAt = $cguValidatedAt;
+		return $this;
+	}
 
-        return $this;
-    }
+	/**
+	 * Get cguValidatedAt
+	 *
+	 * @return \DateTime
+	 */
+	public function getCguValidatedAt()
+	{
+		return $this->cguValidatedAt;
+	}
 
-    /**
-     * Get cguValidatedAt
-     *
-     * @return \DateTime 
-     */
-    public function getCguValidatedAt()
-    {
-        return $this->cguValidatedAt;
-    }
+	/**
+	 * Set birthday
+	 *
+	 * @param \DateTime $birthday
+	 * @return CustomerDetails
+	 */
+	public function setBirthday($birthday)
+	{
+		$this->birthday = $birthday;
 
-    /**
-     * Set birthday
-     *
-     * @param \DateTime $birthday
-     * @return CustomerDetails
-     */
-    public function setBirthday($birthday)
-    {
-        $this->birthday = $birthday;
+		return $this;
+	}
 
-        return $this;
-    }
+	/**
+	 * Get birthday
+	 *
+	 * @return \DateTime
+	 */
+	public function getBirthday()
+	{
+		return $this->birthday;
+	}
 
-    /**
-     * Get birthday
-     *
-     * @return \DateTime 
-     */
-    public function getBirthday()
-    {
-        return $this->birthday;
-    }
+	/**
+	 * Set defaultBilling
+	 *
+	 * @param \Ecommerce\Entity\CustomerAddress $defaultBilling
+	 * @return CustomerDetails
+	 */
+	public function setDefaultBilling(\Ecommerce\Entity\CustomerAddress $defaultBilling = null)
+	{
+		$this->defaultBilling = $defaultBilling;
 
-    /**
-     * Set defaultBilling
-     *
-     * @param \Ecommerce\Entity\CustomerAddress $defaultBilling
-     * @return CustomerDetails
-     */
-    public function setDefaultBilling(\Ecommerce\Entity\CustomerAddress $defaultBilling = null)
-    {
-        $this->defaultBilling = $defaultBilling;
+		return $this;
+	}
 
-        return $this;
-    }
+	/**
+	 * Get defaultBilling
+	 *
+	 * @return \Ecommerce\Entity\CustomerAddress
+	 */
+	public function getDefaultBilling()
+	{
+		return $this->defaultBilling;
+	}
 
-    /**
-     * Get defaultBilling
-     *
-     * @return \Ecommerce\Entity\CustomerAddress 
-     */
-    public function getDefaultBilling()
-    {
-        return $this->defaultBilling;
-    }
+	/**
+	 * Set customer
+	 *
+	 * @param \Ecommerce\Entity\Customer $customer
+	 * @return CustomerDetails
+	 */
+	public function setCustomer(\Ecommerce\Entity\Customer $customer)
+	{
+		$this->customer = $customer;
 
-    /**
-     * Set customer
-     *
-     * @param \Ecommerce\Entity\Customer $customer
-     * @return CustomerDetails
-     */
-    public function setCustomer(\Ecommerce\Entity\Customer $customer)
-    {
-        $this->customer = $customer;
+		return $this;
+	}
 
-        return $this;
-    }
+	/**
+	 * Get customer
+	 *
+	 * @return \Ecommerce\Entity\Customer
+	 */
+	public function getCustomer()
+	{
+		return $this->customer;
+	}
 
-    /**
-     * Get customer
-     *
-     * @return \Ecommerce\Entity\Customer 
-     */
-    public function getCustomer()
-    {
-        return $this->customer;
-    }
+	/**
+	 * Set defaultShipping
+	 *
+	 * @param \Ecommerce\Entity\CustomerAddress $defaultShipping
+	 * @return CustomerDetails
+	 */
+	public function setDefaultShipping(\Ecommerce\Entity\CustomerAddress $defaultShipping = null)
+	{
+		$this->defaultShipping = $defaultShipping;
 
-    /**
-     * Set defaultShipping
-     *
-     * @param \Ecommerce\Entity\CustomerAddress $defaultShipping
-     * @return CustomerDetails
-     */
-    public function setDefaultShipping(\Ecommerce\Entity\CustomerAddress $defaultShipping = null)
-    {
-        $this->defaultShipping = $defaultShipping;
+		return $this;
+	}
 
-        return $this;
-    }
+	/**
+	 * Get defaultShipping
+	 *
+	 * @return \Ecommerce\Entity\CustomerAddress
+	 */
+	public function getDefaultShipping()
+	{
+		return $this->defaultShipping;
+	}
 
-    /**
-     * Get defaultShipping
-     *
-     * @return \Ecommerce\Entity\CustomerAddress 
-     */
-    public function getDefaultShipping()
-    {
-        return $this->defaultShipping;
-    }
+	/**
+	 * Get full formatted name
+	 *
+	 * @return string
+	 */
+	public function getFullName()
+	{
+		return implode(' ', array($this->prefix, $this->firstname, $this->lastname));
+	}
+
 }
