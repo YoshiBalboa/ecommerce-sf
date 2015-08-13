@@ -20,3 +20,7 @@ body {
 form .gender {
 	display: inline-block;
 }
+
+#account_addresses p.text-center {
+	margin-top: 50px;
+}

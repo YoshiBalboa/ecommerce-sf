@@ -22,7 +22,7 @@ class AddressController extends Controller
 	{
 		if(!$this->isLoggedIn())
 		{
-			//return $this->redirectToRoute('login');
+			return $this->redirectToRoute('login');
 		}
 
 		$country_repository = $this->getDoctrine()->getRepository('Ecommerce:GeoCountry');
@@ -216,7 +216,118 @@ class AddressController extends Controller
 		$em->persist($address_details);
 		$em->flush();
 
+		//5 - Assign as default address
+		$customer_details_repository = $this->getDoctrine()->getRepository('Ecommerce:CustomerDetails');
+		$customer_details = $customer_details_repository->findOneByCustomer($this->getUser());
+
+		if(empty($customer_details->getDefaultBilling()) or !empty($data['default_billing'][0]))
+		{
+			$customer_details->setDefaultBilling($address);
+		}
+
+		if(empty($customer_details->getDefaultShipping()) or !empty($data['default_shipping'][0]))
+		{
+			$customer_details->setDefaultShipping($address);
+		}
+
+		$em->flush();
+
 		return $address_details->getAddress();
+	}
+
+	/*
+	 * Display all active addresses on GET
+	 * Delete one or many addresses on POST
+	 */
+	public function deleteAction(Request $request)
+	{
+		if(!$this->isLoggedIn())
+		{
+			return $this->redirectToRoute('login');
+		}
+
+		$view = array(
+			'head_title' => $this->get('translator')->trans('head_title.address.edit'),
+			'h1_title'	 => $this->get('translator')->trans('h1_title.address.edit'),
+		);
+
+		return $this->render('address/default.html.twig', $view);
+	}
+
+	/**
+	 * Set the given address as default billing address on POST
+	 * @param Request $request
+	 */
+	public function setBillingAction(Request $request)
+	{
+		if(!$this->isLoggedIn())
+		{
+			return $this->redirectToRoute('login');
+		}
+
+		if(!$request->isMethod('POST') or empty($request->request->get('new-billing-address')))
+		{
+			$this->addFlash('danger', $this->get('translator')->trans('flash.invalid-request'));
+			return $this->redirectToRoute('account_addresses');
+		}
+
+		$address_repository = $this->getDoctrine()->getRepository('Ecommerce:CustomerAddress');
+		$address = $address_repository->checkAddress($request->request->get('new-billing-address'), $this->getUser());
+
+		if(empty($address))
+		{
+			$this->addFlash('danger', $this->get('translator')->trans('flash.not-your-address'));
+			return $this->redirectToRoute('account_addresses');
+		}
+
+		$customer_details_repository = $this->getDoctrine()->getRepository('Ecommerce:CustomerDetails');
+		$customer_details = $customer_details_repository->findOneByCustomer($this->getUser());
+
+		$customer_details->setDefaultBilling($address);
+
+		$em = $this->getDoctrine()->getManager();
+		$em->flush();
+
+		$this->addFlash('success', $this->get('translator')->trans('flash.new-address-saved'));
+		return $this->redirectToRoute('account_addresses');
+	}
+
+	/**
+	 * Set the given address as default shipping address on POST
+	 * @param Request $request
+	 */
+	public function setShippingAction(Request $request)
+	{
+		if(!$this->isLoggedIn())
+		{
+			return $this->redirectToRoute('login');
+		}
+
+		if(!$request->isMethod('POST') or empty($request->request->get('new-shipping-address')))
+		{
+			$this->addFlash('danger', $this->get('translator')->trans('flash.invalid-request'));
+			return $this->redirectToRoute('account_addresses');
+		}
+
+		$address_repository = $this->getDoctrine()->getRepository('Ecommerce:CustomerAddress');
+		$address = $address_repository->checkAddress($request->request->get('new-shipping-address'), $this->getUser());
+
+		if(empty($address))
+		{
+			$this->addFlash('danger', $this->get('translator')->trans('flash.not-your-address'));
+			return $this->redirectToRoute('account_addresses');
+		}
+
+		$customer_details_repository = $this->getDoctrine()->getRepository('Ecommerce:CustomerDetails');
+		$customer_details = $customer_details_repository->findOneByCustomer($this->getUser());
+
+		$customer_details->setDefaultShipping($address);
+
+		$em = $this->getDoctrine()->getManager();
+		$em->flush();
+
+		$this->addFlash('success', $this->get('translator')->trans('flash.new-address-saved'));
+		return $this->redirectToRoute('account_addresses');
 	}
 
 	/**

@@ -10,9 +10,68 @@
 	{% if addresses is empty %}
 		<p>{{ 'view.nothing2display'|trans }} <a href="{{ path('address_create') }}" title="{{ 'view.add-address'|trans }}">{{ 'view.add-address'|trans }}</a></p>
 	{% else %}
-		{% for address in addresses %}
-			{{ dump(address) }}
-		{% endfor %}
-		<p><a href="{{ path('address_create') }}" title="{{ 'view.add-address'|trans }}">{{ 'view.add-address'|trans }}</a></p>
+		<div id="account_addresses" class="container-fluid">
+			<div class="row">
+				<div class="col-xs-6 center-block" id="billing-address">
+					<h2>{{ 'view.default-billing-address'|trans }}</h2>
+					{{ ('genders.' ~ addresses.billing.prefix)|trans }} {{ addresses.billing.firstname }} {{ addresses.billing.lastname }}<br>
+					{{ addresses.billing.street }}<br>
+					{{ addresses.billing.postcode }} {{ addresses.billing.location }} ({{ addresses.billing.subdivision }})<br>
+					{{ addresses.billing.country }}<br>
+					{{ 'view.phone'|trans({'%telephone%' : addresses.billing.telephone}) }}
+					<hr>
+					<form method="post" action="{{ path('address_set_billing') }}">
+						<p>{{ 'view.change-billing-address'|trans }}</p>
+						<select name="new-billing-address">
+							{% for address in addresses.all %}
+								{% if address.address_id != addresses.billing.address_id %}
+									<option value="{{ address.address_id }}">
+										{{ address.street }}, {{ address.postcode }} {{ address.location }}
+									</option>
+								{% endif %}
+							{% endfor %}
+						</select>
+						<button type="submit">
+							{{ 'button.save'|trans }}
+						</button>
+					</form>
+				</div>
+				<div class="col-xs-6 center-block" id="shipping-address">
+					<h2>{{ 'view.default-shipping-address'|trans }}</h2>
+					{{ ('genders.' ~ addresses.shipping.prefix)|trans }} {{ addresses.shipping.firstname }} {{ addresses.shipping.lastname }}<br>
+					{{ addresses.shipping.street }}<br>
+					{{ addresses.shipping.postcode }} {{ addresses.shipping.location }} ({{ addresses.shipping.subdivision }})<br>
+					{{ addresses.shipping.country }}<br>
+					{{ 'view.phone'|trans({'%telephone%' : addresses.shipping.telephone}) }}
+					<hr>
+					<form method="post" action="{{ path('address_set_shipping') }}">
+						<p>{{ 'view.change-shipping-address'|trans }}</p>
+						<select name="new-shipping-address">
+							{% for address in addresses.all %}
+								{% if address.address_id != addresses.shipping.address_id %}
+									<option value="{{ address.address_id }}">
+										{{ address.street }}, {{ address.postcode }} {{ address.location }}
+									</option>
+								{% endif %}
+							{% endfor %}
+						</select>
+						<button type="submit">
+							{{ 'button.save'|trans }}
+						</button>
+					</form>
+				</div>
+			</div>
+			<div class="row col-xs-12">
+				<hr>
+				<p class="text-center">
+					<a href="{{ path('address_create') }}" title="{{ 'view.add-address'|trans }}" class="btn btn-default" role="button">
+						{{ 'view.add-address'|trans }}
+					</a>
+					<a href="{{ path('address_delete') }}" title="{{ 'view.delete-addresses'|trans }}" class="btn btn-default" role="button">
+						{{ 'view.delete-addresses'|trans }}
+					</a>
+				</p>
+			</div>
+		</div>
 	{% endif %}
 {% endblock %}

@@ -333,12 +333,17 @@ class AccountController extends Controller
 		if(!empty($active_addresses))
 		{
 			$address_details_repository = $this->getDoctrine()->getRepository('Ecommerce:CustomerAddressDetails');
+			$customer_details_repository = $this->getDoctrine()->getRepository('Ecommerce:CustomerDetails');
+			$customer_details = $customer_details_repository->findOneByCustomer($this->getUser());
 
 			$addresses = array();
 			foreach($active_addresses as $address)
 			{
-				$addresses[$address->getAddressId()] = $address_details_repository->findOneByAddress($address);
+				$addresses['all'][$address->getAddressId()] = $address_details_repository->getParts($address);
 			}
+
+			$addresses['billing'] = $addresses['all'][$customer_details->getDefaultBilling()->getAddressId()];
+			$addresses['shipping'] = $addresses['all'][$customer_details->getDefaultShipping()->getAddressId()];
 
 			$view['addresses'] = $addresses;
 		}

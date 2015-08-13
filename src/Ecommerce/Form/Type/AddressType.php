@@ -65,6 +65,18 @@ class AddressType extends AbstractType
 					'placeholder'	 => '+1 202-456-1111',
 				)
 			))
+			->add('default_billing', 'choice', array(
+				'choices' => array('1' => 'label.default-billing'),
+				'label' => FALSE,
+				'multiple' => TRUE,
+				'expanded' => TRUE,
+			))
+			->add('default_shipping', 'choice', array(
+				'choices' => array('1' => 'label.default-shipping'),
+				'label' => FALSE,
+				'multiple' => TRUE,
+				'expanded' => TRUE,
+			))
 			->add('address_id', 'hidden')
 			->add(
 				$builder->create('subdivision', 'hidden')

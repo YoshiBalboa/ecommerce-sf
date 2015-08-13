@@ -384,14 +384,4 @@ class CustomerDetails
 		return $this->defaultShipping;
 	}
 
-	/**
-	 * Get full formatted name
-	 *
-	 * @return string
-	 */
-	public function getFullName()
-	{
-		return implode(' ', array($this->prefix, $this->firstname, $this->lastname));
-	}
-
 }

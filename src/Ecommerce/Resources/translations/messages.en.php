@@ -11,9 +11,11 @@ return array(
 		'error-try-again'	 => 'An error occured, please try again',
 		'details-saved'		 => 'Your new informations were saved',
 		'invalid-password'	 => 'Your password is invalid',
+		'invalid-request'	 => 'Invalid request',
 		'login2proceed'		 => 'Please login to proceed',
 		'new-address-saved'	 => 'Your new email was saved',
 		'new-password-saved' => 'Your new password was saved',
+		'not-your-address'	 => 'This is not your address',
 	),
 	'genders'	 => array(
 		'f'	 => 'Mme',
@@ -29,10 +31,11 @@ return array(
 			'index'			 => 'Account Index',
 		),
 		'address'	 => array(
-			'create' => "Add address",
-			'edit'	 => "Edit address",
+			'create' => 'Add address',
+			'edit'	 => 'Edit address',
+			'delete' => 'Delete addresses',
 		),
-		'index'	 => array(
+		'index'		 => array(
 			'home' => 'Homepage',
 		),
 		'security'	 => array(
@@ -51,8 +54,9 @@ return array(
 		'address'	 => array(
 			'create' => 'Add a new address',
 			'edit'	 => 'Edit an address',
+			'delete' => 'Delete addresses',
 		),
-		'index'	 => array(
+		'index'		 => array(
 			'home' => 'Homepage',
 		),
 		'security'	 => array(
@@ -65,6 +69,8 @@ return array(
 		'country'					 => 'Country:',
 		'current-password'			 => 'Current password:',
 		'current-password-confirm'	 => 'Confirm current password:',
+		'default-billing'			 => 'Set as main billing address',
+		'default-shipping'			 => 'Set as main shipping address',
 		'email'						 => 'Email:',
 		'firstname'					 => 'Firstname:',
 		'lastname'					 => 'Name:',
@@ -92,9 +98,16 @@ return array(
 		'logout'	 => 'Logout',
 	),
 	'view'		 => array(
-		'add-address'		 => 'Add an address',
-		'nothing2display'	 => 'Nothing to display.',
-		'sitename'			 => "Yoshi's Lair",
-		'your-current-email' => 'Your current email is <u>%email%</u>',
+		'add-address'				 => 'Add an address',
+		'change-billing-address'	 => 'Change the main billing address',
+		'change-shipping-address'	 => 'Change the main shipping address',
+		'default-billing-address'	 => 'Billing Address',
+		'default-shipping-address'	 => 'Shipping Address',
+		'delete-addresses'			 => 'Delete addresses',
+		'nothing2display'			 => 'Nothing to display.',
+		'phone'						 => 'Tel: %telephone%',
+		'select-addresses-to-delete' => 'Select all addresses you want to delete and submit (this cannot be undone)',
+		'sitename'					 => "Yoshi's Lair",
+		'your-current-email'		 => 'Your current email is <u>%email%</u>',
 	)
 );
