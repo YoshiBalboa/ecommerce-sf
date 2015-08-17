@@ -8,7 +8,7 @@
 	</div>
 
 	{% if addresses is empty %}
-		<p>{{ 'view.nothing2display'|trans }} <a href="{{ path('address_create') }}" title="{{ 'view.add-address'|trans }}">{{ 'view.add-address'|trans }}</a></p>
+		<p>{{ 'view.nothing2display'|trans }}</p>
 	{% else %}
 		<div id="account_addresses" class="container-fluid">
 			<div class="row">
@@ -61,17 +61,17 @@
 					</form>
 				</div>
 			</div>
-			<div class="row col-xs-12">
-				<hr>
-				<p class="text-center">
-					<a href="{{ path('address_create') }}" title="{{ 'view.add-address'|trans }}" class="btn btn-default" role="button">
-						{{ 'view.add-address'|trans }}
-					</a>
-					<a href="{{ path('address_delete') }}" title="{{ 'view.delete-addresses'|trans }}" class="btn btn-default" role="button">
-						{{ 'view.delete-addresses'|trans }}
-					</a>
-				</p>
-			</div>
 		</div>
 	{% endif %}
+	<div class="row col-xs-12">
+		<hr>
+		<p class="text-center">
+			<a href="{{ path('address_create') }}" title="{{ 'view.add-address'|trans }}" class="btn btn-default" role="button">
+				{{ 'view.add-address'|trans }}
+			</a>
+			<a href="{{ path('address_delete') }}" title="{{ 'view.delete-addresses'|trans }}" class="btn btn-default" role="button">
+				{{ 'view.delete-addresses'|trans }}
+			</a>
+		</p>
+	</div>
 {% endblock %}

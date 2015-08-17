@@ -324,6 +324,7 @@ class AccountController extends Controller
 		$view = array(
 			'head_title' => $this->get('translator')->trans('head_title.account.addresses'),
 			'h1_title'	 => $this->get('translator')->trans('h1_title.account.addresses'),
+			'addresses' => array(),
 		);
 
 		$address_repository = $this->getDoctrine()->getRepository('Ecommerce:CustomerAddress');
@@ -332,9 +333,10 @@ class AccountController extends Controller
 
 		if(!empty($active_addresses))
 		{
-			$address_details_repository = $this->getDoctrine()->getRepository('Ecommerce:CustomerAddressDetails');
 			$customer_details_repository = $this->getDoctrine()->getRepository('Ecommerce:CustomerDetails');
 			$customer_details = $customer_details_repository->findOneByCustomer($this->getUser());
+
+			$address_details_repository = $this->getDoctrine()->getRepository('Ecommerce:CustomerAddressDetails');
 
 			$addresses = array();
 			foreach($active_addresses as $address)

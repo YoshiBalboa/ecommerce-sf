@@ -1,16 +1,39 @@
 # Learn more about services, parameters and containers at
 # http://symfony.com/doc/current/book/service_container.html
 
+doctrine:
+    dbal:
+        default_connection: default
+        connections:
+            default:
+                driver: pdo_sqlite
+                memory: true
+
 parameters:
     genders:
-        m: Mr
         f: Mme
+        m: Mr
     knp_menu.renderer.twig.options:
         allow_safe_labels: true
-        currentClass: active
         ancestorClass: active
+        currentClass: active
 
 services:
+    Ecommerce.doctrine_subscriber.customer_address:
+        class: Ecommerce\Doctrine\Subscriber\CustomerAddressSubscriber
+        tags:
+            - { name: doctrine.event_subscriber, connection: default }
+
+    Ecommerce.doctrine_subscriber.customer_address_details:
+        class: Ecommerce\Doctrine\Subscriber\CustomerAddressDetailsSubscriber
+        tags:
+            - { name: doctrine.event_subscriber, connection: default }
+
+    Ecommerce.doctrine_subscriber.customer_details:
+        class: Ecommerce\Doctrine\Subscriber\CustomerDetailsSubscriber
+        tags:
+            - { name: doctrine.event_subscriber, connection: default }
+
     Ecommerce.form.type.address:
         class: Ecommerce\Form\Type\AddressType
         arguments: ["@doctrine.orm.entity_manager"]
@@ -65,4 +88,3 @@ services:
         arguments: ["@service_container"]
         tags:
             - { name: knp_menu.voter }
-

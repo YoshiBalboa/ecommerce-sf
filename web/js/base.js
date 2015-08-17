@@ -340,3 +340,39 @@ Ecommerce.formRemoveErrorMessage = function ($container)
 	$container.removeAttr('aria-describedby');
 	$('#' + $container.attr('id') + 'helpBlock').remove();
 };
+
+Ecommerce.deleteAddress = function ($redirect_location)
+{
+	$document.on('submit', 'form', function ()
+	{
+		$form = $(this);
+		$('#address_delete_message').html('');
+
+		$.ajax({
+			url: $form.attr('action'),
+			type: 'post',
+			data: $form.serializeArray(),
+			error: function (jqXHR, textStatus, errorThrown)
+			{
+				$('#address_delete_message').html(jqXHR.responseText);
+			},
+			success: function (data)
+			{
+				$address_block = $form.parent('div.address-block');
+				$parent = $address_block.parent('div.row');
+
+				$address_block.hide('slow', function ()
+				{
+					$address_block.remove();
+
+					if($parent.children().length <= 0)
+					{
+						window.location.assign($redirect_location);
+					}
+				});
+			}
+		});
+
+		return false;
+	});
+}

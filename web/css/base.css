@@ -24,3 +24,12 @@ form .gender {
 #account_addresses p.text-center {
 	margin-top: 50px;
 }
+
+#address_delete .address-block {
+	border: solid 1px #D3D3D3;
+	overflow: auto;
+}
+
+#address_delete .address-block form{
+	margin: 10px 0;
+}

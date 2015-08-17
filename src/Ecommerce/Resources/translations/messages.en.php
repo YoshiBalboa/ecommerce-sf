@@ -3,6 +3,7 @@
 return array(
 	'button'	 => array(
 		'create' => 'Create',
+		'delete' => 'Delete',
 		'save'	 => 'Save',
 	),
 	'flash'		 => array(

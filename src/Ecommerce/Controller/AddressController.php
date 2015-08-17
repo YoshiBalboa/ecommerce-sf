@@ -187,11 +187,8 @@ class AddressController extends Controller
 		{
 			$address = new \Ecommerce\Entity\CustomerAddress();
 			$address->setCustomer($this->getUser());
-			$address->setCreatedAt($date);
 			$address->setIsActive(TRUE);
 		}
-
-		$address->setUpdatedAt($date);
 
 		//3 - Create the new customer_address row in the database
 
@@ -220,12 +217,12 @@ class AddressController extends Controller
 		$customer_details_repository = $this->getDoctrine()->getRepository('Ecommerce:CustomerDetails');
 		$customer_details = $customer_details_repository->findOneByCustomer($this->getUser());
 
-		if(empty($customer_details->getDefaultBilling()) or !empty($data['default_billing'][0]))
+		if(empty($customer_details->getDefaultBilling()) or ! empty($data['default_billing'][0]))
 		{
 			$customer_details->setDefaultBilling($address);
 		}
 
-		if(empty($customer_details->getDefaultShipping()) or !empty($data['default_shipping'][0]))
+		if(empty($customer_details->getDefaultShipping()) or ! empty($data['default_shipping'][0]))
 		{
 			$customer_details->setDefaultShipping($address);
 		}
@@ -237,7 +234,7 @@ class AddressController extends Controller
 
 	/*
 	 * Display all active addresses on GET
-	 * Delete one or many addresses on POST
+	 * Delete one address on POST
 	 */
 	public function deleteAction(Request $request)
 	{
@@ -246,12 +243,61 @@ class AddressController extends Controller
 			return $this->redirectToRoute('login');
 		}
 
+		if($request->isMethod('POST'))
+		{
+			if(empty($request->request->get('address_id')))
+			{
+				return new Response($this->get('translator')->trans('flash.invalid-request'), Response::HTTP_BAD_REQUEST, array(
+					'Content-Type', 'application/json; charset=utf-8'));
+			}
+
+			$address_repository = $this->getDoctrine()->getRepository('Ecommerce:CustomerAddress');
+			$address = $address_repository->checkAddress($request->request->get('address_id'), $this->getUser());
+
+			if(empty($address))
+			{
+				return new Response($this->get('translator')->trans('flash.not-your-address'), Response::HTTP_BAD_REQUEST, array(
+					'Content-Type', 'application/json; charset=utf-8'));
+			}
+
+			//1 - Delete the given address
+
+			$em = $this->getDoctrine()->getManager();
+
+			$address->setIsActive(FALSE);
+
+			$em->flush();
+
+			return new JsonResponse(array('success' => TRUE));
+		}
+
 		$view = array(
-			'head_title' => $this->get('translator')->trans('head_title.address.edit'),
-			'h1_title'	 => $this->get('translator')->trans('h1_title.address.edit'),
+			'head_title' => $this->get('translator')->trans('head_title.address.delete'),
+			'h1_title'	 => $this->get('translator')->trans('h1_title.address.delete'),
+			'addresses'	 => array(),
 		);
 
-		return $this->render('address/default.html.twig', $view);
+		$address_repository = $this->getDoctrine()->getRepository('Ecommerce:CustomerAddress');
+		$active_addresses = $address_repository->findBy(
+			array('customer' => $this->getUser(), 'isActive' => TRUE));
+
+		if(!empty($active_addresses))
+		{
+			$customer_details_repository = $this->getDoctrine()->getRepository('Ecommerce:CustomerDetails');
+			$customer_details_repository->checkDefaultAddresses($this->getUser());
+
+			$address_details_repository = $this->getDoctrine()->getRepository('Ecommerce:CustomerAddressDetails');
+
+			$addresses = array();
+			foreach($active_addresses as $address)
+			{
+				$addresses[$address->getAddressId()] = $address_details_repository->getParts($address);
+			}
+
+			$view['addresses'] = $addresses;
+		}
+
+		return $this->render('address/delete.html.twig', $view);
 	}
 
 	/**

@@ -3,6 +3,7 @@
 return array(
 	'button'	 => array(
 		'create' => 'Créer',
+		'delete' => 'Supprimer',
 		'save'	 => 'Enregistrer',
 	),
 	'flash'		 => array(
@@ -88,7 +89,7 @@ return array(
 		'account'	 => array(
 			'base'			 => 'Mon compte',
 			'index'			 => 'Mes informations',
-			'addresses'		 => 'Mes addresses',
+			'addresses'		 => 'Mes adresses',
 			'edit-details'	 => 'Editer mes informations',
 			'edit-email'	 => 'Modifier mon email',
 			'edit-password'	 => 'Modifier mon mot de passe',
