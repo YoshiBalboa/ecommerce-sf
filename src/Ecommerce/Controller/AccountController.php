@@ -81,10 +81,6 @@ class AccountController extends Controller
 			$group = $customer_group_repository->getDefaultGroup();
 			$customer->setGroup($group);
 
-			$date = new \DateTime();
-			$customer->setCreatedAt($date);
-			$customer->setUpdatedAt($date);
-
 			$customer->setIsActive(TRUE);
 
 			//3 - Create the new customer row in the database
@@ -101,7 +97,7 @@ class AccountController extends Controller
 			$customer_details->setFirstname($form_data['firstname']);
 			$customer_details->setLastname($form_data['lastname']);
 			$customer_details->setLocale('fr_FR');
-			$customer_details->setCguValidatedAt($date);
+			$customer_details->setCguValidatedAt(new \DateTime());
 
 			$em->persist($customer_details);
 			$em->flush();
@@ -172,7 +168,7 @@ class AccountController extends Controller
 			$em = $this->getDoctrine()->getManager();
 			$em->flush();
 
-			$this->addFlash('success', 'flash.details-saved');
+			$this->addFlash('success', $this->get('translator')->trans('flash.details-saved'));
 
 			return $this->redirectToRoute('account_edit_details');
 		}
@@ -221,9 +217,7 @@ class AccountController extends Controller
 				return $this->redirectToRoute('account_edit_email');
 			}
 
-			$date = new \DateTime();
 			$this->getUser()->setEmail($form_data['email']);
-			$this->getUser()->setUpdatedAt($date);
 
 			$em = $this->getDoctrine()->getManager();
 			$em->flush();

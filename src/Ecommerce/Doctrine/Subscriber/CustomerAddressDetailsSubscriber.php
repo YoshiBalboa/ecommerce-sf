@@ -53,7 +53,12 @@ class CustomerAddressDetailsSubscriber implements EventSubscriber
 
 	private function setCustomerAddressUpdatedAt($args)
 	{
-		$args->getEntity()->getAddress()->setUpdatedAt(new \DateTime());
+		$address = $args->getEntity()->getAddress();
+		$address->setUpdatedAt(new \DateTime());
+
+		$em = $args->getEntityManager();
+		$em->persist($address);
+		$em->flush();
 	}
 
 }

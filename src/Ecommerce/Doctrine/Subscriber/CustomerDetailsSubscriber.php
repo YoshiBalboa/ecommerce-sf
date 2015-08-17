@@ -16,25 +16,40 @@ class CustomerDetailsSubscriber implements EventSubscriber
 	public function getSubscribedEvents()
 	{
 		return array(
-		//	Events::preRemove,
-		//	Events::postRemove,
-		//	Events::prePersist,
-		//	Events::postPersist,
-		//	Events::preUpdate,
-		//	Events::postUpdate,
+			//	Events::preRemove,
+			//	Events::postRemove,
+			//	Events::prePersist,
+			//	Events::postPersist,
+			//	Events::preUpdate,
+			Events::postUpdate,
 			Events::postLoad,
-		//	Events::loadClassMetadata,
-		//	Events::onClassMetadataNotFound,
-		//	Events::preFlush,
-		//	Events::onFlush,
-		//	Events::onClear,
+			//	Events::loadClassMetadata,
+			//	Events::onClassMetadataNotFound,
+			//	Events::preFlush,
+			//	Events::onFlush,
+			//	Events::onClear,
 		);
+	}
+
+	public function postUpdate(LifecycleEventArgs $args)
+	{
+		if(!($args->getEntity() instanceof CustomerDetails))
+		{
+			return;
+		}
+
+		$customer = $args->getEntity()->getCustomer();
+		$customer->setUpdatedAt(new \DateTime());
+
+		$em = $args->getEntityManager();
+		$em->persist($customer);
+		$em->flush();
 	}
 
 	public function postLoad(LifecycleEventArgs $args)
 	{
 		$entity = $args->getEntity();
-        $em = $args->getEntityManager();
+		$em = $args->getEntityManager();
 
 		if(!($entity instanceof CustomerDetails))
 		{

@@ -19,6 +19,11 @@ parameters:
         currentClass: active
 
 services:
+    Ecommerce.doctrine_subscriber.customer:
+        class: Ecommerce\Doctrine\Subscriber\CustomerSubscriber
+        tags:
+            - { name: doctrine.event_subscriber, connection: default }
+
     Ecommerce.doctrine_subscriber.customer_address:
         class: Ecommerce\Doctrine\Subscriber\CustomerAddressSubscriber
         tags:
