@@ -6,72 +6,69 @@
 	<div class="page-header">
 		<h1>{{ h1_title }}</h1>
 	</div>
-
-	{% if addresses is empty %}
-		<p>{{ 'view.nothing2display'|trans }}</p>
-	{% else %}
-		<div id="account_addresses" class="container-fluid">
-			<div class="row">
-				<div class="col-xs-6 center-block" id="billing-address">
-					<h2>{{ 'view.default-billing-address'|trans }}</h2>
-					{{ ('genders.' ~ addresses.billing.prefix)|trans }} {{ addresses.billing.firstname }} {{ addresses.billing.lastname }}<br>
-					{{ addresses.billing.street }}<br>
-					{{ addresses.billing.postcode }} {{ addresses.billing.location }} ({{ addresses.billing.subdivision }})<br>
-					{{ addresses.billing.country }}<br>
-					{{ 'view.phone'|trans({'%telephone%' : addresses.billing.telephone}) }}
-					<hr>
-					<form method="post" action="{{ path('address_set_billing') }}">
-						<p>{{ 'view.change-billing-address'|trans }}</p>
-						<select name="new-billing-address">
-							{% for address in addresses.all %}
-								{% if address.address_id != addresses.billing.address_id %}
-									<option value="{{ address.address_id }}">
-										{{ address.street }}, {{ address.postcode }} {{ address.location }}
-									</option>
-								{% endif %}
-							{% endfor %}
-						</select>
-						<button type="submit">
-							{{ 'button.save'|trans }}
-						</button>
-					</form>
-				</div>
-				<div class="col-xs-6 center-block" id="shipping-address">
-					<h2>{{ 'view.default-shipping-address'|trans }}</h2>
-					{{ ('genders.' ~ addresses.shipping.prefix)|trans }} {{ addresses.shipping.firstname }} {{ addresses.shipping.lastname }}<br>
-					{{ addresses.shipping.street }}<br>
-					{{ addresses.shipping.postcode }} {{ addresses.shipping.location }} ({{ addresses.shipping.subdivision }})<br>
-					{{ addresses.shipping.country }}<br>
-					{{ 'view.phone'|trans({'%telephone%' : addresses.shipping.telephone}) }}
-					<hr>
-					<form method="post" action="{{ path('address_set_shipping') }}">
-						<p>{{ 'view.change-shipping-address'|trans }}</p>
-						<select name="new-shipping-address">
-							{% for address in addresses.all %}
-								{% if address.address_id != addresses.shipping.address_id %}
-									<option value="{{ address.address_id }}">
-										{{ address.street }}, {{ address.postcode }} {{ address.location }}
-									</option>
-								{% endif %}
-							{% endfor %}
-						</select>
-						<button type="submit">
-							{{ 'button.save'|trans }}
-						</button>
-					</form>
-				</div>
-			</div>
-		</div>
-	{% endif %}
+{#
 	<div class="row col-xs-12">
-		<hr>
 		<p class="text-center">
 			<a href="{{ path('address_create') }}" title="{{ 'view.add-address'|trans }}" class="btn btn-default" role="button">
 				{{ 'view.add-address'|trans }}
 			</a>
-			<a href="{{ path('address_delete') }}" title="{{ 'view.delete-addresses'|trans }}" class="btn btn-default" role="button">
-				{{ 'view.delete-addresses'|trans }}
-			</a>
 		</p>
+		<hr>
 	</div>
+#}
+	{% if addresses is empty %}
+		<p>{{ 'view.nothing2display'|trans }}</p>
+	{% else %}
+		<div id="account_addresses" class="container-fluid">
+			<p id="error_message" class="text-danger">&nbsp;</p>
+			<div class="row">
+				<div class="table-responsive">
+					<table class="table table-hover">
+						<thead>
+							<tr>
+								<th>{{ 'view.addresses'|trans }}</th>
+								<th>{{ 'view.billing'|trans }}</th>
+								<th>{{ 'view.shipping'|trans }}</th>
+								<th>{{ 'view.actions'|trans }}</th>
+							</tr>
+						</thead>
+						<tbody>
+							{% for address in addresses.all %}
+								<tr {% if (address.address_id == addresses.billing.address_id) or (address.address_id == addresses.shipping.address_id) %}class="active"{% endif %}>
+									<td>
+										{{ ('genders.' ~ address.prefix)|trans }} {{ address.firstname }} {{ address.lastname }}<br>
+										{{ address.street }}<br>
+										{{ address.postcode }} {{ address.location }} {{ address.subdivision }} {{ address.country }}<br>
+										{{ 'view.phone'|trans({'%telephone%' : address.telephone}) }}
+									</td>
+									<td class="set-billing-address">
+										<input type="radio" name="default-billing" value="{{ address.address_id }}" {% if address.address_id == addresses.billing.address_id %}checked="checked"{% endif %}>
+									</td>
+									<td class="set-shipping-address">
+										<input type="radio" name="default-shipping" value="{{ address.address_id }}" {% if address.address_id == addresses.shipping.address_id %}checked="checked"{% endif %}>
+									</td>
+									<td>
+										<a href="{{ path('address_edit', {'address_id':address.address_id}) }}" title="{{ 'view.edit-address'|trans }}" class="btn btn-default" role="button">
+											<span class="glyphicon glyphicon-pencil"></span>
+										</a>
+										<a href="{{ path('address_delete', {'address_id':address.address_id}) }}" title="{{ 'view.delete-address'|trans }}" class="btn btn-default address-delete" role="button">
+											<span class="glyphicon glyphicon-remove"></span>
+										</a>
+									</td>
+								</tr>
+							{% endfor %}
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</div>
+	{% endif %}
+{% endblock %}
+
+{% block javascripts %}
+	<script type="text/javascript">
+		//<![CDATA[
+		Ecommerce.accountAddresses('{{ path('address_set_billing') }}', '{{ path('address_set_shipping') }}');
+		//]]>
+	</script>
 {% endblock %}

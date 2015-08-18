@@ -78,7 +78,46 @@ class AddressController extends Controller
 		{
 			return $this->redirectToRoute('login');
 		}
+		/*
+		  $address_repository = $this->getDoctrine()->getRepository('Ecommerce:CustomerAddress');
+		  $customer_details_repository = $this->getDoctrine()->getRepository('Ecommerce:CustomerDetails');
 
+		  $address = $address_repository->findOneBy(array('address_id' => $address_id, 'customer_id' => $this->getUser()->getCustomerId));
+
+		  var_dump($address);  die('Line:' . __LINE__);
+		  if(empty($address))
+		  {
+		  $this->addFlash('success', $this->get('translator')->trans('flash.invalid-address'));
+		  return $this->redirectToRoute('account_addresses');
+		  }
+
+		  $address_details_repository = $this->getDoctrine()->getRepository('Ecommerce:CustomerAddressDetails');
+		  $address_details = $address_details_repository->findOneByAddress($address);
+
+		  $initial_data = array(
+		  'prefix'	 => $customer_details->getPrefix(),
+		  'firstname'	 => $customer_details->getFirstname(),
+		  'lastname'	 => $customer_details->getLastname(),
+		  'country'	 => $country_repository->findOneById(GeoCountryRepository::COUNTRY_FRANCE),
+		  );
+
+		  $form_attributes = array(
+		  'action' => $this->generateUrl('address_create'),
+		  'method' => 'POST',
+		  );
+
+		  $address_form = $this->createForm(
+		  'e_address', $initial_data, $form_attributes
+		  );
+
+		  $address_form->handleRequest($request);
+
+		  if($request->isMethod('POST') and $address_form->isValid())
+		  {
+
+		  }
+
+		 */
 		$view = array(
 			'head_title' => $this->get('translator')->trans('head_title.address.edit'),
 			'h1_title'	 => $this->get('translator')->trans('h1_title.address.edit'),
@@ -173,7 +212,6 @@ class AddressController extends Controller
 	private function saveAddress(Form $form)
 	{
 		$data = $form->getData();
-		$date = new \DateTime();
 
 		//1 - Look for the existing address
 		if(!empty($data['address_id']))
@@ -236,68 +274,43 @@ class AddressController extends Controller
 	 * Display all active addresses on GET
 	 * Delete one address on POST
 	 */
-	public function deleteAction(Request $request)
+	public function deleteAction(Request $request, $address_id)
 	{
 		if(!$this->isLoggedIn())
 		{
 			return $this->redirectToRoute('login');
 		}
 
-		if($request->isMethod('POST'))
+		if(!$request->isMethod('POST'))
 		{
-			if(empty($request->request->get('address_id')))
-			{
-				return new Response($this->get('translator')->trans('flash.invalid-request'), Response::HTTP_BAD_REQUEST, array(
-					'Content-Type', 'application/json; charset=utf-8'));
-			}
-
-			$address_repository = $this->getDoctrine()->getRepository('Ecommerce:CustomerAddress');
-			$address = $address_repository->checkAddress($request->request->get('address_id'), $this->getUser());
-
-			if(empty($address))
-			{
-				return new Response($this->get('translator')->trans('flash.not-your-address'), Response::HTTP_BAD_REQUEST, array(
-					'Content-Type', 'application/json; charset=utf-8'));
-			}
-
-			//1 - Delete the given address
-
-			$em = $this->getDoctrine()->getManager();
-
-			$address->setIsActive(FALSE);
-
-			$em->flush();
-
-			return new JsonResponse(array('success' => TRUE));
+			return new Response($this->get('translator')->trans('flash.invalid-request'), Response::HTTP_METHOD_NOT_ALLOWED, array(
+				'Content-Type', 'application/json; charset=utf-8'));
 		}
-
-		$view = array(
-			'head_title' => $this->get('translator')->trans('head_title.address.delete'),
-			'h1_title'	 => $this->get('translator')->trans('h1_title.address.delete'),
-			'addresses'	 => array(),
-		);
 
 		$address_repository = $this->getDoctrine()->getRepository('Ecommerce:CustomerAddress');
-		$active_addresses = $address_repository->findBy(
-			array('customer' => $this->getUser(), 'isActive' => TRUE));
+		$address = $address_repository->checkAddress($address_id, $this->getUser());
 
-		if(!empty($active_addresses))
+		if(empty($address))
 		{
-			$customer_details_repository = $this->getDoctrine()->getRepository('Ecommerce:CustomerDetails');
-			$customer_details_repository->checkDefaultAddresses($this->getUser());
-
-			$address_details_repository = $this->getDoctrine()->getRepository('Ecommerce:CustomerAddressDetails');
-
-			$addresses = array();
-			foreach($active_addresses as $address)
-			{
-				$addresses[$address->getAddressId()] = $address_details_repository->getParts($address);
-			}
-
-			$view['addresses'] = $addresses;
+			return new Response($this->get('translator')->trans('flash.invalid-address'), Response::HTTP_BAD_REQUEST, array(
+				'Content-Type', 'application/json; charset=utf-8'));
 		}
 
-		return $this->render('address/delete.html.twig', $view);
+		$address->setIsActive(FALSE);
+		$em = $this->getDoctrine()->getManager();
+		$em->flush();
+
+		$customer_details_repository = $this->getDoctrine()->getRepository('Ecommerce:CustomerDetails');
+		$customer_details_repository->checkDefaultAddresses($this->getUser());
+		$customer_details = $customer_details_repository->findOneByCustomer($this->getUser());
+
+		$response = array(
+			'success'	 => TRUE,
+			'billing'	 => empty($customer_details->getDefaultBilling()) ? '' : $customer_details->getDefaultBilling()->getAddressId(),
+			'shipping'	 => empty($customer_details->getDefaultShipping()) ? '' : $customer_details->getDefaultShipping()->getAddressId(),
+		);
+
+		return new JsonResponse($response);
 	}
 
 	/**
@@ -311,19 +324,25 @@ class AddressController extends Controller
 			return $this->redirectToRoute('login');
 		}
 
-		if(!$request->isMethod('POST') or empty($request->request->get('new-billing-address')))
+		if(!$request->isMethod('POST'))
 		{
-			$this->addFlash('danger', $this->get('translator')->trans('flash.invalid-request'));
-			return $this->redirectToRoute('account_addresses');
+			return new Response($this->get('translator')->trans('flash.invalid-request'), Response::HTTP_METHOD_NOT_ALLOWED, array(
+				'Content-Type', 'application/json; charset=utf-8'));
+		}
+
+		if(empty($request->request->get('address_id')))
+		{
+			return new Response($this->get('translator')->trans('flash.invalid-request'), Response::HTTP_BAD_REQUEST, array(
+				'Content-Type', 'application/json; charset=utf-8'));
 		}
 
 		$address_repository = $this->getDoctrine()->getRepository('Ecommerce:CustomerAddress');
-		$address = $address_repository->checkAddress($request->request->get('new-billing-address'), $this->getUser());
+		$address = $address_repository->checkAddress($request->request->get('address_id'), $this->getUser());
 
 		if(empty($address))
 		{
-			$this->addFlash('danger', $this->get('translator')->trans('flash.not-your-address'));
-			return $this->redirectToRoute('account_addresses');
+			return new Response($this->get('translator')->trans('flash.invalid-address'), Response::HTTP_BAD_REQUEST, array(
+				'Content-Type', 'application/json; charset=utf-8'));
 		}
 
 		$customer_details_repository = $this->getDoctrine()->getRepository('Ecommerce:CustomerDetails');
@@ -334,8 +353,7 @@ class AddressController extends Controller
 		$em = $this->getDoctrine()->getManager();
 		$em->flush();
 
-		$this->addFlash('success', $this->get('translator')->trans('flash.new-address-saved'));
-		return $this->redirectToRoute('account_addresses');
+		return new JsonResponse(array('success' => TRUE));
 	}
 
 	/**
@@ -349,19 +367,25 @@ class AddressController extends Controller
 			return $this->redirectToRoute('login');
 		}
 
-		if(!$request->isMethod('POST') or empty($request->request->get('new-shipping-address')))
+		if(!$request->isMethod('POST'))
 		{
-			$this->addFlash('danger', $this->get('translator')->trans('flash.invalid-request'));
-			return $this->redirectToRoute('account_addresses');
+			return new Response($this->get('translator')->trans('flash.invalid-request'), Response::HTTP_METHOD_NOT_ALLOWED, array(
+				'Content-Type', 'application/json; charset=utf-8'));
+		}
+
+		if(empty($request->request->get('address_id')))
+		{
+			return new Response($this->get('translator')->trans('flash.invalid-request'), Response::HTTP_BAD_REQUEST, array(
+				'Content-Type', 'application/json; charset=utf-8'));
 		}
 
 		$address_repository = $this->getDoctrine()->getRepository('Ecommerce:CustomerAddress');
-		$address = $address_repository->checkAddress($request->request->get('new-shipping-address'), $this->getUser());
+		$address = $address_repository->checkAddress($request->request->get('address_id'), $this->getUser());
 
 		if(empty($address))
 		{
-			$this->addFlash('danger', $this->get('translator')->trans('flash.not-your-address'));
-			return $this->redirectToRoute('account_addresses');
+			return new Response($this->get('translator')->trans('flash.invalid-address'), Response::HTTP_BAD_REQUEST, array(
+				'Content-Type', 'application/json; charset=utf-8'));
 		}
 
 		$customer_details_repository = $this->getDoctrine()->getRepository('Ecommerce:CustomerDetails');
@@ -372,8 +396,7 @@ class AddressController extends Controller
 		$em = $this->getDoctrine()->getManager();
 		$em->flush();
 
-		$this->addFlash('success', $this->get('translator')->trans('flash.new-address-saved'));
-		return $this->redirectToRoute('account_addresses');
+		return new JsonResponse(array('success' => TRUE));
 	}
 
 	/**

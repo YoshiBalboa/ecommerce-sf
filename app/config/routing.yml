@@ -51,7 +51,7 @@ address_edit:
     defaults:	{ _controller: Ecommerce:Address:edit }
 
 address_delete:
-    path:		/address/delete
+    path:		/address/delete/{address_id}
     defaults:	{ _controller: Ecommerce:Address:delete }
 
 address_set_billing:

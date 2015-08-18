@@ -341,38 +341,129 @@ Ecommerce.formRemoveErrorMessage = function ($container)
 	$('#' + $container.attr('id') + 'helpBlock').remove();
 };
 
-Ecommerce.deleteAddress = function ($redirect_location)
+Ecommerce.accountAddresses = function (route_set_billing, route_set_shipping)
 {
-	$document.on('submit', 'form', function ()
+	$document.on('click', 'td.set-billing-address, td.set-shipping-address', function ()
 	{
-		$form = $(this);
-		$('#address_delete_message').html('');
+		if($(this).find('input[type="radio"]').prop('disabled') === true)
+		{
+			return false;
+		}
+
+		$(this).find('input[type="radio"]').change();
+		return false;
+	});
+
+	$document.on('change', 'input[name="default-billing"], input[name="default-shipping"]', function ()
+	{
+		if(this.checked === true)
+		{
+			return false;
+		}
+
+		this.checked = true;
+
+		Ecommerce.accountAddressesSetDefaultAddress((this.name === 'default-billing') ? route_set_billing : route_set_shipping, $(this));
+		return false;
+	});
+
+	$document.on('click', 'a.address-delete', function ()
+	{
+		$('#error_message').html('');
+		$a = $(this);
 
 		$.ajax({
-			url: $form.attr('action'),
+			url: this.href,
 			type: 'post',
-			data: $form.serializeArray(),
 			error: function (jqXHR, textStatus, errorThrown)
 			{
-				$('#address_delete_message').html(jqXHR.responseText);
+				$('#error_message').html(jqXHR.responseText);
 			},
 			success: function (data)
 			{
-				$address_block = $form.parent('div.address-block');
-				$parent = $address_block.parent('div.row');
+				$tr = $a.closest('tr');
+				$tbody = $tr.closest('tbody');
 
-				$address_block.hide('slow', function ()
+				$tr.hide('slow', function ()
 				{
-					$address_block.remove();
+					$tr.remove();
 
-					if($parent.children().length <= 0)
+					if($tbody.children().length <= 0)
 					{
-						window.location.assign($redirect_location);
+						window.location.reload(true);
 					}
+
+					if(typeof data.billing === 'number')
+					{
+						$matching = $('#account_addresses input[name="default-billing"]').filter(function () {
+							return $(this).val() == data.billing;
+						});
+						console.log($matching);
+						$matching.prop('checked', true);
+					}
+
+					if(typeof data.shipping === 'number')
+					{
+						$('#account_addresses input[name="default-shipping"]').filter(function () {
+							return $(this).val() == data.shipping;
+						}).prop('checked', true);
+					}
+
+					Ecommerce.accountAddressesResetActiveClass();
 				});
 			}
 		});
 
 		return false;
 	});
-}
+};
+
+Ecommerce.accountAddressesResetActiveClass = function ()
+{
+	$('#account_addresses table tr').each(function ()
+	{
+		$(this).removeClass('active');
+	});
+
+	$('#account_addresses input[name="default-billing"]').filter(':checked').each(function ()
+	{
+		$(this).closest('tr').addClass('active');
+	});
+};
+
+Ecommerce.accountAddressesSetDefaultAddress = function (route, $input)
+{
+	//disable all input radio to prevent flooding
+	$('#account_addresses input').each(function ()
+	{
+		$(this).prop('disabled', true);
+	});
+
+	$('#error_message').html('');
+
+	$.ajax({
+		url: route,
+		type: 'post',
+		data: {
+			address_id: $input.val()
+		},
+		error: function (jqXHR, textStatus, errorThrown)
+		{
+			$('#account_addresses input').each(function ()
+			{
+				$(this).prop('disabled', false);
+			});
+
+			$('#error_message').html(jqXHR.responseText);
+		},
+		success: function (data)
+		{
+			$('#account_addresses input').each(function ()
+			{
+				$(this).prop('disabled', false);
+			});
+
+			Ecommerce.accountAddressesResetActiveClass();
+		}
+	});
+};
