@@ -78,49 +78,67 @@ class AddressController extends Controller
 		{
 			return $this->redirectToRoute('login');
 		}
-		/*
-		  $address_repository = $this->getDoctrine()->getRepository('Ecommerce:CustomerAddress');
-		  $customer_details_repository = $this->getDoctrine()->getRepository('Ecommerce:CustomerDetails');
 
-		  $address = $address_repository->findOneBy(array('address_id' => $address_id, 'customer_id' => $this->getUser()->getCustomerId));
+		$address_repository = $this->getDoctrine()->getRepository('Ecommerce:CustomerAddress');
+		$address = $address_repository->checkAddress($address_id, $this->getUser());
 
-		  var_dump($address);  die('Line:' . __LINE__);
-		  if(empty($address))
-		  {
-		  $this->addFlash('success', $this->get('translator')->trans('flash.invalid-address'));
-		  return $this->redirectToRoute('account_addresses');
-		  }
+		if(empty($address))
+		{
+			$this->addFlash('success', $this->get('translator')->trans('flash.invalid-address'));
+			return $this->redirectToRoute('account_addresses');
+		}
 
-		  $address_details_repository = $this->getDoctrine()->getRepository('Ecommerce:CustomerAddressDetails');
-		  $address_details = $address_details_repository->findOneByAddress($address);
+		$customer_details_repository = $this->getDoctrine()->getRepository('Ecommerce:CustomerDetails');
+		$customer_details = $customer_details_repository->findOneByCustomer($this->getUser());
+		$address_details_repository = $this->getDoctrine()->getRepository('Ecommerce:CustomerAddressDetails');
+		$address_details = $address_details_repository->findOneByAddress($address);
 
-		  $initial_data = array(
-		  'prefix'	 => $customer_details->getPrefix(),
-		  'firstname'	 => $customer_details->getFirstname(),
-		  'lastname'	 => $customer_details->getLastname(),
-		  'country'	 => $country_repository->findOneById(GeoCountryRepository::COUNTRY_FRANCE),
-		  );
+		$initial_data = array(
+			'prefix'			 => $address_details->getPrefix(),
+			'firstname'			 => $address_details->getFirstname(),
+			'lastname'			 => $address_details->getLastname(),
+			'country'			 => $address_details->getCountry(),
+			'state'				 => empty($address_details->getSubdivision()) ? '' : $address_details->getSubdivision()->getLabel(),
+			'postcode'			 => $address_details->getPostcode(),
+			'city'				 => empty($address_details->getLocation()) ? '' : $address_details->getLocation()->getLabel(),
+			'street'			 => $address_details->getStreet(),
+			'telephone'			 => $address_details->getTelephone(),
+			'default_billing'	 => array(1 => ($customer_details->getDefaultBilling()->getAddressId() == $address_id)),
+			'default_shipping'	 => array(1 => ($customer_details->getDefaultShipping()->getAddressId() == $address_id)),
+			'address_id'		 => $address_id,
+			'subdivision'		 => empty($address_details->getSubdivision()) ? NULL : $address_details->getSubdivision(),
+			'location'			 => empty($address_details->getLocation()) ? NULL : $address_details->getLocation(),
+		);
 
-		  $form_attributes = array(
-		  'action' => $this->generateUrl('address_create'),
-		  'method' => 'POST',
-		  );
+		$form_attributes = array(
+			'action' => $this->generateUrl('address_edit', array('address_id' => $address_id)),
+			'method' => 'POST',
+		);
 
-		  $address_form = $this->createForm(
-		  'e_address', $initial_data, $form_attributes
-		  );
+		$address_form = $this->createForm(
+			'e_address', $initial_data, $form_attributes
+		);
 
-		  $address_form->handleRequest($request);
+		$address_form->handleRequest($request);
 
-		  if($request->isMethod('POST') and $address_form->isValid())
-		  {
+		if($request->isMethod('POST') and $address_form->isValid())
+		{
+			$address = $this->saveAddress($address_form);
 
-		  }
+			if(!empty($address))
+			{
+				$this->addFlash('success', $this->get('translator')->trans('flash.new-address-saved'));
+				return $this->redirectToRoute('account_addresses');
+			}
 
-		 */
+			$this->addFlash('danger', $this->get('translator')->trans('flash.error-try-again'));
+		}
+
+
 		$view = array(
-			'head_title' => $this->get('translator')->trans('head_title.address.edit'),
-			'h1_title'	 => $this->get('translator')->trans('h1_title.address.edit'),
+			'head_title'	 => $this->get('translator')->trans('head_title.address.edit'),
+			'h1_title'		 => $this->get('translator')->trans('h1_title.address.edit'),
+			'address_form'	 => $address_form->createView(),
 		);
 
 		return $this->render('address/default.html.twig', $view);
@@ -236,7 +254,14 @@ class AddressController extends Controller
 
 		//4 - Save details
 
-		$address_details = new \Ecommerce\Entity\CustomerAddressDetails();
+		$address_details_repository = $this->getDoctrine()->getRepository('Ecommerce:CustomerAddressDetails');
+		$address_details = $address_details_repository->findOneByAddress($address);
+
+		if(empty($address_details))
+		{
+			$address_details = new \Ecommerce\Entity\CustomerAddressDetails();
+		}
+
 		$address_details->setAddress($address);
 		$address_details->setPrefix($data['prefix']);
 		$address_details->setFirstname($data['firstname']);

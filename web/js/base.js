@@ -20,7 +20,6 @@ Ecommerce.reloadAutoCompleteField = function ($display_field, $hidden_field, $da
 		source: $data,
 		create: function (event, ui)
 		{
-			$hidden_field.val('');
 			return false;
 		},
 		focus: function (event, ui)
@@ -40,6 +39,10 @@ Ecommerce.reloadAutoCompleteField = function ($display_field, $hidden_field, $da
 			$display_field.closest('.form-group').next('.form-group').find('input').focus();
 
 			return false;
+		},
+		change: function (event, ui)
+		{
+			$display_field.change();
 		}
 	})
 		.autocomplete("instance")._renderItem = function (ul, item)
@@ -104,52 +107,7 @@ Ecommerce.addressForm = function ($reload_subdivision, $reload_location)
 			return false;
 		}
 
-		$('#e_address_state').prop('disabled', true);
-
-		$.ajax({
-			url: $reload_subdivision,
-			type: 'post',
-			dataType: 'json',
-			data: {
-				country_id: $country_id
-			},
-			error: function (jqXHR, textStatus, errorThrown)
-			{
-				$('#e_address_state').prop('disabled', false);
-			},
-			success: function (data)
-			{
-				$container = $('#e_address_state');
-				$container.html('');
-				$container.prop('disabled', false);
-
-				if(typeof ($container.autocomplete("instance")) !== 'undefined')
-				{
-					$container.autocomplete("destroy");
-				}
-
-				if($.isEmptyObject(data) || data.error > 0)
-				{
-					//an error occured, don't touch the form
-					return;
-				}
-				else if(typeof (data.success) !== 'undefined')
-				{
-					//country_id was valid but no subdivision was found
-					$('#e_address_subdivision').val('-1');
-					return;
-				}
-				else
-				{
-					//country_id was valid and subdivisions were found.
-					Ecommerce.reloadAutoCompleteField(
-						$container,
-						$('#e_address_subdivision'),
-						data
-						);
-				}
-			}
-		});
+		Ecommerce.addressFormReloadSubdivision($reload_subdivision, $country_id);
 
 		return false;
 	});
@@ -181,7 +139,7 @@ Ecommerce.addressForm = function ($reload_subdivision, $reload_location)
 		var $subdivision_id = $('#e_address_subdivision').val();
 
 		//reset city field
-		if($subdivision_id != -1)
+		if($subdivision_id != '-1')
 		{
 			$('#e_address_city').val('');
 			$('#e_address_location').val('');
@@ -192,52 +150,7 @@ Ecommerce.addressForm = function ($reload_subdivision, $reload_location)
 			return false;
 		}
 
-		$('#e_address_city').prop('disabled', true);
-
-		$.ajax({
-			url: $reload_location,
-			type: 'post',
-			dataType: 'json',
-			data: {
-				country_id: $country_id,
-				subdivision_id: $subdivision_id
-			},
-			error: function (jqXHR, textStatus, errorThrown)
-			{
-				$('#e_address_city').prop('disabled', false);
-			},
-			success: function (data)
-			{
-				$container = $('#e_address_city');
-				$container.html('');
-				$container.prop('disabled', false);
-
-				if(typeof ($container.autocomplete("instance")) !== 'undefined')
-				{
-					$container.autocomplete("destroy");
-				}
-
-				if($.isEmptyObject(data) || data.error > 0)
-				{
-					//an error occured, don't touch the form
-					return;
-				}
-				else if(typeof (data.success) !== 'undefined')
-				{
-					//country_id and subdivision_id were valid but no location was found
-					return;
-				}
-				else
-				{
-					//country_id and subdivision_id were valid and locations were found.
-					Ecommerce.reloadAutoCompleteField(
-						$container,
-						$('#e_address_location'),
-						data
-						);
-				}
-			}
-		});
+		Ecommerce.addressFormReloadLocation($reload_location, $country_id, $subdivision_id)
 
 		return false;
 	});
@@ -295,8 +208,149 @@ Ecommerce.addressForm = function ($reload_subdivision, $reload_location)
 	//Initialize the form
 	$document.ready(function ()
 	{
-		$('#e_address_country').change();
-		$('#e_address_state').change();
+		var $country_id = $('#e_address_country').children('option:selected').val();
+
+		if($('#e_address_state').val().length > 0)
+		{
+			Ecommerce.addressFormReloadSubdivision($reload_subdivision, $country_id, $('#e_address_state').val());
+		}
+		else
+		{
+			$('#e_address_country').change();
+		}
+
+		if($('#e_address_city').val().length > 0)
+		{
+			Ecommerce.addressFormReloadLocation($reload_location, $country_id, $('#e_address_subdivision').val(), $('#e_address_city').val());
+		}
+		else
+		{
+			$('#e_address_state').change();
+		}
+	});
+};
+
+Ecommerce.addressFormReloadLocation = function ($reload_location, $country_id, $subdivision_id, $default_location)
+{
+	$('#e_address_city').prop('disabled', true);
+
+	$.ajax({
+		url: $reload_location,
+		type: 'post',
+		dataType: 'json',
+		data: {
+			country_id: $country_id,
+			subdivision_id: $subdivision_id
+		},
+		error: function (jqXHR, textStatus, errorThrown)
+		{
+			$('#e_address_city').prop('disabled', false);
+		},
+		success: function (data)
+		{
+			$container = $('#e_address_city');
+			$container.html('');
+			$container.prop('disabled', false);
+
+			if(typeof ($container.autocomplete("instance")) !== 'undefined')
+			{
+				$container.autocomplete("destroy");
+			}
+
+			if($.isEmptyObject(data) || data.error > 0)
+			{
+				//an error occured, don't touch the form
+				return;
+			}
+			else if(typeof (data.success) !== 'undefined')
+			{
+				//country_id and subdivision_id were valid but no location was found
+
+
+				if(typeof ($default_location) !== 'undefined' && $default_location.length > 0)
+				{
+					$container.val($default_location);
+				}
+				return;
+			}
+			else
+			{
+				//country_id and subdivision_id were valid and locations were found.
+				Ecommerce.reloadAutoCompleteField(
+					$container,
+					$('#e_address_location'),
+					data
+					);
+
+				if(typeof ($default_location) !== 'undefined' && $default_location.length > 0)
+				{
+					$container.autocomplete().val($default_location);
+				}
+			}
+		}
+	});
+};
+
+Ecommerce.addressFormReloadSubdivision = function ($reload_subdivision, $country_id, $default_subdivision)
+{
+	$('#e_address_state').prop('disabled', true);
+
+	$.ajax({
+		url: $reload_subdivision,
+		type: 'post',
+		dataType: 'json',
+		data: {
+			country_id: $country_id
+		},
+		error: function (jqXHR, textStatus, errorThrown)
+		{
+			$('#e_address_state').prop('disabled', false);
+		},
+		success: function (data)
+		{
+			$container = $('#e_address_state');
+			$container.html('');
+			$container.prop('disabled', false);
+
+			if(typeof ($container.autocomplete("instance")) !== 'undefined')
+			{
+				$container.autocomplete("destroy");
+			}
+
+			if($.isEmptyObject(data) || data.error > 0)
+			{
+				//an error occured, don't touch the form
+				return;
+			}
+			else if(typeof (data.success) !== 'undefined')
+			{
+				//country_id was valid but no subdivision was found
+				if(typeof ($default_subdivision) !== 'undefined' && $default_subdivision.length > 0)
+				{
+					$container.val($default_subdivision);
+				}
+
+				$('#e_address_subdivision').val('-1');
+				return;
+			}
+			else
+			{
+				//country_id was valid and subdivisions were found.
+				Ecommerce.reloadAutoCompleteField(
+					$container,
+					$('#e_address_subdivision'),
+					data
+					);
+
+				if(typeof ($default_subdivision) !== 'undefined' && $default_subdivision.length > 0)
+				{
+					$container.autocomplete().val($default_subdivision);
+					$container.trigger("autocompleteselect");
+					//$container.data('ui-autocomplete')._trigger('select', 'autocompleteselect', {item:{value:$container.val()}});
+				}
+
+			}
+		}
 	});
 };
 

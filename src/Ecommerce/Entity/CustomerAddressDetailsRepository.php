@@ -6,6 +6,7 @@ use Doctrine\ORM\EntityRepository;
 
 class CustomerAddressDetailsRepository extends EntityRepository
 {
+
 	/**
 	 * Retrieve all parts of an address as simple type (no more object)
 	 * @return Array
@@ -28,19 +29,19 @@ class CustomerAddressDetailsRepository extends EntityRepository
 		}
 
 		$parts = array(
-			'address_id' => $address_details->getAddress()->getAddressId(),
-			'prefix' => $address_details->getPrefix(),
-			'firstname' => $address_details->getFirstname(),
-			'lastname' => $address_details->getLastname(),
-			'country_id' => $address_details->getCountry()->getId(),
-			'country' => $address_details->getCountry()->getLabel(),
+			'address_id'	 => $address_details->getAddress()->getAddressId(),
+			'prefix'		 => $address_details->getPrefix(),
+			'firstname'		 => $address_details->getFirstname(),
+			'lastname'		 => $address_details->getLastname(),
+			'country_id'	 => $address_details->getCountry()->getId(),
+			'country'		 => $address_details->getCountry()->getLabel(),
 			'subdivision_id' => empty($address_details->getSubdivision()) ? null : $address_details->getSubdivision()->getId(),
-			'subdivision' => empty($address_details->getSubdivision()) ? null : $address_details->getSubdivision()->getLabel(),
-			'location_id' => $address_details->getLocation()->getId(),
-			'location' => $address_details->getLocation()->getLabel(),
-			'street' => $address_details->getStreet(),
-			'postcode' => $address_details->getPostcode(),
-			'telephone' => $address_details->getTelephone(),
+			'subdivision'	 => empty($address_details->getSubdivision()) ? null : $address_details->getSubdivision()->getLabel(),
+			'location_id'	 => empty($address_details->getLocation()) ? null : $address_details->getLocation()->getId(),
+			'location'		 => empty($address_details->getLocation()) ? null : $address_details->getLocation()->getLabel(),
+			'street'		 => $address_details->getStreet(),
+			'postcode'		 => $address_details->getPostcode(),
+			'telephone'		 => $address_details->getTelephone(),
 		);
 
 		return $parts;
