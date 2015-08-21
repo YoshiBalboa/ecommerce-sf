@@ -66,24 +66,24 @@ class AddressType extends AbstractType
 				)
 			))
 			->add('default_billing', 'choice', array(
-				'choices' => array('1' => 'label.default-billing'),
-				'label' => FALSE,
-				'multiple' => TRUE,
-				'expanded' => TRUE,
+				'choices'	 => array('1' => 'label.default-billing'),
+				'label'		 => FALSE,
+				'multiple'	 => TRUE,
+				'expanded'	 => TRUE,
 			))
 			->add('default_shipping', 'choice', array(
-				'choices' => array('1' => 'label.default-shipping'),
-				'label' => FALSE,
-				'multiple' => TRUE,
-				'expanded' => TRUE,
+				'choices'	 => array('1' => 'label.default-shipping'),
+				'label'		 => FALSE,
+				'multiple'	 => TRUE,
+				'expanded'	 => TRUE,
 			))
-			->add('address_id', 'hidden')
+			->add('address_id', 'hidden', array('attr' => array('required' => TRUE)))
 			->add(
-				$builder->create('subdivision', 'hidden')
+				$builder->create('subdivision', 'hidden', array('attr' => array('required' => TRUE)))
 				->addModelTransformer($subdivision_transformer)
 			)
 			->add(
-				$builder->create('location', 'hidden')
+				$builder->create('location', 'hidden', array('attr' => array('required' => TRUE)))
 				->addModelTransformer($location_transformer))
 			->add('Save', 'submit', array(
 				'label' => 'button.save',))
