@@ -7,5 +7,8 @@
 		<h1>{{ h1_title }}</h1>
 	</div>
 
-	{{ dump(customer) }}
+	<p>
+		{{ 'view.hello'|trans({'%fullname%': ('genders.' ~ customer.getPrefix())|trans ~ ' ' ~ customer.getFirstname() ~ ' ' ~ customer.getLastname()}) }}
+	</p>
+
 {% endblock %}

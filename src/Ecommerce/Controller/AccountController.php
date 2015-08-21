@@ -20,8 +20,11 @@ class AccountController extends Controller
 			return $this->redirectToRoute('login');
 		}
 
+		$customer_details_repository = $this->getDoctrine()->getRepository('Ecommerce:CustomerDetails');
+		$customer_details = $customer_details_repository->findOneByCustomer($this->getUser());
+
 		$view = array(
-			'customer'	 => $this->getUser()->toArray(),
+			'customer'	 => $customer_details,
 			'head_title' => $this->get('translator')->trans('head_title.account.index'),
 			'h1_title' => $this->get('translator')->trans('h1_title.account.index'),
 		);

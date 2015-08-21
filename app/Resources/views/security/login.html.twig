@@ -15,5 +15,5 @@
 	{{ form_widget(login_form) }}
 	{{ form_end(login_form) }}
 
-	<a href="{{ path('account_create') }}" title="Create an account">Not a member yet ?</a>
+	<a href="{{ path('account_create') }}" title="{{ 'view.create-an-account'|trans }}" id="create_account">{{ 'view.create-account-not-member'|trans }}</a>
 {% endblock %}

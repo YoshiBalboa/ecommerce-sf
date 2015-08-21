@@ -11,10 +11,11 @@ class IndexControllerTest extends WebTestCase
 	{
 		$client = static::createClient();
 
+		//Home
 		$crawler = $client->request('GET', '/');
-
-		$this->assertEquals(200, $client->getResponse()->getStatusCode());
-		$this->assertTrue($crawler->filter('html:contains("Homepage")')->count() > 0);
+		$this->assertTrue($client->getResponse()->isSuccessful());
+		$this->assertEquals('Ecommerce\Controller\IndexController::indexAction', $client->getRequest()->attributes->get('_controller'));
+		$this->assertCount(1, $crawler->filter('h1'));
 	}
 
 }
