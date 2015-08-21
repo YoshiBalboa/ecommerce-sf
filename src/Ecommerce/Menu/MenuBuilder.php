@@ -44,6 +44,7 @@ class MenuBuilder
 		if(!$authorization_checker->isGranted('IS_AUTHENTICATED_FULLY'))
 		{
 			$menu->addChild($this->translator->trans('menu.login'), array('route' => 'login'));
+			$menu[$this->translator->trans('menu.login')]->setLinkAttribute('id', 'login');
 		}
 		else
 		{
