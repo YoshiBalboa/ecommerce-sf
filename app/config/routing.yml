@@ -20,7 +20,7 @@ account:
 
 account_addresses:
     path:		/account/addresses
-    defaults:	{ _controller: Ecommerce:Account:Addresses }
+    defaults:	{ _controller: Ecommerce:Account:addresses }
 
 account_create:
     path:		/account/create

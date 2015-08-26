@@ -230,6 +230,29 @@ class AccountControllerTest extends WebTestCase
 		$this->assertTrue($encoder->isPasswordValid($user, $this->password));
 	}
 
+	public function testAddresses()
+	{
+		fwrite(STDOUT, PHP_EOL . __METHOD__ . PHP_EOL);
+
+		$this->logIn($this->login, $this->password);
+
+		$crawler = $this->client->request('GET', '/account/addresses');
+		$this->assertTrue($this->client->getResponse()->isSuccessful());
+		$this->assertEquals('Ecommerce\Controller\AccountController::addressesAction', $this->client->getRequest()->attributes->get('_controller'));
+
+		$address_repository = $this->em->getRepository('Ecommerce:CustomerAddress');
+		$user = $this->client->getContainer()->get('security.context')->getToken()->getUser();
+
+		$active_addresses = $address_repository->findBy(
+			array('customer' => $user, 'isActive' => TRUE));
+
+		$nb_addresses = $crawler->filter('#account_addresses tbody tr')->count();
+
+		fwrite(STDOUT, "\t" . 'db_addresses: ' . count($active_addresses) . PHP_EOL);
+		fwrite(STDOUT, "\t" . 'html_addresses: ' . $nb_addresses . PHP_EOL);
+		$this->assertEquals($nb_addresses, count($active_addresses));
+	}
+
 	public function tearDown()
 	{
 		$this->client->getKernel()->getContainer()->get('doctrine')->getConnection()->close();
