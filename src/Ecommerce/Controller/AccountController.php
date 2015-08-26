@@ -26,7 +26,7 @@ class AccountController extends Controller
 		$view = array(
 			'customer'	 => $customer_details,
 			'head_title' => $this->get('translator')->trans('head_title.account.index'),
-			'h1_title' => $this->get('translator')->trans('h1_title.account.index'),
+			'h1_title'	 => $this->get('translator')->trans('h1_title.account.index'),
 		);
 
 		return $this->render('account/index.html.twig', $view);
@@ -321,7 +321,7 @@ class AccountController extends Controller
 		$view = array(
 			'head_title' => $this->get('translator')->trans('head_title.account.addresses'),
 			'h1_title'	 => $this->get('translator')->trans('h1_title.account.addresses'),
-			'addresses' => array(),
+			'addresses'	 => array(),
 		);
 
 		$address_repository = $this->getDoctrine()->getRepository('Ecommerce:CustomerAddress');

@@ -33,7 +33,7 @@ class AccountControllerTest extends WebTestCase
 
 	public function testCreateAccount()
 	{
-		fwrite(STDOUT, __METHOD__ . PHP_EOL);
+		fwrite(STDOUT, PHP_EOL . __METHOD__ . PHP_EOL);
 		$this->markTestSkipped('PHPUnit will skip this test method');
 
 		$client = static::createClient(array(), array());
