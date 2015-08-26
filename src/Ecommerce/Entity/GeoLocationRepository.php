@@ -3,6 +3,7 @@
 namespace Ecommerce\Entity;
 
 use Ecommerce\Entity\GeoCountry;
+use Ecommerce\Entity\GeoLocation;
 use Ecommerce\Entity\GeoSubdivision;
 use Doctrine\ORM\EntityRepository;
 
@@ -28,6 +29,20 @@ class GeoLocationRepository extends EntityRepository
 		}
 
 		return $return_builder ? $locations : $locations->getQuery()->getResult();
+	}
+
+	public function isValidLocation(GeoCountry $country, $subdivision, GeoLocation $location)
+	{
+		if(!empty($subdivision) and $subdivision instanceof GeoSubdivision)
+		{
+			$location = $this->findOneBy(array('country' => $country, 'subdivision' => $subdivision, 'id' => $location->getId()));
+		}
+		else
+		{
+			$location = $this->findOneBy(array('country' => $country, 'id' => $location->getId()));
+		}
+
+		return !empty($location);
 	}
 
 	public function supportsClass($class)

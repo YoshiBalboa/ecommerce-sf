@@ -231,14 +231,21 @@ class AddressController extends Controller
 	{
 		$data = $form->getData();
 
-		//1 - Look for the existing address
+		//1 - Validate country + subdivision + location
+		$location_repository = $this->getDoctrine()->getRepository('Ecommerce:GeoLocation');
+		if(!$location_repository->isValidLocation($data['country'], $data['subdivision'], $data['location']))
+		{
+			return FALSE;
+		}
+
+		//2 - Look for the existing address
 		if(!empty($data['address_id']))
 		{
 			$address_repository = $this->getDoctrine()->getRepository('Ecommerce:CustomerAddress');
 			$address = $address_repository->checkAddress($data['address_id'], $this->getUser());
 		}
 
-		//2 - If no address was found, create a new CustomerAddress row
+		//3 - If no address was found, create a new CustomerAddress row
 		if(empty($address))
 		{
 			$address = new \Ecommerce\Entity\CustomerAddress();
@@ -246,13 +253,13 @@ class AddressController extends Controller
 			$address->setIsActive(TRUE);
 		}
 
-		//3 - Create the new customer_address row in the database
+		//4 - Create the new customer_address row in the database
 
 		$em = $this->getDoctrine()->getManager();
 		$em->persist($address);
 		$em->flush();
 
-		//4 - Save details
+		//5 - Save details
 
 		$address_details_repository = $this->getDoctrine()->getRepository('Ecommerce:CustomerAddressDetails');
 		$address_details = $address_details_repository->findOneByAddress($address);
@@ -276,7 +283,7 @@ class AddressController extends Controller
 		$em->persist($address_details);
 		$em->flush();
 
-		//5 - Assign as default address
+		//6 - Assign as default address
 		$customer_details_repository = $this->getDoctrine()->getRepository('Ecommerce:CustomerDetails');
 		$customer_details = $customer_details_repository->findOneByCustomer($this->getUser());
 
