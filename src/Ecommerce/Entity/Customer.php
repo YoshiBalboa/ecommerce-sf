@@ -3,6 +3,7 @@
 namespace Ecommerce\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Ecommerce\Entity\CustomerGroupRepository;
 use Symfony\Component\Security\Core\User\AdvancedUserInterface;
 use Symfony\Component\Serializer\NameConverter\CamelCaseToSnakeCaseNameConverter as camel2snake;
 
@@ -210,8 +211,14 @@ class Customer implements AdvancedUserInterface, \Serializable
 
 	public function getRoles()
 	{
-		//@TODO définir le rôle en fonction du group_id
-		return array('ROLE_USER');
+		$roles = array(
+			CustomerGroupRepository::GROUP_DEFAULT => array('ROLE_USER'),
+			CustomerGroupRepository::GROUP_UNSUBSCRIBE => array('ROLE_USER'),
+			CustomerGroupRepository::GROUP_PRO => array('ROLE_PRO', 'ROLE_USER'),
+			CustomerGroupRepository::GROUP_ADMIN => array('ROLE_ADMIN', 'ROLE_PRO', 'ROLE_USER'),
+		);
+
+		return $roles[$this->getGroupId()];
 	}
 
 	public function getSalt()
