@@ -17,6 +17,7 @@ return array(
 		'login2proceed'		 => 'Please login to proceed',
 		'new-address-saved'	 => 'Your new email was saved',
 		'new-password-saved' => 'Your new password was saved',
+		'wrong-role'		 => 'You should not be here',
 	),
 	'genders'	 => array(
 		'f'	 => 'Mme',
@@ -35,6 +36,13 @@ return array(
 			'create' => 'Add address',
 			'edit'	 => 'Edit address',
 			'delete' => 'Delete addresses',
+		),
+		'attribute'	 => array(
+			'display-brand'			 => 'Brand Attribute',
+			'display-category'		 => 'Category Attribute',
+			'display-color'			 => 'Color Attribute',
+			'display-material'		 => 'Material Attribute',
+			'display-subcategory'	 => 'Subcategory Attribute',
 		),
 		'index'		 => array(
 			'home' => 'Homepage',
@@ -56,6 +64,13 @@ return array(
 			'create' => 'Add a new address',
 			'edit'	 => 'Edit an address',
 			'delete' => 'Delete addresses',
+		),
+		'attribute'	 => array(
+			'display-brand'			 => 'List of brands',
+			'display-category'		 => 'List of categories',
+			'display-color'			 => 'List of colors',
+			'display-material'		 => 'List of materials',
+			'display-subcategory'	 => 'List of subcategories',
 		),
 		'index'		 => array(
 			'home' => 'Homepage',
@@ -93,6 +108,14 @@ return array(
 			'edit-details'	 => 'Edit details',
 			'edit-email'	 => 'Edit email',
 			'edit-password'	 => 'Edit password',
+		),
+		'attribute'	 => array(
+			'base'				 => 'Attribute',
+			'manage-brand'		 => 'Manage brands',
+			'manage-category'	 => 'Manage categories',
+			'manage-color'		 => 'Manage colors',
+			'manage-material'	 => 'Manage materials',
+			'manage-subcategory' => 'Manage subcategories',
 		),
 		'home'		 => 'Home',
 		'login'		 => 'Login',

@@ -17,6 +17,7 @@ return array(
 		'login2proceed'		 => 'Vous devez vous connecter pour continuer',
 		'new-address-saved'	 => 'Votre nouvelle adresse a été enregitrée',
 		'new-password-saved' => 'Votre nouveau mot de passe a été enregitré',
+		'wrong-role'		 => 'Vous ne devriez pas être ici',
 	),
 	'genders'	 => array(
 		'f'	 => 'Mme',
@@ -35,6 +36,13 @@ return array(
 			'create' => "Ajouter d'adresse",
 			'edit'	 => "Edition d'adresse",
 			'delete' => 'Supprimer des adresses',
+		),
+		'attribute'	 => array(
+			'display-brand'			 => 'Attribut Marque',
+			'display-category'		 => 'Attribut Catégorie',
+			'display-color'			 => 'Attribut Couleur',
+			'display-material'		 => 'Attribut Matière',
+			'display-subcategory'	 => 'Attribut Sous-Catégorie',
 		),
 		'index'		 => array(
 			'home' => "Page d'accueil",
@@ -56,6 +64,13 @@ return array(
 			'create' => 'Ajouter une nouvelle adresse',
 			'edit'	 => 'Editer une adresse',
 			'delete' => 'Supprimer des adresses',
+		),
+		'attribute'	 => array(
+			'display-brand'			 => 'Liste des marques',
+			'display-category'		 => 'Liste des catégories',
+			'display-color'			 => 'Liste des couleurs',
+			'display-material'		 => 'Liste des matières',
+			'display-subcategory'	 => 'Liste des sous-catégories',
 		),
 		'index'		 => array(
 			'home' => "Page d'accueil",
@@ -93,6 +108,14 @@ return array(
 			'edit-details'	 => 'Editer mes informations',
 			'edit-email'	 => 'Modifier mon email',
 			'edit-password'	 => 'Modifier mon mot de passe',
+		),
+		'attribute'	 => array(
+			'base'				 => 'Attributs',
+			'manage-brand'		 => 'Gérer les marques',
+			'manage-category'	 => 'Gérer les catégories',
+			'manage-color'		 => 'Gérer les couleurs',
+			'manage-material'	 => 'Gérer les matières',
+			'manage-subcategory' => 'Gérer les sous-catégories',
 		),
 		'home'		 => "Page d'accueil",
 		'login'		 => 'Connexion',
