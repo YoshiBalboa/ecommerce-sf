@@ -53,22 +53,30 @@ address_edit:
 address_delete:
     path:		/address/delete/{address_id}
     defaults:	{ _controller: Ecommerce:Address:delete }
+    requirements:
+        _method:  POST
 
 address_set_billing:
     path:		/address/set/billing
     defaults:	{ _controller: Ecommerce:Address:setBilling }
+    requirements:
+        _method:  POST
 
 address_set_shipping:
     path:		/address/set/shipping
     defaults:	{ _controller: Ecommerce:Address:setShipping }
+    requirements:
+        _method:  POST
 
 address_subdivisions:
     path:		/address/subdivisions
     defaults:	{ _controller: Ecommerce:Address:subdivisions }
+    condition:	"request.isXmlHttpRequest()"
 
 address_locations:
     path:		/address/locations
     defaults:	{ _controller: Ecommerce:Address:locations }
+    condition:	"request.isXmlHttpRequest()"
 
 #***************************************************************************
 # SECURITY CONTROLLER

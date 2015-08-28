@@ -150,11 +150,6 @@ class AddressController extends Controller
 	 */
 	public function subdivisionsAction(Request $request)
 	{
-		if(!$request->isXmlHttpRequest() or empty($request->request->get('country_id')))
-		{
-			return new JsonResponse(array('error' => 'Invalid request'));
-		}
-
 		$country_repository = $this->getDoctrine()->getRepository('Ecommerce:GeoCountry');
 		$subdivision_repository = $this->getDoctrine()->getRepository('Ecommerce:GeoSubdivision');
 
@@ -188,11 +183,6 @@ class AddressController extends Controller
 	 */
 	public function locationsAction(Request $request)
 	{
-		if(!$request->isXmlHttpRequest() or empty($request->request->get('country_id')))
-		{
-			return new JsonResponse(array('error' => 'Invalid request'));
-		}
-
 		$country_repository = $this->getDoctrine()->getRepository('Ecommerce:GeoCountry');
 		$location_repository = $this->getDoctrine()->getRepository('Ecommerce:GeoLocation');
 
@@ -220,6 +210,116 @@ class AddressController extends Controller
 		$response->headers->set('Content-Type', 'application/json');
 
 		return $response;
+	}
+
+	/*
+	 * Delete one address on POST
+	 */
+	public function deleteAction($address_id)
+	{
+		if(!$this->isLoggedIn())
+		{
+			return $this->redirectToRoute('login');
+		}
+
+		$address_repository = $this->getDoctrine()->getRepository('Ecommerce:CustomerAddress');
+		$address = $address_repository->checkAddress($address_id, $this->getUser());
+
+		if(empty($address))
+		{
+			return new Response($this->get('translator')->trans('flash.invalid-address'), Response::HTTP_BAD_REQUEST, array(
+				'Content-Type', 'application/json; charset=utf-8'));
+		}
+
+		$address->setIsActive(FALSE);
+		$em = $this->getDoctrine()->getManager();
+		$em->flush();
+
+		$customer_details_repository = $this->getDoctrine()->getRepository('Ecommerce:CustomerDetails');
+		$customer_details_repository->checkDefaultAddresses($this->getUser());
+		$customer_details = $customer_details_repository->findOneByCustomer($this->getUser());
+
+		$response = array(
+			'success'	 => TRUE,
+			'billing'	 => empty($customer_details->getDefaultBilling()) ? '' : $customer_details->getDefaultBilling()->getAddressId(),
+			'shipping'	 => empty($customer_details->getDefaultShipping()) ? '' : $customer_details->getDefaultShipping()->getAddressId(),
+		);
+
+		return new JsonResponse($response);
+	}
+
+	/**
+	 * Set the given address as default billing address on POST
+	 * @param Request $request
+	 */
+	public function setBillingAction(Request $request)
+	{
+		if(!$this->isLoggedIn())
+		{
+			return $this->redirectToRoute('login');
+		}
+
+		if(empty($request->request->get('address_id')))
+		{
+			return new Response($this->get('translator')->trans('flash.invalid-request'), Response::HTTP_BAD_REQUEST, array(
+				'Content-Type', 'application/json; charset=utf-8'));
+		}
+
+		$address_repository = $this->getDoctrine()->getRepository('Ecommerce:CustomerAddress');
+		$address = $address_repository->checkAddress($request->request->get('address_id'), $this->getUser());
+
+		if(empty($address))
+		{
+			return new Response($this->get('translator')->trans('flash.invalid-address'), Response::HTTP_BAD_REQUEST, array(
+				'Content-Type', 'application/json; charset=utf-8'));
+		}
+
+		$customer_details_repository = $this->getDoctrine()->getRepository('Ecommerce:CustomerDetails');
+		$customer_details = $customer_details_repository->findOneByCustomer($this->getUser());
+
+		$customer_details->setDefaultBilling($address);
+
+		$em = $this->getDoctrine()->getManager();
+		$em->flush();
+
+		return new JsonResponse(array('success' => TRUE));
+	}
+
+	/**
+	 * Set the given address as default shipping address on POST
+	 * @param Request $request
+	 */
+	public function setShippingAction(Request $request)
+	{
+		if(!$this->isLoggedIn())
+		{
+			return $this->redirectToRoute('login');
+		}
+
+		if(empty($request->request->get('address_id')))
+		{
+			return new Response($this->get('translator')->trans('flash.invalid-request'), Response::HTTP_BAD_REQUEST, array(
+				'Content-Type', 'application/json; charset=utf-8'));
+		}
+
+		$address_repository = $this->getDoctrine()->getRepository('Ecommerce:CustomerAddress');
+		$address = $address_repository->checkAddress($request->request->get('address_id'), $this->getUser());
+
+		if(empty($address))
+		{
+			return new Response($this->get('translator')->trans('flash.invalid-address'), Response::HTTP_BAD_REQUEST, array(
+				'Content-Type', 'application/json; charset=utf-8'));
+		}
+
+		$customer_details_repository = $this->getDoctrine()->getRepository('Ecommerce:CustomerDetails');
+		$customer_details = $customer_details_repository->findOneByCustomer($this->getUser());
+
+		$customer_details->setDefaultShipping($address);
+
+		$em = $this->getDoctrine()->getManager();
+		$em->flush();
+
+		return new JsonResponse(array('success' => TRUE));
 	}
 
 	/**
@@ -300,135 +400,6 @@ class AddressController extends Controller
 		$em->flush();
 
 		return $address_details->getAddress();
-	}
-
-	/*
-	 * Display all active addresses on GET
-	 * Delete one address on POST
-	 */
-	public function deleteAction(Request $request, $address_id)
-	{
-		if(!$this->isLoggedIn())
-		{
-			return $this->redirectToRoute('login');
-		}
-
-		if(!$request->isMethod('POST'))
-		{
-			return new Response($this->get('translator')->trans('flash.invalid-request'), Response::HTTP_METHOD_NOT_ALLOWED, array(
-				'Content-Type', 'application/json; charset=utf-8'));
-		}
-
-		$address_repository = $this->getDoctrine()->getRepository('Ecommerce:CustomerAddress');
-		$address = $address_repository->checkAddress($address_id, $this->getUser());
-
-		if(empty($address))
-		{
-			return new Response($this->get('translator')->trans('flash.invalid-address'), Response::HTTP_BAD_REQUEST, array(
-				'Content-Type', 'application/json; charset=utf-8'));
-		}
-
-		$address->setIsActive(FALSE);
-		$em = $this->getDoctrine()->getManager();
-		$em->flush();
-
-		$customer_details_repository = $this->getDoctrine()->getRepository('Ecommerce:CustomerDetails');
-		$customer_details_repository->checkDefaultAddresses($this->getUser());
-		$customer_details = $customer_details_repository->findOneByCustomer($this->getUser());
-
-		$response = array(
-			'success'	 => TRUE,
-			'billing'	 => empty($customer_details->getDefaultBilling()) ? '' : $customer_details->getDefaultBilling()->getAddressId(),
-			'shipping'	 => empty($customer_details->getDefaultShipping()) ? '' : $customer_details->getDefaultShipping()->getAddressId(),
-		);
-
-		return new JsonResponse($response);
-	}
-
-	/**
-	 * Set the given address as default billing address on POST
-	 * @param Request $request
-	 */
-	public function setBillingAction(Request $request)
-	{
-		if(!$this->isLoggedIn())
-		{
-			return $this->redirectToRoute('login');
-		}
-
-		if(!$request->isMethod('POST'))
-		{
-			return new Response($this->get('translator')->trans('flash.invalid-request'), Response::HTTP_METHOD_NOT_ALLOWED, array(
-				'Content-Type', 'application/json; charset=utf-8'));
-		}
-
-		if(empty($request->request->get('address_id')))
-		{
-			return new Response($this->get('translator')->trans('flash.invalid-request'), Response::HTTP_BAD_REQUEST, array(
-				'Content-Type', 'application/json; charset=utf-8'));
-		}
-
-		$address_repository = $this->getDoctrine()->getRepository('Ecommerce:CustomerAddress');
-		$address = $address_repository->checkAddress($request->request->get('address_id'), $this->getUser());
-
-		if(empty($address))
-		{
-			return new Response($this->get('translator')->trans('flash.invalid-address'), Response::HTTP_BAD_REQUEST, array(
-				'Content-Type', 'application/json; charset=utf-8'));
-		}
-
-		$customer_details_repository = $this->getDoctrine()->getRepository('Ecommerce:CustomerDetails');
-		$customer_details = $customer_details_repository->findOneByCustomer($this->getUser());
-
-		$customer_details->setDefaultBilling($address);
-
-		$em = $this->getDoctrine()->getManager();
-		$em->flush();
-
-		return new JsonResponse(array('success' => TRUE));
-	}
-
-	/**
-	 * Set the given address as default shipping address on POST
-	 * @param Request $request
-	 */
-	public function setShippingAction(Request $request)
-	{
-		if(!$this->isLoggedIn())
-		{
-			return $this->redirectToRoute('login');
-		}
-
-		if(!$request->isMethod('POST'))
-		{
-			return new Response($this->get('translator')->trans('flash.invalid-request'), Response::HTTP_METHOD_NOT_ALLOWED, array(
-				'Content-Type', 'application/json; charset=utf-8'));
-		}
-
-		if(empty($request->request->get('address_id')))
-		{
-			return new Response($this->get('translator')->trans('flash.invalid-request'), Response::HTTP_BAD_REQUEST, array(
-				'Content-Type', 'application/json; charset=utf-8'));
-		}
-
-		$address_repository = $this->getDoctrine()->getRepository('Ecommerce:CustomerAddress');
-		$address = $address_repository->checkAddress($request->request->get('address_id'), $this->getUser());
-
-		if(empty($address))
-		{
-			return new Response($this->get('translator')->trans('flash.invalid-address'), Response::HTTP_BAD_REQUEST, array(
-				'Content-Type', 'application/json; charset=utf-8'));
-		}
-
-		$customer_details_repository = $this->getDoctrine()->getRepository('Ecommerce:CustomerDetails');
-		$customer_details = $customer_details_repository->findOneByCustomer($this->getUser());
-
-		$customer_details->setDefaultShipping($address);
-
-		$em = $this->getDoctrine()->getManager();
-		$em->flush();
-
-		return new JsonResponse(array('success' => TRUE));
 	}
 
 	/**
