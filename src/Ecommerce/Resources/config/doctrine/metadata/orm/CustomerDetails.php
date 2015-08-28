@@ -35,13 +35,6 @@ class CustomerDetails
 	/**
 	 * @var string
 	 *
-	 * @ORM\Column(name="password", type="string", length=255, nullable=true)
-	 */
-	private $password;
-
-	/**
-	 * @var string
-	 *
 	 * @ORM\Column(name="crypt_current_vector", type="string", length=255, nullable=true)
 	 */
 	private $cryptCurrentVector;
@@ -49,9 +42,9 @@ class CustomerDetails
 	/**
 	 * @var string
 	 *
-	 * @ORM\Column(name="locale", type="string", length=5, nullable=true)
+	 * @ORM\Column(name="locale", type="string", length=2, nullable=false)
 	 */
-	private $locale = 'fr_FR';
+	private $locale = 'fr';
 
 	/**
 	 * @var string
@@ -86,7 +79,7 @@ class CustomerDetails
 	 *
 	 * @ORM\ManyToOne(targetEntity="CustomerAddress")
 	 * @ORM\JoinColumns({
-	 * 	 @ORM\JoinColumn(name="default_billing_id", referencedColumnName="address_id")
+	 *   @ORM\JoinColumn(name="default_billing_id", referencedColumnName="address_id")
 	 * })
 	 */
 	private $defaultBilling;
@@ -98,7 +91,7 @@ class CustomerDetails
 	 * @ORM\GeneratedValue(strategy="NONE")
 	 * @ORM\OneToOne(targetEntity="Customer")
 	 * @ORM\JoinColumns({
-	 * 	 @ORM\JoinColumn(name="customer_id", referencedColumnName="customer_id")
+	 *   @ORM\JoinColumn(name="customer_id", referencedColumnName="customer_id")
 	 * })
 	 */
 	private $customer;
@@ -108,7 +101,7 @@ class CustomerDetails
 	 *
 	 * @ORM\ManyToOne(targetEntity="CustomerAddress")
 	 * @ORM\JoinColumns({
-	 * 	 @ORM\JoinColumn(name="default_shipping_id", referencedColumnName="address_id")
+	 *   @ORM\JoinColumn(name="default_shipping_id", referencedColumnName="address_id")
 	 * })
 	 */
 	private $defaultShipping;

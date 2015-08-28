@@ -5,7 +5,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * CustomerAddressDetails
  *
- * @ORM\Table(name="customer_address_details", indexes={@ORM\Index(name="fk_customer_address_details_country", columns={"country_id"}), @ORM\Index(name="fk_customer_address_details_city", columns={"city_id"})})
+ * @ORM\Table(name="customer_address_details", indexes={@ORM\Index(name="fk_customer_address_details_country", columns={"country_id"}), @ORM\Index(name="fk_customer_address_details_subdivision", columns={"subdivision_id"}), @ORM\Index(name="fk_customer_address_details_location", columns={"location_id"})})
  * @ORM\Entity
  */
 class CustomerAddressDetails
@@ -66,16 +66,6 @@ class CustomerAddressDetails
 	private $address;
 
 	/**
-	 * @var \GeoLocation
-	 *
-	 * @ORM\ManyToOne(targetEntity="GeoLocation")
-	 * @ORM\JoinColumns({
-	 *   @ORM\JoinColumn(name="city_id", referencedColumnName="id")
-	 * })
-	 */
-	private $city;
-
-	/**
 	 * @var \GeoCountry
 	 *
 	 * @ORM\ManyToOne(targetEntity="GeoCountry")
@@ -84,5 +74,25 @@ class CustomerAddressDetails
 	 * })
 	 */
 	private $country;
+
+	/**
+	 * @var \GeoLocation
+	 *
+	 * @ORM\ManyToOne(targetEntity="GeoLocation")
+	 * @ORM\JoinColumns({
+	 *   @ORM\JoinColumn(name="location_id", referencedColumnName="id")
+	 * })
+	 */
+	private $location;
+
+	/**
+	 * @var \GeoSubdivision
+	 *
+	 * @ORM\ManyToOne(targetEntity="GeoSubdivision")
+	 * @ORM\JoinColumns({
+	 *   @ORM\JoinColumn(name="subdivision_id", referencedColumnName="id")
+	 * })
+	 */
+	private $subdivision;
 
 }

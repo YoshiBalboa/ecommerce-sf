@@ -30,9 +30,9 @@ class Customer
 	/**
 	 * @var string
 	 *
-	 * @ORM\Column(name="password", type="string", length=255, nullable=false)
+	 * @ORM\Column(name="password", type="string", length=255, nullable=true)
 	 */
-	private $password = '';
+	private $password;
 
 	/**
 	 * @var \DateTime
