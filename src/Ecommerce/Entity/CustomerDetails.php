@@ -44,9 +44,9 @@ class CustomerDetails
 	/**
 	 * @var string
 	 *
-	 * @ORM\Column(name="locale", type="string", length=5, nullable=true)
+	 * @ORM\Column(name="locale", type="string", length=2, nullable=false)
 	 */
-	private $locale = 'fr_FR';
+	private $locale = 'fr';
 
 	/**
 	 * @var string
