@@ -79,6 +79,90 @@ address_locations:
     condition:	"request.isXmlHttpRequest()"
 
 #***************************************************************************
+# ATTRIBUTE CONTROLLER
+#***************************************************************************
+
+attribute_add_brand:
+    path:		/attribute/add/brand
+    defaults:	{ _controller: Ecommerce:Attribute:addBrand }
+    requirements:
+        _method:  POST
+
+attribute_add_category:
+    path:		/attribute/add/category
+    defaults:	{ _controller: Ecommerce:Attribute:addCategory }
+    requirements:
+        _method:  POST
+
+attribute_add_color:
+    path:		/attribute/add/color
+    defaults:	{ _controller: Ecommerce:Attribute:addColor }
+    requirements:
+        _method:  POST
+
+attribute_add_material:
+    path:		/attribute/add/material
+    defaults:	{ _controller: Ecommerce:Attribute:addMaterial }
+    requirements:
+        _method:  POST
+
+attribute_add_subcategory:
+    path:		/attribute/add/subcategories
+    defaults:	{ _controller: Ecommerce:Attribute:addSubcategories }
+    requirements:
+        _method:  POST
+
+attribute_delete_brand:
+    path:		/attribute/delete/brand
+    defaults:	{ _controller: Ecommerce:Attribute:deleteBrand }
+    requirements:
+        _method:  POST
+
+attribute_delete_category:
+    path:		/attribute/delete/category
+    defaults:	{ _controller: Ecommerce:Attribute:deleteCategory }
+    requirements:
+        _method:  POST
+
+attribute_delete_color:
+    path:		/attribute/delete/color
+    defaults:	{ _controller: Ecommerce:Attribute:deleteColor }
+    requirements:
+        _method:  POST
+
+attribute_delete_material:
+    path:		/attribute/delete/material
+    defaults:	{ _controller: Ecommerce:Attribute:deleteMaterial }
+    requirements:
+        _method:  POST
+
+attribute_delete_subcategory:
+    path:		/attribute/delete/subcategories
+    defaults:	{ _controller: Ecommerce:Attribute:deleteSubcategories }
+    requirements:
+        _method:  POST
+
+attribute_display_brand:
+    path:		/attribute/brand
+    defaults:	{ _controller: Ecommerce:Attribute:displayBrand }
+
+attribute_display_category:
+    path:		/attribute/category
+    defaults:	{ _controller: Ecommerce:Attribute:displayCategory }
+
+attribute_display_color:
+    path:		/attribute/color
+    defaults:	{ _controller: Ecommerce:Attribute:displayColor }
+
+attribute_display_material:
+    path:		/attribute/material
+    defaults:	{ _controller: Ecommerce:Attribute:displayMaterial }
+
+attribute_display_subcategory:
+    path:		/attribute/subcategories
+    defaults:	{ _controller: Ecommerce:Attribute:displaySubcategories }
+
+#***************************************************************************
 # SECURITY CONTROLLER
 #***************************************************************************
 

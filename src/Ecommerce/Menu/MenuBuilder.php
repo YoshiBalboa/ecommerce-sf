@@ -76,6 +76,38 @@ class MenuBuilder
 			$menu['Account']->setChildrenAttribute('class', 'dropdown-menu');
 			$menu['Account']->setLabel($this->translator->trans('menu.account.base') . ' <span class="caret"></span>');
 
+			if($authorization_checker->isGranted('ROLE_ADMIN'))
+			{
+				$menu->addChild('Attribute', array('uri' => '#', 'extras' => array('safe_label' => TRUE)));
+				$menu['Attribute']->setAttribute('class', 'dropdown');
+				$menu['Attribute']->setLinkAttributes(array(
+					'href'			 => "#",
+					'class'			 => 'dropdown-toggle',
+					'data-toggle'	 => 'dropdown',
+					'role'			 => 'button',
+					'aria-haspopup'	 => 'true',
+					'aria-expanded'	 => 'false',
+				));
+
+				$menu['Attribute']->addChild($this->translator->trans('menu.attribute.manage-category'), array(
+					'route' => 'attribute_display_category'));
+
+				$menu['Attribute']->addChild($this->translator->trans('menu.attribute.manage-subcategory'), array(
+					'route' => 'attribute_display_subcategory'));
+
+				$menu['Attribute']->addChild($this->translator->trans('menu.attribute.manage-brand'), array(
+					'route' => 'attribute_display_brand'));
+
+				$menu['Attribute']->addChild($this->translator->trans('menu.attribute.manage-color'), array(
+					'route' => 'attribute_display_color'));
+
+				$menu['Attribute']->addChild($this->translator->trans('menu.attribute.manage-material'), array(
+					'route' => 'attribute_display_material'));
+
+				$menu['Attribute']->setChildrenAttribute('class', 'dropdown-menu');
+				$menu['Attribute']->setLabel($this->translator->trans('menu.attribute.base') . ' <span class="caret"></span>');
+			}
+
 			//Logout
 			$menu->addChild($this->translator->trans('menu.logout'), array('route' => 'logout'));
 		}
