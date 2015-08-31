@@ -19,16 +19,6 @@ parameters:
         currentClass: active
 
 services:
-    Ecommerce.doctrine_subscriber.customer:
-        class: Ecommerce\Doctrine\Subscriber\CustomerSubscriber
-        tags:
-            - { name: doctrine.event_subscriber, connection: default }
-
-    Ecommerce.doctrine_subscriber.customer_address:
-        class: Ecommerce\Doctrine\Subscriber\CustomerAddressSubscriber
-        tags:
-            - { name: doctrine.event_subscriber, connection: default }
-
     Ecommerce.doctrine_subscriber.customer_address_details:
         class: Ecommerce\Doctrine\Subscriber\CustomerAddressDetailsSubscriber
         tags:
@@ -36,6 +26,11 @@ services:
 
     Ecommerce.doctrine_subscriber.customer_details:
         class: Ecommerce\Doctrine\Subscriber\CustomerDetailsSubscriber
+        tags:
+            - { name: doctrine.event_subscriber, connection: default }
+
+    Ecommerce.doctrine_subscriber.updated_at:
+        class: Ecommerce\Doctrine\Subscriber\UpdatedAtSubscriber
         tags:
             - { name: doctrine.event_subscriber, connection: default }
 

@@ -8,7 +8,7 @@ use Doctrine\ORM\Mapping as ORM;
  * AttributeValue
  *
  * @ORM\Table(name="attribute_value", uniqueConstraints={@ORM\UniqueConstraint(name="uk_attribute_value_label_locale", columns={"label_id", "locale"})}, indexes={@ORM\Index(name="IDX_FE4FBB8233B92F39", columns={"label_id"})})
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="Ecommerce\Entity\Repository\AttributeValueRepository")
  */
 class AttributeValue
 {
@@ -57,6 +57,13 @@ class AttributeValue
     private $urlkey = '';
 
     /**
+     * @var string
+     *
+     * @ORM\Column(name="hash", type="string", length=40, nullable=false)
+     */
+    private $hash = '';
+
+    /**
      * @var \AttributeLabel
      *
      * @ORM\ManyToOne(targetEntity="AttributeLabel")
@@ -71,7 +78,7 @@ class AttributeValue
     /**
      * Get valueId
      *
-     * @return integer 
+     * @return integer
      */
     public function getValueId()
     {
@@ -94,7 +101,7 @@ class AttributeValue
     /**
      * Get createdAt
      *
-     * @return \DateTime 
+     * @return \DateTime
      */
     public function getCreatedAt()
     {
@@ -117,7 +124,7 @@ class AttributeValue
     /**
      * Get updatedAt
      *
-     * @return \DateTime 
+     * @return \DateTime
      */
     public function getUpdatedAt()
     {
@@ -140,7 +147,7 @@ class AttributeValue
     /**
      * Get locale
      *
-     * @return string 
+     * @return string
      */
     public function getLocale()
     {
@@ -163,7 +170,7 @@ class AttributeValue
     /**
      * Get name
      *
-     * @return string 
+     * @return string
      */
     public function getName()
     {
@@ -186,11 +193,44 @@ class AttributeValue
     /**
      * Get urlkey
      *
-     * @return string 
+     * @return string
      */
     public function getUrlkey()
     {
         return $this->urlkey;
+    }
+
+    /**
+     * Set hash
+	 * Use the same value as in setName
+     *
+     * @param string $name
+     * @return AttributeValue
+     */
+    public function setHash($name = '')
+    {
+		if(empty($name) or $name != $this->name)
+		{
+			$to_hash = $this->name;
+		}
+		else
+		{
+			$to_hash = $name;
+		}
+
+        $this->hash = \sha1($to_hash);
+
+        return $this;
+    }
+
+    /**
+     * Get hash
+     *
+     * @return string
+     */
+    public function getHash()
+    {
+        return $this->hash;
     }
 
     /**
@@ -209,7 +249,7 @@ class AttributeValue
     /**
      * Get label
      *
-     * @return \Ecommerce\Entity\AttributeLabel 
+     * @return \Ecommerce\Entity\AttributeLabel
      */
     public function getLabel()
     {

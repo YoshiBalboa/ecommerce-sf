@@ -41,6 +41,7 @@ CREATE TABLE attribute_value (
 	locale CHAR(2) NOT NULL,
 	`name` VARCHAR(255) NOT NULL DEFAULT '',
 	urlkey VARCHAR(255) NOT NULL DEFAULT '',
+	hash VARCHAR(40) NOT NULL DEFAULT '',
 	PRIMARY KEY (value_id),
 	UNIQUE KEY uk_attribute_value_label_locale (label_id, locale),
 	CONSTRAINT fk_attribute_value_label FOREIGN KEY (label_id) REFERENCES attribute_label (label_id) ON DELETE CASCADE ON UPDATE CASCADE

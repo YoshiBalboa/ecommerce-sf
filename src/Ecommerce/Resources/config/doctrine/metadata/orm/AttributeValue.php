@@ -55,6 +55,13 @@ class AttributeValue
 	 */
 	private $urlkey = '';
 
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="hash", type="string", length=40, nullable=false)
+     */
+    private $hash = '';
+
 	/**
 	 * @var \AttributeLabel
 	 *

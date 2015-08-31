@@ -5,12 +5,11 @@ namespace Ecommerce\Doctrine\Subscriber;
 use Doctrine\Common\EventSubscriber;
 use Doctrine\ORM\Event\LifecycleEventArgs;
 use Doctrine\ORM\Events;
-use Ecommerce\Entity\CustomerAddress;
 
 /**
- * Class CustomerAddressSubscriber
+ * Class UpdatedAtSubscriber
  */
-class CustomerAddressSubscriber implements EventSubscriber
+class UpdatedAtSubscriber implements EventSubscriber
 {
 
 	public function getSubscribedEvents()
@@ -35,7 +34,7 @@ class CustomerAddressSubscriber implements EventSubscriber
 	{
 		$entity = $args->getEntity();
 
-		if(!($entity instanceof CustomerAddress))
+		if(!$this->isInWhitelist($entity))
 		{
 			return;
 		}
@@ -49,12 +48,25 @@ class CustomerAddressSubscriber implements EventSubscriber
 	{
 		$entity = $args->getEntity();
 
-		if(!($entity instanceof CustomerAddress))
+		if(!$this->isInWhitelist($entity))
 		{
 			return;
 		}
 
 		$entity->setUpdatedAt(new \DateTime());
+	}
+
+	private function isInWhitelist($entity)
+	{
+		$return = FALSE;
+
+		if($entity instanceof \Ecommerce\Entity\Customer
+			or $entity instanceof \Ecommerce\Entity\CustomerAddress)
+		{
+			$return = TRUE;
+		}
+
+		return $return;
 	}
 
 }
