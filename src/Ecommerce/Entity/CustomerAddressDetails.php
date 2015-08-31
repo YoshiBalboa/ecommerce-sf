@@ -8,7 +8,7 @@ use Doctrine\ORM\Mapping as ORM;
  * CustomerAddressDetails
  *
  * @ORM\Table(name="customer_address_details", indexes={@ORM\Index(name="fk_customer_address_details_country", columns={"country_id"}), @ORM\Index(name="fk_customer_address_details_subdivision", columns={"subdivision_id"}), @ORM\Index(name="fk_customer_address_details_location", columns={"location_id"})})
- * @ORM\Entity(repositoryClass="Ecommerce\Entity\CustomerAddressDetailsRepository")
+ * @ORM\Entity(repositoryClass="Ecommerce\Entity\Repository\CustomerAddressDetailsRepository")
  */
 class CustomerAddressDetails
 {

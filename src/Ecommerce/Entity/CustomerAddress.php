@@ -8,7 +8,7 @@ use Doctrine\ORM\Mapping as ORM;
  * CustomerAddress
  *
  * @ORM\Table(name="customer_address", indexes={@ORM\Index(name="fk_customer_address_customer", columns={"customer_id"})})
- * @ORM\Entity(repositoryClass="Ecommerce\Entity\CustomerAddressRepository")
+ * @ORM\Entity(repositoryClass="Ecommerce\Entity\Repository\CustomerAddressRepository")
  */
 class CustomerAddress
 {

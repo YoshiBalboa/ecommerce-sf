@@ -8,7 +8,7 @@ use Doctrine\ORM\Mapping as ORM;
  * GeoLocation
  *
  * @ORM\Table(name="geo_location", uniqueConstraints={@ORM\UniqueConstraint(name="uk_row", columns={"code", "subdivision_id"})}, indexes={@ORM\Index(name="fk_geo_location_subdivision", columns={"subdivision_id"}), @ORM\Index(name="fk_geo_location_country", columns={"country_id"})})
- * @ORM\Entity(repositoryClass="Ecommerce\Entity\GeoLocationRepository")
+ * @ORM\Entity(repositoryClass="Ecommerce\Entity\Repository\GeoLocationRepository")
  */
 class GeoLocation
 {

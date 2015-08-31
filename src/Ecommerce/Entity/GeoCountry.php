@@ -8,7 +8,7 @@ use Doctrine\ORM\Mapping as ORM;
  * GeoCountry
  *
  * @ORM\Table(name="geo_country", uniqueConstraints={@ORM\UniqueConstraint(name="uk_row", columns={"code"})})
- * @ORM\Entity(repositoryClass="Ecommerce\Entity\GeoCountryRepository")
+ * @ORM\Entity(repositoryClass="Ecommerce\Entity\Repository\GeoCountryRepository")
  */
 class GeoCountry
 {

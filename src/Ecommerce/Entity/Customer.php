@@ -11,7 +11,7 @@ use Symfony\Component\Serializer\NameConverter\CamelCaseToSnakeCaseNameConverter
  * Customer
  *
  * @ORM\Table(name="customer", uniqueConstraints={@ORM\UniqueConstraint(name="uk_customer_entity_email", columns={"email"})}, indexes={@ORM\Index(name="idx_createdat", columns={"created_at"}), @ORM\Index(name="fk_customer_group", columns={"group_id"})})
- * @ORM\Entity(repositoryClass="Ecommerce\Entity\CustomerRepository")
+ * @ORM\Entity(repositoryClass="Ecommerce\Entity\Repository\CustomerRepository")
  */
 class Customer implements AdvancedUserInterface, \Serializable
 {
