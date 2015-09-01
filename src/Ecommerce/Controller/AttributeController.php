@@ -373,15 +373,17 @@ class AttributeController extends Controller
 		);
 
 		$category_form = $this->createForm(new Type\CategoryType(), array(), $form_attributes);
+		$attr_value_form = $this->createForm(new Type\AttributeValueType(), array(), array());
 
 		$category_repository = $this->getDoctrine()->getRepository('Ecommerce:Category');
-		$categories = $category_repository->getActiveCategories($request->getLocale());
+		$categories = $category_repository->getCategories();
 
 		$view = array(
 			'head_title'	 => $this->get('translator')->trans('head_title.attribute.display-category'),
 			'h1_title'		 => $this->get('translator')->trans('h1_title.attribute.display-category'),
 			'categories'	 => $categories,
 			'category_form'	 => $category_form->createView(),
+			'attr_value_form'	 => $attr_value_form->createView(),
 		);
 
 		return $this->render('attribute/category.html.twig', $view);
@@ -448,10 +450,52 @@ class AttributeController extends Controller
 	 * Edit an attribute_value row on POST
 	 * @return Response
 	 */
-	public function editValue()
+	public function editValueAction(Request $request)
 	{
-		var_dump(__CLASS__, __METHOD__);
-		die('Line:' . __LINE__);
+		if(!$this->isAdmin())
+		{
+			return $this->redirectToRoute('home');
+		}
+
+		$attr_value_form = $this->createForm(new Type\AttributeValueType(), array(), array());
+		$attr_value_form->handleRequest($request);
+
+		if(!$attr_value_form->isValid())
+		{
+			var_dump($attr_value_form->getErrors());  die(implode('|', array(__METHOD__, __LINE__)));
+			return new Response($this->get('translator')->trans('flash.invalid-request'), Response::HTTP_BAD_REQUEST, array(
+				'Content-Type', 'application/json; charset=utf-8'));
+		}
+
+		$data = $attr_value_form->getData();
+
+		$attr_value_repository = $this->getDoctrine()->getRepository('Ecommerce:AttributeValue');
+		$attr_value = $attr_value_repository->findOneByValueId($data['value_id']);
+
+		if(empty($attr_value))
+		{
+			return new Response($this->get('translator')->trans('flash.error-try-again'), Response::HTTP_INTERNAL_SERVER_ERROR, array(
+				'Content-Type', 'application/json; charset=utf-8'));
+		}
+
+		if($attr_value_repository->existsLabel($data['type_id'], $data['name'], $data['locale'], $attr_value))
+		{
+			return new Response($this->get('translator')->trans('flash.label-exists'), Response::HTTP_INTERNAL_SERVER_ERROR, array(
+				'Content-Type', 'application/json; charset=utf-8'));
+		}
+
+		$attr_value->setName($data['name']);
+		$attr_value->setUrlkey($data['urlkey']);
+		$attr_value->setHash($data['name']);
+
+		$em = $this->getDoctrine()->getEntityManager();
+		$em->flush();
+
+		$response = array(
+			'success' => TRUE,
+		);
+
+		return new JsonResponse($response);
 	}
 
 	/**

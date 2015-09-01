@@ -13,11 +13,11 @@ class CategoryRepository extends EntityRepository
 	 *
 	 * @return array
 	 */
-	public function getActiveCategories()
+	public function getCategories()
 	{
 		$em = $this->getEntityManager();
 		$attr_value_repository = $em->getRepository('Ecommerce:AttributeValue');
-		$obj_categories = $this->findBy(array('isActive' => TRUE));
+		$obj_categories = $this->findBy(array(), array('createdAt' => 'ASC'));
 
 		$categories = array();
 		foreach($obj_categories as $idx => $category)
@@ -37,8 +37,16 @@ class CategoryRepository extends EntityRepository
 				'type_id'		 => $category->getType()->getTypeId(),
 				'label_id'		 => $category->getLabel()->getLabelId(),
 				'values'		 => array(
-					'fr' => array('name' => $value_fr->getName(), 'urlkey' => $value_fr->getUrlkey()),
-					'en' => array('name' => $value_en->getName(), 'urlkey' => $value_en->getUrlkey()),
+					'fr' => array(
+						'value_id'	 => $value_fr->getValueId(),
+						'name'		 => $value_fr->getName(),
+						'urlkey'	 => $value_fr->getUrlkey()
+					),
+					'en' => array(
+						'value_id'	 => $value_en->getValueId(),
+						'name'		 => $value_en->getName(),
+						'urlkey'	 => $value_en->getUrlkey()
+					),
 				),
 				'is_active'		 => $category->getIsActive(),
 			);

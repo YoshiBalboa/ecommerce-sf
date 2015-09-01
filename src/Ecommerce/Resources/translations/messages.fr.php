@@ -92,6 +92,8 @@ return array(
 		'english-label'				 => 'Nom Anglais',
 		'firstname'					 => 'Prénom :',
 		'french-label'				 => 'Nom Français',
+		'id'						 => 'Id :',
+		'label'						 => 'Nom :',
 		'lastname'					 => 'Nom :',
 		'new-email'					 => 'Nouvel email :',
 		'new-password'				 => 'Nouveau mot de passe :',
@@ -102,6 +104,7 @@ return array(
 		'state'						 => 'Département :',
 		'street'					 => 'Rue :',
 		'telephone'					 => 'Téléphone :',
+		'url'						 => 'Url :',
 	),
 	'menu'		 => array(
 		'account'	 => array(

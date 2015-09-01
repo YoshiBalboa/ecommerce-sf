@@ -522,11 +522,48 @@ Ecommerce.accountAddressesSetDefaultAddress = function (route, $input)
 	});
 };
 
-Ecommerce.attributeDisplayForm = function ()
+Ecommerce.attributeController = function ()
 {
 	$document.on('click', 'button.display-form', function()
 	{
 		$(this).hide('slow');
 		$('#attribute_container .attribute-form').show('slow');
+	});
+
+	$document.on('submit', 'form[name="e_attr_value"]', function()
+	{
+		$form = $(this);
+		$data = $form.serialize();
+		console.log($form.serialize());
+
+		$('#error_message').html('');
+		$form.find('input').prop('disabled', true);
+		$form.find('.edit-loader button').hide();
+		$form.find('.edit-loader div').removeClass('hidden').show();
+		$form.closest('tr').removeClass('danger').removeClass('success');
+
+		$.ajax({
+			url: $form.attr('action'),
+			type: 'post',
+			data: $data,
+			error: function (jqXHR, textStatus, errorThrown)
+			{
+				$('#error_message').html(jqXHR.responseText);
+
+				$form.find('input').prop('disabled', false);
+				$form.find('.edit-loader button').show();
+				$form.find('.edit-loader div').hide();
+				$form.closest('tr').addClass('danger').removeClass('success');
+			},
+			success: function (data)
+			{
+				$form.find('input').prop('disabled', false);
+				$form.find('.edit-loader button').show();
+				$form.find('.edit-loader div').hide();
+				$form.closest('tr').removeClass('danger').addClass('success');
+			}
+		});
+
+		return false;
 	});
 }

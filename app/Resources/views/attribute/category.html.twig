@@ -29,17 +29,17 @@
 							<tr>
 								<th>{{ 'view.id'|trans|upper }}</th>
 								<th>
-									<div class="phoca-flagbox small">
-										<span class="phoca-flag fr"></span>
-									</div>
-								</th>
-								<th>
-									<div class="phoca-flagbox small en">
-										<span class="phoca-flag en"></span>
-									</div>
-								</th>
-								<th>{{ 'view.active?'|trans }}</th>
-							</tr>
+						<div class="phoca-flagbox small">
+							<span class="phoca-flag fr"></span>
+						</div>
+						</th>
+						<th>
+						<div class="phoca-flagbox small en">
+							<span class="phoca-flag en"></span>
+						</div>
+						</th>
+						<th>{{ 'view.active?'|trans }}</th>
+						</tr>
 						</thead>
 						<tbody>
 							{% for category in categories %}
@@ -48,30 +48,22 @@
 										<b>{{ category.category_id }}</b>
 									</td>
 									<td>
-										<form action="{{ path('attribute_edit_value') }}" method="POST">
-											<label for="name">{{ 'view.label'|trans }}</label>
-											<input type="text" name="name" value="{{ category.values.fr.name }}">
-											<br>
-											<label for="url">{{ 'view.url'|trans }}</label>
-											<input type="text" name="url" value="{{ category.values.fr.urlkey }}">
-											<button type="submit" class="btn btn-default edit">
-												<span class="glyphicon glyphicon-pencil"></span>
-											</button>
-										</form>
+										{{ include('Ecommerce:Form:category_attr_value.html.twig',
+											{
+												'form': attr_value_form,
+												'category': category,
+												'values': category.values.fr,
+												'locale': 'fr'
+											}) }}
 									</td>
 									<td>
-										<form action="{{ path('attribute_edit_value') }}" method="POST">
-											<div>
-												<label for="name">{{ 'view.label'|trans }}</label>
-												<input type="text" name="name" value="{{ category.values.en.name }}">
-												<br>
-												<label for="url">{{ 'view.url'|trans }}</label>
-												<input type="text" name="url" value="{{ category.values.en.urlkey }}">
-												<button type="submit" class="btn btn-default edit">
-													<span class="glyphicon glyphicon-pencil"></span>
-												</button>
-											</div>
-										</form>
+										{{ include('Ecommerce:Form:category_attr_value.html.twig',
+											{
+												'form': attr_value_form,
+												'category': category,
+												'values': category.values.en,
+												'locale': 'en'
+											}) }}
 									</td>
 									<td class="set-is-active">
 										<input type="checkbox" name="is-active" value="{{ category.category_id }}" {% if category.is_active %}checked="checked"{% endif %}>
@@ -89,7 +81,7 @@
 {% block javascripts %}
 	<script type="text/javascript">
 		//<![CDATA[
-		Ecommerce.attributeDisplayForm();
+		Ecommerce.attributeController();
 		//]]>
 	</script>
 {% endblock %}
