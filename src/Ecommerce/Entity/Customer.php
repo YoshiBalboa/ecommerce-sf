@@ -3,7 +3,7 @@
 namespace Ecommerce\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
-use Ecommerce\Entity\CustomerGroupRepository;
+use Ecommerce\Entity\Repository\CustomerGroupRepository;
 use Symfony\Component\Security\Core\User\AdvancedUserInterface;
 use Symfony\Component\Serializer\NameConverter\CamelCaseToSnakeCaseNameConverter as camel2snake;
 

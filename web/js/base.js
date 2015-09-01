@@ -521,3 +521,12 @@ Ecommerce.accountAddressesSetDefaultAddress = function (route, $input)
 		}
 	});
 };
+
+Ecommerce.attributeDisplayForm = function ()
+{
+	$document.on('click', 'button.display-form', function()
+	{
+		$(this).hide('slow');
+		$('#attribute_container .attribute-form').show('slow');
+	});
+}

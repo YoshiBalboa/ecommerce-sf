@@ -162,6 +162,12 @@ attribute_display_subcategory:
     path:		/attribute/subcategories
     defaults:	{ _controller: Ecommerce:Attribute:displaySubcategories }
 
+attribute_edit_value:
+    path:		/attribute/edit/value
+    defaults:	{ _controller: Ecommerce:Attribute:editValue }
+    requirements:
+        _method:  POST
+
 #***************************************************************************
 # SECURITY CONTROLLER
 #***************************************************************************

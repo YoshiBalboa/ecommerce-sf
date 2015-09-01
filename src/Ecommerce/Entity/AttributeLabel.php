@@ -36,7 +36,7 @@ class AttributeLabel
     /**
      * Get labelId
      *
-     * @return integer 
+     * @return integer
      */
     public function getLabelId()
     {
@@ -59,7 +59,7 @@ class AttributeLabel
     /**
      * Get type
      *
-     * @return \Ecommerce\Entity\AttributeType 
+     * @return \Ecommerce\Entity\AttributeType
      */
     public function getType()
     {

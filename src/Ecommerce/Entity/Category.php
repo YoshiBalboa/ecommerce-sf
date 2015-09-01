@@ -8,7 +8,7 @@ use Doctrine\ORM\Mapping as ORM;
  * Category
  *
  * @ORM\Table(name="category", indexes={@ORM\Index(name="fk_category_type", columns={"type_id"}), @ORM\Index(name="fk_category_label", columns={"label_id"})})
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="Ecommerce\Entity\Repository\CategoryRepository")
  */
 class Category
 {
@@ -62,12 +62,17 @@ class Category
      */
     private $type;
 
+    /**
+     * @var \AttributeValue
+     */
+	private $value;
+
 
 
     /**
      * Get categoryId
      *
-     * @return integer 
+     * @return integer
      */
     public function getCategoryId()
     {
@@ -90,7 +95,7 @@ class Category
     /**
      * Get createdAt
      *
-     * @return \DateTime 
+     * @return \DateTime
      */
     public function getCreatedAt()
     {
@@ -113,7 +118,7 @@ class Category
     /**
      * Get updatedAt
      *
-     * @return \DateTime 
+     * @return \DateTime
      */
     public function getUpdatedAt()
     {
@@ -136,7 +141,7 @@ class Category
     /**
      * Get isActive
      *
-     * @return boolean 
+     * @return boolean
      */
     public function getIsActive()
     {
@@ -159,7 +164,7 @@ class Category
     /**
      * Get label
      *
-     * @return \Ecommerce\Entity\AttributeLabel 
+     * @return \Ecommerce\Entity\AttributeLabel
      */
     public function getLabel()
     {
@@ -182,10 +187,33 @@ class Category
     /**
      * Get type
      *
-     * @return \Ecommerce\Entity\AttributeType 
+     * @return \Ecommerce\Entity\AttributeType
      */
     public function getType()
     {
         return $this->type;
+    }
+
+    /**
+     * Set value
+     *
+     * @param \Ecommerce\Entity\AttributeValue $value
+     * @return Category
+     */
+    public function setValue(\Ecommerce\Entity\AttributeValue $value = null)
+    {
+        $this->value = $value;
+
+        return $this;
+    }
+
+    /**
+     * Get value
+     *
+     * @return \Ecommerce\Entity\AttributeValue
+     */
+    public function getValue()
+    {
+        return $this->value;
     }
 }
