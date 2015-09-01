@@ -3,7 +3,7 @@
 namespace Ecommerce\Form\Type;
 
 use Doctrine\Common\Persistence\ObjectManager;
-use Ecommerce\Entity\GeoCountryRepository;
+use Ecommerce\Entity\Repository\GeoCountryRepository;
 use Ecommerce\Form\DataTransformer\GeoLocationToNumberTransformer;
 use Ecommerce\Form\DataTransformer\GeoSubdivisionToNumberTransformer;
 use Symfony\Component\Form\AbstractType;
