@@ -4,12 +4,13 @@ namespace Ecommerce\Entity\Repository;
 
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\Query\ResultSetMapping;
+use Ecommerce\Entity\Category;
 
 class CategoryRepository extends EntityRepository
 {
 
 	/**
-	 * Return active categories as an array in an array
+	 * Return categories entities as an array in an array
 	 *
 	 * @return array
 	 */
@@ -53,6 +54,29 @@ class CategoryRepository extends EntityRepository
 		}
 
 		return $categories;
+	}
+
+	/**
+	 * Disabled all subcategories if the parent category is inactive
+	 * @param Category $category
+	 * @return type
+	 */
+	public function disableSubcategories(Category $category)
+	{
+		if($category->getIsActive())
+		{
+			return FALSE;
+		}
+
+		$qb = $this->getEntityManager()->createQueryBuilder();
+		$query = $qb->update('Ecommerce:Subcategory', 's')
+			->set('s.isActive', $qb->expr()->literal(0))
+			->where('s.category = :category')
+			->setParameter('category', $category)
+			->getQuery();
+		$query->execute();
+
+		return TRUE;
 	}
 
 	public function supportsClass($class)

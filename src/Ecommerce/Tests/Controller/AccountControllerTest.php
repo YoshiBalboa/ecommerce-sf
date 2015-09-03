@@ -59,13 +59,13 @@ class AccountControllerTest extends WebTestCase
 		$this->assertEquals('Ecommerce\Controller\AccountController::createAction', $client->getRequest()->attributes->get('_controller'));
 
 		//Create account form
-		$form = $crawler->filter('form[name="ecommerce_account_create"]')->form();
-		$form['ecommerce_account_create[prefix]'] = 'm';
-		$form['ecommerce_account_create[firstname]'] = 'Testfirst';
-		$form['ecommerce_account_create[lastname]'] = 'Testlast';
-		$form['ecommerce_account_create[email]'] = $this->login;
-		$form['ecommerce_account_create[password][first]'] = $this->password;
-		$form['ecommerce_account_create[password][second]'] = $this->password;
+		$form = $crawler->filter('form[name="e_account_create"]')->form();
+		$form['e_account_create[prefix]'] = 'm';
+		$form['e_account_create[firstname]'] = 'Testfirst';
+		$form['e_account_create[lastname]'] = 'Testlast';
+		$form['e_account_create[email]'] = $this->login;
+		$form['e_account_create[password][first]'] = $this->password;
+		$form['e_account_create[password][second]'] = $this->password;
 		$client->submit($form);
 
 		$this->assertTrue($client->getResponse()->isRedirect('/account'));

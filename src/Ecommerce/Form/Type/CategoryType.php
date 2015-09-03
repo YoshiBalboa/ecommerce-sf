@@ -29,7 +29,7 @@ class CategoryType extends AbstractType
 
 	public function getName()
 	{
-		return 'ecommerce_category';
+		return 'e_category';
 	}
 
 }

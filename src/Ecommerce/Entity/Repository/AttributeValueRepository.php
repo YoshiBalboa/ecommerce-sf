@@ -29,7 +29,7 @@ class AttributeValueRepository extends EntityRepository
 
 		$result = $query->getOneOrNullResult();
 
-		if(empty($result) or (!empty($value) and $value->getValueId() == $result->getValueId()))
+		if(empty($result) or ( !empty($value) and $value->getValueId() == $result->getValueId()))
 		{
 			//This label isn't use yet
 			return FALSE;

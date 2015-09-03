@@ -66,7 +66,9 @@
 											}) }}
 									</td>
 									<td class="set-is-active">
-										<input type="checkbox" name="is-active" value="{{ category.category_id }}" {% if category.is_active %}checked="checked"{% endif %}>
+										<div class="checkbox">
+											<input type="checkbox" name="is-active" value="{{ category.category_id }}" {% if category.is_active %}checked="checked"{% endif %}>
+										</div>
 									</td>
 								</tr>
 							{% endfor %}
@@ -81,7 +83,7 @@
 {% block javascripts %}
 	<script type="text/javascript">
 		//<![CDATA[
-		Ecommerce.attributeController();
+		Ecommerce.attributeController('{{ path('attribute_delete_category') }}');
 		//]]>
 	</script>
 {% endblock %}

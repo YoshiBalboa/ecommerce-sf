@@ -29,7 +29,7 @@ class AccountLoginType extends AbstractType
 
 	public function getName()
 	{
-		return 'ecommerce_account_login';
+		return 'e_login';
 	}
 
 }

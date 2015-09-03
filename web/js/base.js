@@ -183,7 +183,7 @@ Ecommerce.addressForm = function ($reload_subdivision, $reload_location)
 
 
 	//Check validity of simple input
-	$('#ecommerce_address').on('change', 'input[type="text"]:not(#e_address_state, #e_address_city)', function ()
+	$('#e_address').on('change blur', 'input[type="text"]:not(#e_address_state, #e_address_city)', function ()
 	{
 		$this = $(this);
 		if(this.checkValidity() === true)
@@ -522,25 +522,25 @@ Ecommerce.accountAddressesSetDefaultAddress = function (route, $input)
 	});
 };
 
-Ecommerce.attributeController = function ()
+Ecommerce.attributeController = function (route_delete_category)
 {
-	$document.on('click', 'button.display-form', function()
+	$document.on('click', 'button.display-form', function ()
 	{
 		$(this).hide('slow');
 		$('#attribute_container .attribute-form').show('slow');
 	});
 
-	$document.on('submit', 'form[name="e_attr_value"]', function()
+	$document.on('submit', 'form[name="e_attr_value"]', function ()
 	{
 		$form = $(this);
+		$tr = $form.closest('tr');
 		$data = $form.serialize();
-		console.log($form.serialize());
 
 		$('#error_message').html('');
-		$form.find('input').prop('disabled', true);
-		$form.find('.edit-loader button').hide();
-		$form.find('.edit-loader div').removeClass('hidden').show();
-		$form.closest('tr').removeClass('danger').removeClass('success');
+		$tr.find('input').prop('disabled', true);
+		$tr.find('.edit-loader button').hide();
+		$tr.find('.edit-loader div').removeClass('hidden').show();
+		$tr.removeClass('danger').removeClass('success');
 
 		$.ajax({
 			url: $form.attr('action'),
@@ -550,20 +550,60 @@ Ecommerce.attributeController = function ()
 			{
 				$('#error_message').html(jqXHR.responseText);
 
-				$form.find('input').prop('disabled', false);
-				$form.find('.edit-loader button').show();
-				$form.find('.edit-loader div').hide();
-				$form.closest('tr').addClass('danger').removeClass('success');
+				$tr.find('input').prop('disabled', false);
+				$tr.find('.edit-loader button').show();
+				$tr.find('.edit-loader div').hide();
+				$tr.addClass('danger').removeClass('success');
 			},
 			success: function (data)
 			{
-				$form.find('input').prop('disabled', false);
-				$form.find('.edit-loader button').show();
-				$form.find('.edit-loader div').hide();
-				$form.closest('tr').removeClass('danger').addClass('success');
+				$tr.find('input').prop('disabled', false);
+				$tr.find('.edit-loader button').show();
+				$tr.find('.edit-loader div').hide();
+				$tr.removeClass('danger').addClass('success');
 			}
 		});
 
 		return false;
 	});
-}
+
+	$document.on('change', 'input[name="is-active"]', function ()
+	{
+		$checkbox = $(this);
+		$category_id = $checkbox.val();
+		$tr = $(this).closest('tr');
+
+		$('#error_message').html('');
+		$tr.find('input').prop('disabled', true);
+		$tr.find('.edit-loader button').hide();
+		$tr.find('.edit-loader div').removeClass('hidden').show();
+		$tr.removeClass('danger').removeClass('success');
+
+		$.ajax({
+			url: route_delete_category,
+			type: 'post',
+			data: {
+				category_id: $category_id,
+				is_active: (this.checked === true) ? 1 : 0
+			},
+			error: function (jqXHR, textStatus, errorThrown)
+			{
+				$('#error_message').html(jqXHR.responseText);
+
+				$tr.find('input').prop('disabled', false);
+				$tr.find('.edit-loader button').show();
+				$tr.find('.edit-loader div').hide();
+				$tr.addClass('danger').removeClass('success');
+			},
+			success: function (data)
+			{
+				$tr.find('input').prop('disabled', false);
+				$tr.find('.edit-loader button').show();
+				$tr.find('.edit-loader div').hide();
+				$tr.removeClass('danger').addClass('success');
+			}
+		});
+
+		return false;
+	});
+};

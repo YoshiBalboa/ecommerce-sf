@@ -32,8 +32,8 @@ security:
                 check_path:			/login_check
 
                 # field names for the username and password fields
-                username_parameter:	ecommerce_account_login[_username]
-                password_parameter:	ecommerce_account_login[_password]
+                username_parameter:	e_login[_username]
+                password_parameter:	e_login[_password]
 
                 # login success redirecting options
                 always_use_default_target_path:	false

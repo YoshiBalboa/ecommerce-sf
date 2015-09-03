@@ -237,17 +237,30 @@ class AttributeController extends Controller
 			return $this->redirectToRoute('home');
 		}
 
-		if(empty($request->request->get('category_id')))
+		if(empty($request->request->get('category_id')) or null === $request->request->get('is_active'))
 		{
 			return new Response($this->get('translator')->trans('flash.invalid-request'), Response::HTTP_BAD_REQUEST, array(
 				'Content-Type', 'application/json; charset=utf-8'));
 		}
 
-		//@TODO
-		die('Line:' . __LINE__);
+		$category_repository = $this->getDoctrine()->getRepository('Ecommerce:Category');
+		$category = $category_repository->findOneByCategoryId($request->request->get('category_id'));
+
+		if(empty($category))
+		{
+			return new Response($this->get('translator')->trans('flash.error-try-again'), Response::HTTP_INTERNAL_SERVER_ERROR, array(
+				'Content-Type', 'application/json; charset=utf-8'));
+		}
+
+		$category->setIsActive((bool) $request->request->get('is_active'));
+		$em = $this->getDoctrine()->getEntityManager();
+		$em->flush();
+
+		$category_repository->disableSubCategories($category);
 
 		$response = array(
-			'success' => TRUE,
+			'success'	 => TRUE,
+			'message'	 => $this->get('translator')->trans('flash.attribute-updated'),
 		);
 
 		return new JsonResponse($response);
@@ -376,10 +389,10 @@ class AttributeController extends Controller
 		$categories = $category_repository->getCategories();
 
 		$view = array(
-			'head_title'	 => $this->get('translator')->trans('head_title.attribute.display-category'),
-			'h1_title'		 => $this->get('translator')->trans('h1_title.attribute.display-category'),
-			'categories'	 => $categories,
-			'category_form'	 => $category_form->createView(),
+			'head_title'		 => $this->get('translator')->trans('head_title.attribute.display-category'),
+			'h1_title'			 => $this->get('translator')->trans('h1_title.attribute.display-category'),
+			'categories'		 => $categories,
+			'category_form'		 => $category_form->createView(),
 			'attr_value_form'	 => $attr_value_form->createView(),
 		);
 
@@ -488,8 +501,8 @@ class AttributeController extends Controller
 		$em->flush();
 
 		$response = array(
-			'success' => TRUE,
-			'message' => $this->get('translator')->trans('flash.attribute-updated'),
+			'success'	 => TRUE,
+			'message'	 => $this->get('translator')->trans('flash.attribute-updated'),
 		);
 
 		return new JsonResponse($response);

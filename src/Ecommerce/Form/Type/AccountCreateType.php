@@ -33,7 +33,7 @@ class AccountCreateType extends AbstractType
 
 	public function getName()
 	{
-		return 'ecommerce_account_create';
+		return 'e_account_create';
 	}
 
 }
