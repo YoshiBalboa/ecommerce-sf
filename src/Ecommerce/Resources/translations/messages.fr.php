@@ -7,6 +7,8 @@ return array(
 		'save'	 => 'Enregistrer',
 	),
 	'flash'		 => array(
+		'attribute-created'	 => 'Le nouvel attribut a été créé avec succès',
+		'attribute-updated'	 => "L'attribut a été édité avec succès",
 		'email-exists'		 => 'Cet email existe déjà',
 		'email-saved'		 => 'Votre nouvel email a été enregitré',
 		'error-try-again'	 => 'Une erreur est survenue, merci de réessayer',

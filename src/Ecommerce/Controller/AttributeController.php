@@ -55,8 +55,8 @@ class AttributeController extends Controller
 
 		if(!$category_form->isValid())
 		{
-			return new Response($this->get('translator')->trans('flash.invalid-request'), Response::HTTP_BAD_REQUEST, array(
-				'Content-Type', 'application/json; charset=utf-8'));
+			$this->addFlash('warning', $this->get('translator')->trans('flash.invalid-request'));
+			return $this->redirectToRoute('attribute_display_category');
 		}
 
 		$data = $category_form->getData();
@@ -67,8 +67,8 @@ class AttributeController extends Controller
 		if($attr_value_repository->existsLabel(AttributeTypeRepository::TYPE_CATEGORY, $data['category_fr'], 'fr')
 			or $attr_value_repository->existsLabel(AttributeTypeRepository::TYPE_CATEGORY, $data['category_en'], 'en'))
 		{
-			return new Response($this->get('translator')->trans('flash.label-exists'), Response::HTTP_INTERNAL_SERVER_ERROR, array(
-				'Content-Type', 'application/json; charset=utf-8'));
+			$this->addFlash('danger', $this->get('translator')->trans('flash.label-exists'));
+			return $this->redirectToRoute('attribute_display_category');
 		}
 
 		$em = $this->getDoctrine()->getEntityManager();
@@ -114,11 +114,8 @@ class AttributeController extends Controller
 		$em->persist($attr_value_en);
 		$em->flush();
 
-		$response = array(
-			'success' => TRUE,
-		);
-
-		return new JsonResponse($response);
+		$this->addFlash('success', $this->get('translator')->trans('flash.attribute-created'));
+		return $this->redirectToRoute('attribute_display_category');
 	}
 
 	/**
@@ -462,7 +459,6 @@ class AttributeController extends Controller
 
 		if(!$attr_value_form->isValid())
 		{
-			var_dump($attr_value_form->getErrors());  die(implode('|', array(__METHOD__, __LINE__)));
 			return new Response($this->get('translator')->trans('flash.invalid-request'), Response::HTTP_BAD_REQUEST, array(
 				'Content-Type', 'application/json; charset=utf-8'));
 		}
@@ -493,6 +489,7 @@ class AttributeController extends Controller
 
 		$response = array(
 			'success' => TRUE,
+			'message' => $this->get('translator')->trans('flash.attribute-updated'),
 		);
 
 		return new JsonResponse($response);

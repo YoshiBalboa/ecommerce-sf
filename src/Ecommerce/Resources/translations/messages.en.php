@@ -7,6 +7,8 @@ return array(
 		'save'	 => 'Save',
 	),
 	'flash'		 => array(
+		'attribute-created'	 => 'The new attribute was created with success',
+		'attribute-updated'	 => 'The attribute was updated with success',
 		'email-exists'		 => 'This email already exists',
 		'email-saved'		 => 'Your new email was saved',
 		'error-try-again'	 => 'An error occured, please try again',

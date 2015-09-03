@@ -31,7 +31,7 @@ Ecommerce.reloadAutoCompleteField = function ($display_field, $hidden_field, $da
 		select: function (event, ui)
 		{
 			//Triggered when an item is selected from the menu.
-			Ecommerce.formRemoveErrorMessage($display_field);
+			Ecommerce.formRemoveFieldErrorMessage($display_field);
 
 			$display_field.val(ui.item.label);
 			$hidden_field.val(ui.item.id);
@@ -56,7 +56,7 @@ Ecommerce.reloadAutoCompleteField = function ($display_field, $hidden_field, $da
 
 Ecommerce.searchInAutoComplete = function ($display_field, $hidden_field)
 {
-	Ecommerce.formRemoveErrorMessage($display_field);
+	Ecommerce.formRemoveFieldErrorMessage($display_field);
 
 	if(typeof ($display_field.autocomplete("instance")) === 'undefined')
 	{
@@ -85,7 +85,7 @@ Ecommerce.searchInAutoComplete = function ($display_field, $hidden_field)
 	//If the user input doesn't match any autocomplete element, display the error
 	if($hidden_field.val().length <= 0)
 	{
-		Ecommerce.formAddErrorMessage($display_field, 'Please select a value from the list');
+		Ecommerce.formAddFieldErrorMessage($display_field, 'Please select a value from the list');
 	}
 };
 
@@ -188,17 +188,17 @@ Ecommerce.addressForm = function ($reload_subdivision, $reload_location)
 		$this = $(this);
 		if(this.checkValidity() === true)
 		{
-			Ecommerce.formRemoveErrorMessage($this);
+			Ecommerce.formRemoveFieldErrorMessage($this);
 		}
 		else
 		{
 			if($this.attr('id') === 'e_address_telephone')
 			{
-				Ecommerce.formAddErrorMessage($(this), 'Wrong format. Allowed characters are "digits", " ", ".", "-", "+"');
+				Ecommerce.formAddFieldErrorMessage($(this), 'Wrong format. Allowed characters are "digits", " ", ".", "-", "+"');
 			}
 			else
 			{
-				Ecommerce.formAddErrorMessage($(this), 'This field is required');
+				Ecommerce.formAddFieldErrorMessage($(this), 'This field is required');
 			}
 		}
 
@@ -354,7 +354,7 @@ Ecommerce.addressFormReloadSubdivision = function ($reload_subdivision, $country
 	});
 };
 
-Ecommerce.formAddErrorMessage = function ($container, $message)
+Ecommerce.formAddFieldErrorMessage = function ($container, $message)
 {
 	if($('#' + $container.attr('id') + 'helpBlock').length > 0)
 	{
@@ -382,7 +382,7 @@ Ecommerce.formAddErrorMessage = function ($container, $message)
 	}));
 };
 
-Ecommerce.formRemoveErrorMessage = function ($container)
+Ecommerce.formRemoveFieldErrorMessage = function ($container)
 {
 	if($('#' + $container.attr('id') + 'helpBlock').length <= 0)
 	{
