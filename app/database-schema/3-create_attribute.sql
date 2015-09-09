@@ -1,8 +1,7 @@
 USE ecommerce;
 
-DROP TABLE IF EXISTS brand;
-DROP TABLE IF EXISTS color;
-DROP TABLE IF EXISTS material;
+DROP TABLE IF EXISTS linked_attribute;
+DROP TABLE IF EXISTS attribute;
 DROP TABLE IF EXISTS subcategory;
 DROP TABLE IF EXISTS category;
 DROP TABLE IF EXISTS attribute_value;
@@ -73,50 +72,25 @@ CREATE TABLE subcategory (
 	CONSTRAINT fk_subcategory_category FOREIGN KEY (category_id) REFERENCES category (category_id) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=INNODB DEFAULT CHARSET=UTF8 COMMENT="Subcategories index";
 
-CREATE TABLE brand (
-	brand_id SMALLINT(3) UNSIGNED NOT NULL AUTO_INCREMENT,
-	type_id SMALLINT(3) UNSIGNED NOT NULL DEFAULT 3,
+CREATE TABLE attribute (
+	attribute_id SMALLINT(3) UNSIGNED NOT NULL AUTO_INCREMENT,
+	type_id SMALLINT(3) UNSIGNED NOT NULL,
 	label_id SMALLINT(3) UNSIGNED NOT NULL,
-	category_id SMALLINT(3) UNSIGNED NOT NULL,
-	subcategory_id SMALLINT(3) UNSIGNED,
 	created_at DATETIME NOT NULL DEFAULT '0000-00-00 00:00:00',
 	updated_at DATETIME NOT NULL DEFAULT '0000-00-00 00:00:00',
 	is_active BOOLEAN NOT NULL DEFAULT '1',
-	PRIMARY KEY (brand_id),
-	CONSTRAINT fk_brand_type FOREIGN KEY (type_id) REFERENCES attribute_type (type_id) ON DELETE CASCADE ON UPDATE CASCADE,
-	CONSTRAINT fk_brand_label FOREIGN KEY (label_id) REFERENCES attribute_label (label_id) ON DELETE CASCADE ON UPDATE CASCADE,
-	CONSTRAINT fk_brand_category FOREIGN KEY (category_id) REFERENCES category (category_id) ON DELETE CASCADE ON UPDATE CASCADE,
-	CONSTRAINT fk_brand_subcategory FOREIGN KEY (subcategory_id) REFERENCES subcategory (subcategory_id) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=INNODB DEFAULT CHARSET=UTF8 COMMENT="Brands index";
+	PRIMARY KEY (attribute_id),
+	CONSTRAINT fk_attribute_type FOREIGN KEY (type_id) REFERENCES attribute_type (type_id) ON DELETE CASCADE ON UPDATE CASCADE,
+	CONSTRAINT fk_attribute_label FOREIGN KEY (label_id) REFERENCES attribute_label (label_id) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=INNODB DEFAULT CHARSET=UTF8 COMMENT="Attributes index";
 
-CREATE TABLE color (
-	color_id SMALLINT(3) UNSIGNED NOT NULL AUTO_INCREMENT,
-	type_id SMALLINT(3) UNSIGNED NOT NULL DEFAULT 4,
-	label_id SMALLINT(3) UNSIGNED NOT NULL,
+CREATE TABLE linked_attribute (
+	attribute_id SMALLINT(3) UNSIGNED NOT NULL,
 	category_id SMALLINT(3) UNSIGNED NOT NULL,
 	subcategory_id SMALLINT(3) UNSIGNED,
-	created_at DATETIME NOT NULL DEFAULT '0000-00-00 00:00:00',
-	updated_at DATETIME NOT NULL DEFAULT '0000-00-00 00:00:00',
-	is_active BOOLEAN NOT NULL DEFAULT '1',
-	PRIMARY KEY (color_id),
-	CONSTRAINT fk_color_type FOREIGN KEY (type_id) REFERENCES attribute_type (type_id) ON DELETE CASCADE ON UPDATE CASCADE,
-	CONSTRAINT fk_color_label FOREIGN KEY (label_id) REFERENCES attribute_label (label_id) ON DELETE CASCADE ON UPDATE CASCADE,
-	CONSTRAINT fk_color_category FOREIGN KEY (category_id) REFERENCES category (category_id) ON DELETE CASCADE ON UPDATE CASCADE,
-	CONSTRAINT fk_color_subcategory FOREIGN KEY (subcategory_id) REFERENCES subcategory (subcategory_id) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=INNODB DEFAULT CHARSET=UTF8 COMMENT="Colors index";
-
-CREATE TABLE material (
-	material_id SMALLINT(3) UNSIGNED NOT NULL AUTO_INCREMENT,
-	type_id SMALLINT(3) UNSIGNED NOT NULL DEFAULT 5,
-	label_id SMALLINT(3) UNSIGNED NOT NULL,
-	category_id SMALLINT(3) UNSIGNED NOT NULL,
-	subcategory_id SMALLINT(3) UNSIGNED,
-	created_at DATETIME NOT NULL DEFAULT '0000-00-00 00:00:00',
-	updated_at DATETIME NOT NULL DEFAULT '0000-00-00 00:00:00',
-	is_active BOOLEAN NOT NULL DEFAULT '1',
-	PRIMARY KEY (material_id),
-	CONSTRAINT fk_material_type FOREIGN KEY (type_id) REFERENCES attribute_type (type_id) ON DELETE CASCADE ON UPDATE CASCADE,
-	CONSTRAINT fk_material_label FOREIGN KEY (label_id) REFERENCES attribute_label (label_id) ON DELETE CASCADE ON UPDATE CASCADE,
-	CONSTRAINT fk_material_category FOREIGN KEY (category_id) REFERENCES category (category_id) ON DELETE CASCADE ON UPDATE CASCADE,
-	CONSTRAINT fk_material_subcategory FOREIGN KEY (subcategory_id) REFERENCES subcategory (subcategory_id) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=INNODB DEFAULT CHARSET=UTF8 COMMENT="Materials index";
+	PRIMARY KEY (attribute_id, category_id),
+	UNIQUE KEY (attribute_id, category_id, subcategory_id),
+	CONSTRAINT fk_linked_attribute_attribute FOREIGN KEY (attribute_id) REFERENCES attribute (attribute_id) ON DELETE CASCADE ON UPDATE CASCADE,
+	CONSTRAINT fk_linked_attribute_category FOREIGN KEY (category_id) REFERENCES category (category_id) ON DELETE CASCADE ON UPDATE CASCADE,
+	CONSTRAINT fk_linked_material_subcategory FOREIGN KEY (subcategory_id) REFERENCES subcategory (subcategory_id) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=INNODB DEFAULT CHARSET=UTF8 COMMENT="Links between attributes and (sub)categories";

@@ -95,14 +95,8 @@ class MenuBuilder
 				$menu['Attribute']->addChild($this->translator->trans('menu.attribute.manage-subcategory'), array(
 					'route' => 'attribute_display_subcategory'));
 
-				$menu['Attribute']->addChild($this->translator->trans('menu.attribute.manage-brand'), array(
-					'route' => 'attribute_display_brand'));
-
-				$menu['Attribute']->addChild($this->translator->trans('menu.attribute.manage-color'), array(
-					'route' => 'attribute_display_color'));
-
-				$menu['Attribute']->addChild($this->translator->trans('menu.attribute.manage-material'), array(
-					'route' => 'attribute_display_material'));
+				$menu['Attribute']->addChild($this->translator->trans('menu.attribute.manage-attribute'), array(
+					'route' => 'attribute_display_type', 'routeParameters' => array('type_id' => 0)));
 
 				$menu['Attribute']->setChildrenAttribute('class', 'dropdown-menu');
 				$menu['Attribute']->setLabel($this->translator->trans('menu.attribute.base') . ' <span class="caret"></span>');

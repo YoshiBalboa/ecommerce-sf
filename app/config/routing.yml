@@ -82,27 +82,9 @@ address_locations:
 # ATTRIBUTE CONTROLLER
 #***************************************************************************
 
-attribute_add_brand:
-    path:		/attribute/add/brand
-    defaults:	{ _controller: Ecommerce:Attribute:addBrand }
-    requirements:
-        _method:  POST
-
 attribute_add_category:
     path:		/attribute/add/category
     defaults:	{ _controller: Ecommerce:Attribute:addCategory }
-    requirements:
-        _method:  POST
-
-attribute_add_color:
-    path:		/attribute/add/color
-    defaults:	{ _controller: Ecommerce:Attribute:addColor }
-    requirements:
-        _method:  POST
-
-attribute_add_material:
-    path:		/attribute/add/material
-    defaults:	{ _controller: Ecommerce:Attribute:addMaterial }
     requirements:
         _method:  POST
 
@@ -112,66 +94,49 @@ attribute_add_subcategory:
     requirements:
         _method:  POST
 
-attribute_set_is_active_brand:
-    path:		/attribute/delete/brand
-    defaults:	{ _controller: Ecommerce:Attribute:setIsActiveBrand }
+attribute_create:
+    path:		/attribute/create
+    defaults:	{ _controller: Ecommerce:Attribute:add }
     requirements:
         _method:  POST
-    condition:	"request.isXmlHttpRequest()"
 
-attribute_set_is_active_category:
-    path:		/attribute/delete/category
-    defaults:	{ _controller: Ecommerce:Attribute:setIsActiveCategory }
+attribute_delete:
+    path:		/attribute/delete
+    defaults:	{ _controller: Ecommerce:Attribute:add }
     requirements:
         _method:  POST
-    condition:	"request.isXmlHttpRequest()"
-
-attribute_set_is_active_color:
-    path:		/attribute/delete/color
-    defaults:	{ _controller: Ecommerce:Attribute:setIsActiveColor }
-    requirements:
-        _method:  POST
-    condition:	"request.isXmlHttpRequest()"
-
-attribute_set_is_active_material:
-    path:		/attribute/delete/material
-    defaults:	{ _controller: Ecommerce:Attribute:setIsActiveMaterial }
-    requirements:
-        _method:  POST
-    condition:	"request.isXmlHttpRequest()"
-
-attribute_set_is_active_subcategory:
-    path:		/attribute/delete/subcategory
-    defaults:	{ _controller: Ecommerce:Attribute:setIsActiveSubcategory }
-    requirements:
-        _method:  POST
-    condition:	"request.isXmlHttpRequest()"
-
-attribute_display_brand:
-    path:		/attribute/brand
-    defaults:	{ _controller: Ecommerce:Attribute:displayBrand }
 
 attribute_display_category:
     path:		/attribute/category
     defaults:	{ _controller: Ecommerce:Attribute:displayCategory }
 
-attribute_display_color:
-    path:		/attribute/color
-    defaults:	{ _controller: Ecommerce:Attribute:displayColor }
-
-attribute_display_material:
-    path:		/attribute/material
-    defaults:	{ _controller: Ecommerce:Attribute:displayMaterial }
-
 attribute_display_subcategory:
     path:		/attribute/subcategory
     defaults:	{ _controller: Ecommerce:Attribute:displaySubcategory }
+
+attribute_display_type:
+    path:		/attribute/display/{type_id}
+    defaults:	{ _controller: Ecommerce:Attribute:displayType }
 
 attribute_edit_value:
     path:		/attribute/edit/value
     defaults:	{ _controller: Ecommerce:Attribute:editValue }
     requirements:
         _method:  POST
+
+attribute_set_is_active_category:
+    path:		/attribute/enable/category
+    defaults:	{ _controller: Ecommerce:Attribute:setIsActiveCategory }
+    requirements:
+        _method:  POST
+    condition:	"request.isXmlHttpRequest()"
+
+attribute_set_is_active_subcategory:
+    path:		/attribute/enable/subcategory
+    defaults:	{ _controller: Ecommerce:Attribute:setIsActiveSubcategory }
+    requirements:
+        _method:  POST
+    condition:	"request.isXmlHttpRequest()"
 
 attribute_switch_category:
     path:		/attribute/switch/category

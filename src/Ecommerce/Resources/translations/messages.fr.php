@@ -42,11 +42,9 @@ return array(
 			'delete' => 'Supprimer des adresses',
 		),
 		'attribute'	 => array(
-			'display-brand'			 => 'Attribut Marque',
-			'display-category'		 => 'Attribut Catégorie',
-			'display-color'			 => 'Attribut Couleur',
-			'display-material'		 => 'Attribut Matière',
-			'display-subcategory'	 => 'Attribut Sous-Catégorie',
+			'display-attribute'		 => 'Attributs',
+			'display-category'		 => 'Catégories',
+			'display-subcategory'	 => 'Sous-Catégories',
 		),
 		'index'		 => array(
 			'home' => "Page d'accueil",
@@ -70,10 +68,8 @@ return array(
 			'delete' => 'Supprimer des adresses',
 		),
 		'attribute'	 => array(
-			'display-brand'			 => 'Liste des marques',
+			'display-attribute'		 => 'Liste des attributs',
 			'display-category'		 => 'Liste des catégories',
-			'display-color'			 => 'Liste des couleurs',
-			'display-material'		 => 'Liste des matières',
 			'display-subcategory'	 => 'Liste des sous-catégories',
 		),
 		'index'		 => array(
@@ -122,10 +118,8 @@ return array(
 		),
 		'attribute'	 => array(
 			'base'				 => 'Attributs',
-			'manage-brand'		 => 'Gérer les marques',
+			'manage-attribute'	 => 'Gérer les attributs',
 			'manage-category'	 => 'Gérer les catégories',
-			'manage-color'		 => 'Gérer les couleurs',
-			'manage-material'	 => 'Gérer les matières',
 			'manage-subcategory' => 'Gérer les sous-catégories',
 		),
 		'home'		 => "Page d'accueil",

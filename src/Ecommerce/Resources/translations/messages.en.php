@@ -42,11 +42,9 @@ return array(
 			'delete' => 'Delete addresses',
 		),
 		'attribute'	 => array(
-			'display-brand'			 => 'Brand Attribute',
-			'display-category'		 => 'Category Attribute',
-			'display-color'			 => 'Color Attribute',
-			'display-material'		 => 'Material Attribute',
-			'display-subcategory'	 => 'Subcategory Attribute',
+			'display-attribute'		 => 'Display Attributes',
+			'display-category'		 => 'Display Categories',
+			'display-subcategory'	 => 'Display Subcategories',
 		),
 		'index'		 => array(
 			'home' => 'Homepage',
@@ -70,10 +68,8 @@ return array(
 			'delete' => 'Delete addresses',
 		),
 		'attribute'	 => array(
-			'display-brand'			 => 'List of brands',
+			'display-attribute'		 => 'List of attributes',
 			'display-category'		 => 'List of categories',
-			'display-color'			 => 'List of colors',
-			'display-material'		 => 'List of materials',
 			'display-subcategory'	 => 'List of subcategories',
 		),
 		'index'		 => array(
@@ -122,10 +118,8 @@ return array(
 		),
 		'attribute'	 => array(
 			'base'				 => 'Attribute',
-			'manage-brand'		 => 'Manage brands',
+			'manage-attribute'	 => 'Manage attributes',
 			'manage-category'	 => 'Manage categories',
-			'manage-color'		 => 'Manage colors',
-			'manage-material'	 => 'Manage materials',
 			'manage-subcategory' => 'Manage subcategories',
 		),
 		'home'		 => 'Home',

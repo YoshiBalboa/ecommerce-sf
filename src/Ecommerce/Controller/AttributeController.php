@@ -3,7 +3,6 @@
 namespace Ecommerce\Controller;
 
 use Ecommerce\Entity\Repository\AttributeTypeRepository;
-use Ecommerce\Form\Type;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -11,34 +10,6 @@ use Symfony\Component\HttpFoundation\Response;
 
 class AttributeController extends Controller
 {
-
-	/**
-	 * Create a new brand attribute
-	 * @param Request $request
-	 * @return Response
-	 */
-	public function addBrandAction(Request $request)
-	{
-		if(!$this->isAdmin())
-		{
-			return $this->redirectToRoute('home');
-		}
-
-		if(empty($request->request->get('brand_id')))
-		{
-			return new Response($this->get('translator')->trans('flash.invalid-request'), Response::HTTP_BAD_REQUEST, array(
-				'Content-Type', 'application/json; charset=utf-8'));
-		}
-
-		//@TODO
-		die('Line:' . __LINE__);
-
-		$response = array(
-			'success' => TRUE,
-		);
-
-		return new JsonResponse($response);
-	}
 
 	/**
 	 * Create a new category attribute
@@ -104,62 +75,6 @@ class AttributeController extends Controller
 
 		$this->addFlash('success', $this->get('translator')->trans('flash.attribute-created'));
 		return $this->redirectToRoute('attribute_display_category');
-	}
-
-	/**
-	 * Create a new color attribute
-	 * @param Request $request
-	 * @return Response
-	 */
-	public function addColorAction(Request $request)
-	{
-		if(!$this->isAdmin())
-		{
-			return $this->redirectToRoute('home');
-		}
-
-		if(empty($request->request->get('color_id')))
-		{
-			return new Response($this->get('translator')->trans('flash.invalid-request'), Response::HTTP_BAD_REQUEST, array(
-				'Content-Type', 'application/json; charset=utf-8'));
-		}
-
-		//@TODO
-		die('Line:' . __LINE__);
-
-		$response = array(
-			'success' => TRUE,
-		);
-
-		return new JsonResponse($response);
-	}
-
-	/**
-	 * Create a new material attribute
-	 * @param Request $request
-	 * @return Response
-	 */
-	public function addMaterialAction(Request $request)
-	{
-		if(!$this->isAdmin())
-		{
-			return $this->redirectToRoute('home');
-		}
-
-		if(empty($request->request->get('material_id')))
-		{
-			return new Response($this->get('translator')->trans('flash.invalid-request'), Response::HTTP_BAD_REQUEST, array(
-				'Content-Type', 'application/json; charset=utf-8'));
-		}
-
-		//@TODO
-		die('Line:' . __LINE__);
-
-		$response = array(
-			'success' => TRUE,
-		);
-
-		return new JsonResponse($response);
 	}
 
 	/**
@@ -237,34 +152,6 @@ class AttributeController extends Controller
 	}
 
 	/**
-	 * Set active/inactive a brand attribute
-	 * @param Request $request
-	 * @return Response
-	 */
-	public function setIsActiveBrandAction(Request $request)
-	{
-		if(!$this->isAdmin())
-		{
-			return $this->redirectToRoute('home');
-		}
-
-		if(empty($request->request->get('brand_id')))
-		{
-			return new Response($this->get('translator')->trans('flash.invalid-request'), Response::HTTP_BAD_REQUEST, array(
-				'Content-Type', 'application/json; charset=utf-8'));
-		}
-
-		//@TODO
-		die('Line:' . __LINE__);
-
-		$response = array(
-			'success' => TRUE,
-		);
-
-		return new JsonResponse($response);
-	}
-
-	/**
 	 * Set active/inactive a category attribute
 	 * @param Request $request
 	 * @return Response
@@ -313,62 +200,6 @@ class AttributeController extends Controller
 	}
 
 	/**
-	 * Set active/inactive a color attribute
-	 * @param Request $request
-	 * @return Response
-	 */
-	public function setIsActiveColorAction(Request $request)
-	{
-		if(!$this->isAdmin())
-		{
-			return $this->redirectToRoute('home');
-		}
-
-		if(empty($request->request->get('color_id')))
-		{
-			return new Response($this->get('translator')->trans('flash.invalid-request'), Response::HTTP_BAD_REQUEST, array(
-				'Content-Type', 'application/json; charset=utf-8'));
-		}
-
-		//@TODO
-		die('Line:' . __LINE__);
-
-		$response = array(
-			'success' => TRUE,
-		);
-
-		return new JsonResponse($response);
-	}
-
-	/**
-	 * Set active/inactive a material attribute
-	 * @param Request $request
-	 * @return Response
-	 */
-	public function setIsActiveMaterialAction(Request $request)
-	{
-		if(!$this->isAdmin())
-		{
-			return $this->redirectToRoute('home');
-		}
-
-		if(empty($request->request->get('material_id')))
-		{
-			return new Response($this->get('translator')->trans('flash.invalid-request'), Response::HTTP_BAD_REQUEST, array(
-				'Content-Type', 'application/json; charset=utf-8'));
-		}
-
-		//@TODO
-		die('Line:' . __LINE__);
-
-		$response = array(
-			'success' => TRUE,
-		);
-
-		return new JsonResponse($response);
-	}
-
-	/**
 	 * Set active/inactive a subcategory attribute
 	 * @param Request $request
 	 * @return Response
@@ -408,25 +239,6 @@ class AttributeController extends Controller
 	}
 
 	/**
-	 * Display brands attributes list
-	 * @return Response
-	 */
-	public function displayBrandAction()
-	{
-		if(!$this->isAdmin())
-		{
-			return $this->redirectToRoute('home');
-		}
-
-		$view = array(
-			'head_title' => $this->get('translator')->trans('head_title.attribute.display-brand'),
-			'h1_title'	 => $this->get('translator')->trans('h1_title.attribute.display-brand'),
-		);
-
-		return $this->render('attribute/default.html.twig', $view);
-	}
-
-	/**
 	 * Display categories attributes list
 	 * @return Response
 	 */
@@ -457,44 +269,6 @@ class AttributeController extends Controller
 		);
 
 		return $this->render('attribute/category.html.twig', $view);
-	}
-
-	/**
-	 * Display colors attributes list
-	 * @return Response
-	 */
-	public function displayColorAction()
-	{
-		if(!$this->isAdmin())
-		{
-			return $this->redirectToRoute('home');
-		}
-
-		$view = array(
-			'head_title' => $this->get('translator')->trans('head_title.attribute.display-color'),
-			'h1_title'	 => $this->get('translator')->trans('h1_title.attribute.display-color'),
-		);
-
-		return $this->render('attribute/default.html.twig', $view);
-	}
-
-	/**
-	 * Display materials attributes list
-	 * @return Response
-	 */
-	public function displayMaterialAction()
-	{
-		if(!$this->isAdmin())
-		{
-			return $this->redirectToRoute('home');
-		}
-
-		$view = array(
-			'head_title' => $this->get('translator')->trans('head_title.attribute.display-material'),
-			'h1_title'	 => $this->get('translator')->trans('h1_title.attribute.display-material'),
-		);
-
-		return $this->render('attribute/default.html.twig', $view);
 	}
 
 	/**
@@ -537,6 +311,48 @@ class AttributeController extends Controller
 		);
 
 		return $this->render('attribute/subcategory.html.twig', $view);
+	}
+
+	/**
+	 * Display attributes list
+	 * @param int $type_id
+	 * @return Response
+	 */
+	public function displayTypeAction($type_id)
+	{
+		if(!$this->isAdmin())
+		{
+			return $this->redirectToRoute('home');
+		}
+
+		$type_repository = $this->getDoctrine()->getRepository('Ecommerce:AttributeType');
+		$type = $type_repository->findOneByTypeId($type_id);
+
+		$view = array(
+			'head_title' => $this->get('translator')->trans('head_title.attribute.display-attribute'),
+			'h1_title'	 => $this->get('translator')->trans('h1_title.attribute.display-attribute'),
+		);
+
+		if(empty($type))
+		{
+			//@TODO display valid type list
+			die(implode('|', array(__METHOD__, __LINE__)));
+		}
+		elseif($type->getTypeId() == AttributeTypeRepository::TYPE_CATEGORY)
+		{
+			return $this->redirectToRoute('attribute_display_category');
+		}
+		elseif($type->getTypeId() == AttributeTypeRepository::TYPE_SUBCATEGORY)
+		{
+			return $this->redirectToRoute('attribute_display_subcategory');
+		}
+		else
+		{
+			//@TODO get attribute list of the given type
+			die(implode('|', array(__METHOD__, __LINE__)));
+		}
+
+		return $this->render('attribute/default.html.twig', $view);
 	}
 
 	/**
