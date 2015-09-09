@@ -107,40 +107,45 @@ attribute_add_material:
         _method:  POST
 
 attribute_add_subcategory:
-    path:		/attribute/add/subcategories
-    defaults:	{ _controller: Ecommerce:Attribute:addSubcategories }
+    path:		/attribute/add/subcategory
+    defaults:	{ _controller: Ecommerce:Attribute:addSubcategory }
     requirements:
         _method:  POST
 
-attribute_delete_brand:
+attribute_set_is_active_brand:
     path:		/attribute/delete/brand
-    defaults:	{ _controller: Ecommerce:Attribute:deleteBrand }
+    defaults:	{ _controller: Ecommerce:Attribute:setIsActiveBrand }
     requirements:
         _method:  POST
+    condition:	"request.isXmlHttpRequest()"
 
-attribute_delete_category:
+attribute_set_is_active_category:
     path:		/attribute/delete/category
-    defaults:	{ _controller: Ecommerce:Attribute:deleteCategory }
+    defaults:	{ _controller: Ecommerce:Attribute:setIsActiveCategory }
     requirements:
         _method:  POST
+    condition:	"request.isXmlHttpRequest()"
 
-attribute_delete_color:
+attribute_set_is_active_color:
     path:		/attribute/delete/color
-    defaults:	{ _controller: Ecommerce:Attribute:deleteColor }
+    defaults:	{ _controller: Ecommerce:Attribute:setIsActiveColor }
     requirements:
         _method:  POST
+    condition:	"request.isXmlHttpRequest()"
 
-attribute_delete_material:
+attribute_set_is_active_material:
     path:		/attribute/delete/material
-    defaults:	{ _controller: Ecommerce:Attribute:deleteMaterial }
+    defaults:	{ _controller: Ecommerce:Attribute:setIsActiveMaterial }
     requirements:
         _method:  POST
+    condition:	"request.isXmlHttpRequest()"
 
-attribute_delete_subcategory:
-    path:		/attribute/delete/subcategories
-    defaults:	{ _controller: Ecommerce:Attribute:deleteSubcategories }
+attribute_set_is_active_subcategory:
+    path:		/attribute/delete/subcategory
+    defaults:	{ _controller: Ecommerce:Attribute:setIsActiveSubcategory }
     requirements:
         _method:  POST
+    condition:	"request.isXmlHttpRequest()"
 
 attribute_display_brand:
     path:		/attribute/brand
@@ -159,14 +164,21 @@ attribute_display_material:
     defaults:	{ _controller: Ecommerce:Attribute:displayMaterial }
 
 attribute_display_subcategory:
-    path:		/attribute/subcategories
-    defaults:	{ _controller: Ecommerce:Attribute:displaySubcategories }
+    path:		/attribute/subcategory
+    defaults:	{ _controller: Ecommerce:Attribute:displaySubcategory }
 
 attribute_edit_value:
     path:		/attribute/edit/value
     defaults:	{ _controller: Ecommerce:Attribute:editValue }
     requirements:
         _method:  POST
+
+attribute_switch_category:
+    path:		/attribute/switch/category
+    defaults:	{ _controller: Ecommerce:Attribute:switchCategory }
+    requirements:
+        _method:  POST
+    condition:	"request.isXmlHttpRequest()"
 
 #***************************************************************************
 # SECURITY CONTROLLER

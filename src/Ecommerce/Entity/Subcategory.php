@@ -8,7 +8,7 @@ use Doctrine\ORM\Mapping as ORM;
  * Subcategory
  *
  * @ORM\Table(name="subcategory", indexes={@ORM\Index(name="fk_subcategory_type", columns={"type_id"}), @ORM\Index(name="fk_subcategory_label", columns={"label_id"}), @ORM\Index(name="fk_subcategory_category", columns={"category_id"})})
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="Ecommerce\Entity\Repository\SubcategoryRepository")
  */
 class Subcategory
 {
@@ -77,7 +77,7 @@ class Subcategory
     /**
      * Get subcategoryId
      *
-     * @return integer 
+     * @return integer
      */
     public function getSubcategoryId()
     {
@@ -100,7 +100,7 @@ class Subcategory
     /**
      * Get createdAt
      *
-     * @return \DateTime 
+     * @return \DateTime
      */
     public function getCreatedAt()
     {
@@ -123,7 +123,7 @@ class Subcategory
     /**
      * Get updatedAt
      *
-     * @return \DateTime 
+     * @return \DateTime
      */
     public function getUpdatedAt()
     {
@@ -146,7 +146,7 @@ class Subcategory
     /**
      * Get isActive
      *
-     * @return boolean 
+     * @return boolean
      */
     public function getIsActive()
     {
@@ -169,7 +169,7 @@ class Subcategory
     /**
      * Get category
      *
-     * @return \Ecommerce\Entity\Category 
+     * @return \Ecommerce\Entity\Category
      */
     public function getCategory()
     {
@@ -192,7 +192,7 @@ class Subcategory
     /**
      * Get label
      *
-     * @return \Ecommerce\Entity\AttributeLabel 
+     * @return \Ecommerce\Entity\AttributeLabel
      */
     public function getLabel()
     {
@@ -215,7 +215,7 @@ class Subcategory
     /**
      * Get type
      *
-     * @return \Ecommerce\Entity\AttributeType 
+     * @return \Ecommerce\Entity\AttributeType
      */
     public function getType()
     {

@@ -2,6 +2,7 @@
 
 return array(
 	'button'	 => array(
+		'change' => 'Change',
 		'create' => 'Create',
 		'delete' => 'Delete',
 		'save'	 => 'Save',
@@ -84,6 +85,7 @@ return array(
 	),
 	'label'		 => array(
 		'birthday'					 => 'Birthday:',
+		'category'					 => 'Category:',
 		'city'						 => 'City:',
 		'country'					 => 'Country:',
 		'current-password'			 => 'Current password:',
@@ -105,6 +107,7 @@ return array(
 		'prefix'					 => 'Prefix:',
 		'state'						 => 'State/Department:',
 		'street'					 => 'Street:',
+		'subcategory'				 => 'Subcategory:',
 		'telephone'					 => 'Telephone:',
 		'url'						 => 'Url:',
 	),
@@ -135,9 +138,12 @@ return array(
 		'addresses'					 => 'Addresses',
 		'add-address'				 => 'Add an address',
 		'add-category'				 => 'Add a category',
+		'add-subcategory'			 => 'Add a subcategory',
 		'billing'					 => 'Billing',
+		'category'					 => 'Category',
 		'change-billing-address'	 => 'Change the main billing address',
 		'change-shipping-address'	 => 'Change the main shipping address',
+		'confirm-category-change'	 => 'Please confirm the modification of the category',
 		'create-account-not-member'	 => 'Not a member yet ?',
 		'create-an-account'			 => 'Create an account',
 		'default-billing-address'	 => 'Billing Address',
@@ -154,6 +160,7 @@ return array(
 		'select-addresses-to-delete' => 'Select all addresses you want to delete and submit (this cannot be undone)',
 		'shipping'					 => 'Shipping',
 		'sitename'					 => "Yoshi's Lair",
+		'subcategory'				 => 'Subcategory',
 		'toggle-navigation'			 => 'Toggle navigation',
 		'url'						 => 'Url',
 		'your-current-email'		 => 'Your current email is <u>%email%</u>',

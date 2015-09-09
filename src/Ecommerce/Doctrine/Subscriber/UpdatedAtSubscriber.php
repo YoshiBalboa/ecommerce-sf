@@ -63,7 +63,8 @@ class UpdatedAtSubscriber implements EventSubscriber
 		if($entity instanceof \Ecommerce\Entity\AttributeValue
 			or $entity instanceof \Ecommerce\Entity\Category
 			or $entity instanceof \Ecommerce\Entity\Customer
-			or $entity instanceof \Ecommerce\Entity\CustomerAddress)
+			or $entity instanceof \Ecommerce\Entity\CustomerAddress
+			or $entity instanceof \Ecommerce\Entity\Subcategory)
 		{
 			$return = TRUE;
 		}

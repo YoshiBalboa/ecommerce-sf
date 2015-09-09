@@ -24,7 +24,7 @@ class AttributeValueType extends AbstractType
 	public function configureOptions(OptionsResolver $resolver)
 	{
 		$resolver->setDefaults(array(
-			'csrf_protection'	 => true,
+			'csrf_protection'	 => false,
 			'csrf_field_name'	 => '_token',
 			'intention'			 => 'ecommerce_attribute_value_item',
 		));

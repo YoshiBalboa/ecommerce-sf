@@ -40,6 +40,18 @@ services:
         tags:
             - { name: form.type, alias: e_address }
 
+    Ecommerce.form.type.attr_value:
+        class: Ecommerce\Form\Type\AttributeValueType
+        arguments:
+        tags:
+            - { name: form.type, alias: e_attr_value }
+
+    Ecommerce.form.type.category:
+        class: Ecommerce\Form\Type\CategoryType
+        arguments:
+        tags:
+            - { name: form.type, alias: e_category }
+
     Ecommerce.form.type.gender:
         class: Ecommerce\Form\Type\GenderType
         arguments:
@@ -52,6 +64,12 @@ services:
         arguments:
         tags:
             - { name: form.type, alias: e_password }
+
+    Ecommerce.form.type.subcategory:
+        class: Ecommerce\Form\Type\SubcategoryType
+        arguments: ["@doctrine.orm.entity_manager"]
+        tags:
+            - { name: form.type, alias: e_subcategory }
 
     Ecommerce.locale_listener:
         class: Ecommerce\EventListener\LocaleListener

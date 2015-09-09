@@ -1,0 +1,108 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+	<div class="page-header">
+		<h1>{{ h1_title }}</h1>
+	</div>
+	<div id="attribute_container" class="container-fluid">
+		<div class="row">
+			<p class="text-center">
+				<button type="button" class="display-form btn btn-default">{{ 'view.add-subcategory'|trans }}</button>
+			</p>
+			<div class="attribute-form">
+				<p class="form-title">{{ 'view.add-subcategory'|trans }}</p>
+				{{ form_start(subcategory_form) }}
+				{{ form_widget(subcategory_form) }}
+				{{ form_end(subcategory_form) }}
+			</div>
+			<hr>
+		</div>
+
+		{% if subcategories is empty %}
+			<p>{{ 'view.nothing2display'|trans }}</p>
+		{% else %}
+			<div class="row">
+				<p id="error_message" class="text-danger">&nbsp;</p>
+				<div class="table-responsive">
+					<table class="table table-hover">
+						<thead>
+							<tr>
+								<th>{{ 'view.id'|trans|upper }}</th>
+								<th>{{ 'view.category'|trans }}</th>
+								<th>
+									<div class="phoca-flagbox small">
+										<span class="phoca-flag fr"></span>
+									</div>
+								</th>
+								<th>
+									<div class="phoca-flagbox small en">
+										<span class="phoca-flag en"></span>
+									</div>
+								</th>
+								<th>{{ 'view.active?'|trans }}</th>
+							</tr>
+						</thead>
+						<tbody>
+							{% for subcategory in subcategories %}
+								<tr>
+									<td>
+										<b>{{ subcategory.subcategory_id }}</b>
+									</td>
+									<td>
+										{% if categories is empty %}
+											{{ subcategory.category.name ~ ' (' ~ 'view.id'|trans ~ ': ' ~ subcategory.category.category_id ~ ')' }}
+										{% else %}
+											<form method="POST" action="{{ path('attribute_switch_category') }}" name="switch_category">
+												<div class="form-group">
+													<select name="category_id" class="form-control">
+														{% for category_id, category_name in categories %}
+															<option value="{{ category_id }}" {% if subcategory.category.category_id == category_id %}selected="selected"{% endif %}>{{ category_name }}</option>
+														{% endfor %}
+													</select>
+													<input type="hidden" name="subcategory_id" value="{{ subcategory.subcategory_id }}">
+												</div>
+											</form>
+										{% endif %}
+									</td>
+									<td>
+										{{ include('Ecommerce:Form:attribute_value.html.twig',
+											{
+												'form': attr_value_form,
+												'attr_id': subcategory.subcategory_id,
+												'type_id': subcategory.type_id,
+												'values': subcategory.values.fr,
+												'locale': 'fr'
+											}) }}
+									</td>
+									<td>
+										{{ include('Ecommerce:Form:attribute_value.html.twig',
+											{
+												'form': attr_value_form,
+												'attr_id': subcategory.subcategory_id,
+												'type_id': subcategory.type_id,
+												'values': subcategory.values.en,
+												'locale': 'en'
+											}) }}
+									</td>
+									<td class="set-is-active">
+										<div class="checkbox">
+											<input type="checkbox" name="is-active" value="{{ subcategory.subcategory_id }}" {% if subcategory.is_active %}checked="checked"{% endif %}>
+										</div>
+									</td>
+								</tr>
+							{% endfor %}
+						</tbody>
+					</table>
+				</div>
+			</div>
+		{% endif %}
+	</div>
+{% endblock %}
+
+{% block javascripts %}
+	<script type="text/javascript">
+		//<![CDATA[
+		Ecommerce.attributeController('{{ path('home') }}', '{{ path('attribute_set_is_active_subcategory') }}', '{{ 'view.confirm-category-change'|trans }}');
+		//]]>
+	</script>
+{% endblock %}

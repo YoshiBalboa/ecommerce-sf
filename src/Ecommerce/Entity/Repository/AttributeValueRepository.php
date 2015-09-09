@@ -4,10 +4,25 @@ namespace Ecommerce\Entity\Repository;
 
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\Query\ResultSetMapping;
+use Ecommerce\Entity\AttributeLabel;
 use Ecommerce\Entity\AttributeValue;
 
 class AttributeValueRepository extends EntityRepository
 {
+
+	public function createAttributeValue(AttributeLabel $label, $locale, $name, $urlkey)
+	{
+		$attr_value = new AttributeValue();
+		$attr_value->setLabel($label);
+		$attr_value->setLocale($locale);
+		$attr_value->setName($name);
+		$attr_value->setHash();
+		$attr_value->setUrlkey($urlkey);
+
+		$em = $this->getEntityManager();
+		$em->persist($attr_value);
+		$em->flush();
+	}
 
 	public function existsLabel($type, $name, $locale, AttributeValue $value = null)
 	{

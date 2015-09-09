@@ -12,8 +12,8 @@ class CategoryType extends AbstractType
 	public function buildForm(FormBuilderInterface $builder, array $options)
 	{
 		$builder
-			->add('category_fr', 'text', array('label' => 'label.french-label'))
-			->add('category_en', 'text', array('label' => 'label.english-label'))
+			->add('value_fr', 'text', array('label' => 'label.french-label'))
+			->add('value_en', 'text', array('label' => 'label.english-label'))
 			->add('save', 'submit', array('label' => 'button.save'))
 		;
 	}

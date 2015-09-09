@@ -3,18 +3,39 @@
 namespace Ecommerce\Entity\Repository;
 
 use Doctrine\ORM\EntityRepository;
-use Doctrine\ORM\Query\ResultSetMapping;
+use Doctrine\ORM\Query\Expr\Join;
 use Ecommerce\Entity\Category;
 
 class CategoryRepository extends EntityRepository
 {
 
+	public function getFormChoiceCategories($locale)
+	{
+		$qb = $this->getEntityManager()->createQueryBuilder();
+		$qb->select('c.categoryId as id', 'v.name')
+			->from('Ecommerce:Category', 'c')
+			->innerJoin('Ecommerce:AttributeValue', 'v', Join::WITH, 'v.label = c.label AND v.locale = :locale')
+			->where('c.isActive = 1')
+			->setParameter('locale', $locale)
+			->groupBy('c.categoryId')
+			->orderBy('v.name', 'ASC');
+
+		$categories = array();
+		foreach($qb->getQuery()->getResult() as $row)
+		{
+			$categories[$row['id']] = $row['name'];
+		}
+
+		return $categories;
+	}
+
 	/**
 	 * Return categories entities as an array in an array
+	 * This array is for rendering categories in view
 	 *
 	 * @return array
 	 */
-	public function getCategories()
+	public function getViewCategories()
 	{
 		$em = $this->getEntityManager();
 		$attr_value_repository = $em->getRepository('Ecommerce:AttributeValue');
@@ -59,7 +80,7 @@ class CategoryRepository extends EntityRepository
 	/**
 	 * Disabled all subcategories if the parent category is inactive
 	 * @param Category $category
-	 * @return type
+	 * @return boolean
 	 */
 	public function disableSubcategories(Category $category)
 	{
@@ -71,6 +92,29 @@ class CategoryRepository extends EntityRepository
 		$qb = $this->getEntityManager()->createQueryBuilder();
 		$query = $qb->update('Ecommerce:Subcategory', 's')
 			->set('s.isActive', $qb->expr()->literal(0))
+			->where('s.category = :category')
+			->setParameter('category', $category)
+			->getQuery();
+		$query->execute();
+
+		return TRUE;
+	}
+
+	/**
+	 * Enable all subcategories if the parent category is active
+	 * @param Category $category
+	 * @return boolean
+	 */
+	public function enableSubcategories(Category $category)
+	{
+		if(!$category->getIsActive())
+		{
+			return FALSE;
+		}
+
+		$qb = $this->getEntityManager()->createQueryBuilder();
+		$query = $qb->update('Ecommerce:Subcategory', 's')
+			->set('s.isActive', $qb->expr()->literal(1))
 			->where('s.category = :category')
 			->setParameter('category', $category)
 			->getQuery();

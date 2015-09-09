@@ -2,6 +2,7 @@
 
 return array(
 	'button'	 => array(
+		'change' => 'Changer',
 		'create' => 'Créer',
 		'delete' => 'Supprimer',
 		'save'	 => 'Enregistrer',
@@ -84,6 +85,7 @@ return array(
 	),
 	'label'		 => array(
 		'birthday'					 => 'Date de naissance :',
+		'category'					 => 'Catégorie :',
 		'city'						 => 'Ville :',
 		'country'					 => 'Pays :',
 		'current-password'			 => 'Mot de passe actuel :',
@@ -105,6 +107,7 @@ return array(
 		'prefix'					 => 'Préfix :',
 		'state'						 => 'Département :',
 		'street'					 => 'Rue :',
+		'subcategory'				 => 'Sous-catégorie :',
 		'telephone'					 => 'Téléphone :',
 		'url'						 => 'Url :',
 	),
@@ -135,9 +138,12 @@ return array(
 		'addresses'					 => 'Adresses',
 		'add-address'				 => 'Ajouter une adresse',
 		'add-category'				 => 'Ajouter une catégorie',
+		'add-subcategory'			 => 'Ajouter une sous-catégorie',
 		'billing'					 => 'Facturation',
+		'category'					 => 'Catégorie',
 		'change-billing-address'	 => "Changer l'adresse de facturation principale",
 		'change-shipping-address'	 => "Changer l'adresse de livraison principale",
+		'confirm-category-change'	 => 'Veuillez confirmer la modification de la catégorie',
 		'create-account-not-member'	 => 'Pas encore membre ?',
 		'create-an-account'			 => 'Créer un compte',
 		'default-billing-address'	 => 'Adresse de facturation',
@@ -154,6 +160,7 @@ return array(
 		'select-addresses-to-delete' => 'Choisissez les adresses que vous souhaitez supprimer puis validez (cette action ne peut être annulée)',
 		'shipping'					 => 'Livraison',
 		'sitename'					 => "Yoshi's Lair",
+		'subcategory'				 => 'Sous-catégorie',
 		'toggle-navigation'			 => 'Basculer la navigation',
 		'url'						 => 'Url',
 		'your-current-email'		 => 'Votre email actuel est <u>%email%</u>',

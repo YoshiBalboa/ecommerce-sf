@@ -14,6 +14,7 @@ class AttributeController extends Controller
 
 	/**
 	 * Create a new brand attribute
+	 * @param Request $request
 	 * @return Response
 	 */
 	public function addBrandAction(Request $request)
@@ -41,6 +42,7 @@ class AttributeController extends Controller
 
 	/**
 	 * Create a new category attribute
+	 * @param Request $request
 	 * @return Response
 	 */
 	public function addCategoryAction(Request $request)
@@ -50,7 +52,7 @@ class AttributeController extends Controller
 			return $this->redirectToRoute('home');
 		}
 
-		$category_form = $this->createForm(new Type\CategoryType(), array(), array());
+		$category_form = $this->createForm('e_category', array(), array());
 		$category_form->handleRequest($request);
 
 		if(!$category_form->isValid())
@@ -61,11 +63,11 @@ class AttributeController extends Controller
 
 		$data = $category_form->getData();
 
-		//Search for the category label
+		//Search for duplicate label
 
 		$attr_value_repository = $this->getDoctrine()->getRepository('Ecommerce:AttributeValue');
-		if($attr_value_repository->existsLabel(AttributeTypeRepository::TYPE_CATEGORY, $data['category_fr'], 'fr')
-			or $attr_value_repository->existsLabel(AttributeTypeRepository::TYPE_CATEGORY, $data['category_en'], 'en'))
+		if($attr_value_repository->existsLabel(AttributeTypeRepository::TYPE_CATEGORY, $data['value_fr'], 'fr')
+			or $attr_value_repository->existsLabel(AttributeTypeRepository::TYPE_CATEGORY, $data['value_en'], 'en'))
 		{
 			$this->addFlash('danger', $this->get('translator')->trans('flash.label-exists'));
 			return $this->redirectToRoute('attribute_display_category');
@@ -74,45 +76,31 @@ class AttributeController extends Controller
 		$em = $this->getDoctrine()->getEntityManager();
 
 		$attr_type_repository = $this->getDoctrine()->getRepository('Ecommerce:AttributeType');
-		$category_type = $attr_type_repository->findOneByTypeId(AttributeTypeRepository::TYPE_CATEGORY);
+		$attr_type = $attr_type_repository->findOneByTypeId(AttributeTypeRepository::TYPE_CATEGORY);
 
 		//Create a new attribute_label
 		$attr_label = new \Ecommerce\Entity\AttributeLabel();
-		$attr_label->setType($category_type);
+		$attr_label->setType($attr_type);
 
 		$em->persist($attr_label);
 		$em->flush();
 
 		//Create a new category
 		$category = new \Ecommerce\Entity\Category();
-		$category->setType($category_type);
+		$category->setType($attr_type);
 		$category->setLabel($attr_label);
 		$category->setIsActive(TRUE);
 
 		$em->persist($category);
 		$em->flush();
 
-		//Create a new attribute_value for FR locale
-		$attr_value_fr = new \Ecommerce\Entity\AttributeValue();
-		$attr_value_fr->setLabel($attr_label);
-		$attr_value_fr->setLocale('fr');
-		$attr_value_fr->setName($data['category_fr']);
-		$attr_value_fr->setHash($data['category_fr']);
-		$attr_value_fr->setUrlkey('category_' . $category->getCategoryId());
+		$urlkey = 'category_' . $category->getCategoryId();
 
-		$em->persist($attr_value_fr);
-		$em->flush();
+		//Create a new attribute_value for FR locale
+		$attr_value_repository->createAttributeValue($attr_label, 'fr', $data['value_fr'], $urlkey);
 
 		//Create a new attribute_value for EN locale
-		$attr_value_en = new \Ecommerce\Entity\AttributeValue();
-		$attr_value_en->setLabel($attr_label);
-		$attr_value_en->setLocale('en');
-		$attr_value_en->setName($data['category_en']);
-		$attr_value_en->setHash($data['category_en']);
-		$attr_value_en->setUrlkey('category_' . $category->getCategoryId());
-
-		$em->persist($attr_value_en);
-		$em->flush();
+		$attr_value_repository->createAttributeValue($attr_label, 'en', $data['value_en'], $urlkey);
 
 		$this->addFlash('success', $this->get('translator')->trans('flash.attribute-created'));
 		return $this->redirectToRoute('attribute_display_category');
@@ -120,6 +108,7 @@ class AttributeController extends Controller
 
 	/**
 	 * Create a new color attribute
+	 * @param Request $request
 	 * @return Response
 	 */
 	public function addColorAction(Request $request)
@@ -147,6 +136,7 @@ class AttributeController extends Controller
 
 	/**
 	 * Create a new material attribute
+	 * @param Request $request
 	 * @return Response
 	 */
 	public function addMaterialAction(Request $request)
@@ -174,6 +164,7 @@ class AttributeController extends Controller
 
 	/**
 	 * Create a new subcategory attribute
+	 * @param Request $request
 	 * @return Response
 	 */
 	public function addSubcategoryAction(Request $request)
@@ -183,27 +174,74 @@ class AttributeController extends Controller
 			return $this->redirectToRoute('home');
 		}
 
-		if(empty($request->request->get('subcategory_id')))
-		{
-			return new Response($this->get('translator')->trans('flash.invalid-request'), Response::HTTP_BAD_REQUEST, array(
-				'Content-Type', 'application/json; charset=utf-8'));
-		}
+		$category_repository = $this->getDoctrine()->getRepository('Ecommerce:Category');
 
-		//@TODO
-		die('Line:' . __LINE__);
-
-		$response = array(
-			'success' => TRUE,
+		$initial_data = array(
+			'categories' => $category_repository->getFormChoiceCategories($request->getLocale()),
 		);
 
-		return new JsonResponse($response);
+		$subcategory_form = $this->createForm('e_subcategory', $initial_data, array());
+		$subcategory_form->handleRequest($request);
+
+		if(!$subcategory_form->isValid())
+		{
+			$this->addFlash('warning', $this->get('translator')->trans('flash.invalid-request'));
+			return $this->redirectToRoute('attribute_display_category');
+		}
+
+		$data = $subcategory_form->getData();
+
+
+		//Search for duplicate label
+
+		$attr_value_repository = $this->getDoctrine()->getRepository('Ecommerce:AttributeValue');
+		if($attr_value_repository->existsLabel(AttributeTypeRepository::TYPE_SUBCATEGORY, $data['value_fr'], 'fr')
+			or $attr_value_repository->existsLabel(AttributeTypeRepository::TYPE_SUBCATEGORY, $data['value_en'], 'en'))
+		{
+			$this->addFlash('danger', $this->get('translator')->trans('flash.label-exists'));
+			return $this->redirectToRoute('attribute_display_category');
+		}
+
+		$em = $this->getDoctrine()->getEntityManager();
+
+		$attr_type_repository = $this->getDoctrine()->getRepository('Ecommerce:AttributeType');
+		$attr_type = $attr_type_repository->findOneByTypeId(AttributeTypeRepository::TYPE_SUBCATEGORY);
+
+		//Create a new attribute_label
+		$attr_label = new \Ecommerce\Entity\AttributeLabel();
+		$attr_label->setType($attr_type);
+
+		$em->persist($attr_label);
+		$em->flush();
+
+		//Create a new category
+		$subcategory = new \Ecommerce\Entity\Subcategory();
+		$subcategory->setType($attr_type);
+		$subcategory->setLabel($attr_label);
+		$subcategory->setCategory($data['category']);
+		$subcategory->setIsActive(TRUE);
+
+		$em->persist($subcategory);
+		$em->flush();
+
+		$urlkey = 'subcategory_' . $subcategory->getSubcategoryId();
+
+		//Create a new attribute_value for FR locale
+		$attr_value_repository->createAttributeValue($attr_label, 'fr', $data['value_fr'], $urlkey);
+
+		//Create a new attribute_value for EN locale
+		$attr_value_repository->createAttributeValue($attr_label, 'en', $data['value_en'], $urlkey);
+
+		$this->addFlash('success', $this->get('translator')->trans('flash.attribute-created'));
+		return $this->redirectToRoute('attribute_display_subcategory');
 	}
 
 	/**
-	 * Set inactive a brand attribute
+	 * Set active/inactive a brand attribute
+	 * @param Request $request
 	 * @return Response
 	 */
-	public function deleteBrandAction(Request $request)
+	public function setIsActiveBrandAction(Request $request)
 	{
 		if(!$this->isAdmin())
 		{
@@ -227,24 +265,25 @@ class AttributeController extends Controller
 	}
 
 	/**
-	 * Set inactive a category attribute
+	 * Set active/inactive a category attribute
+	 * @param Request $request
 	 * @return Response
 	 */
-	public function deleteCategoryAction(Request $request)
+	public function setIsActiveCategoryAction(Request $request)
 	{
 		if(!$this->isAdmin())
 		{
 			return $this->redirectToRoute('home');
 		}
 
-		if(empty($request->request->get('category_id')) or null === $request->request->get('is_active'))
+		if(empty($request->request->get('attribute_id')) or null === $request->request->get('is_active'))
 		{
 			return new Response($this->get('translator')->trans('flash.invalid-request'), Response::HTTP_BAD_REQUEST, array(
 				'Content-Type', 'application/json; charset=utf-8'));
 		}
 
 		$category_repository = $this->getDoctrine()->getRepository('Ecommerce:Category');
-		$category = $category_repository->findOneByCategoryId($request->request->get('category_id'));
+		$category = $category_repository->findOneByCategoryId($request->request->get('attribute_id'));
 
 		if(empty($category))
 		{
@@ -256,7 +295,14 @@ class AttributeController extends Controller
 		$em = $this->getDoctrine()->getEntityManager();
 		$em->flush();
 
-		$category_repository->disableSubCategories($category);
+		if($category->getIsActive())
+		{
+			$category_repository->enableSubCategories($category);
+		}
+		else
+		{
+			$category_repository->disableSubCategories($category);
+		}
 
 		$response = array(
 			'success'	 => TRUE,
@@ -267,10 +313,11 @@ class AttributeController extends Controller
 	}
 
 	/**
-	 * Set inactive a color attribute
+	 * Set active/inactive a color attribute
+	 * @param Request $request
 	 * @return Response
 	 */
-	public function deleteColorAction(Request $request)
+	public function setIsActiveColorAction(Request $request)
 	{
 		if(!$this->isAdmin())
 		{
@@ -294,10 +341,11 @@ class AttributeController extends Controller
 	}
 
 	/**
-	 * Set inactive a material attribute
+	 * Set active/inactive a material attribute
+	 * @param Request $request
 	 * @return Response
 	 */
-	public function deleteMaterialAction(Request $request)
+	public function setIsActiveMaterialAction(Request $request)
 	{
 		if(!$this->isAdmin())
 		{
@@ -321,27 +369,39 @@ class AttributeController extends Controller
 	}
 
 	/**
-	 * Set inactive a subcategory attribute
+	 * Set active/inactive a subcategory attribute
+	 * @param Request $request
 	 * @return Response
 	 */
-	public function deleteSubcategoryAction(Request $request)
+	public function setIsActiveSubcategoryAction(Request $request)
 	{
 		if(!$this->isAdmin())
 		{
 			return $this->redirectToRoute('home');
 		}
 
-		if(empty($request->request->get('subcategory_id')))
+		if(empty($request->request->get('attribute_id')) or null === $request->request->get('is_active'))
 		{
 			return new Response($this->get('translator')->trans('flash.invalid-request'), Response::HTTP_BAD_REQUEST, array(
 				'Content-Type', 'application/json; charset=utf-8'));
 		}
 
-		//@TODO
-		die('Line:' . __LINE__);
+		$subcategory_repository = $this->getDoctrine()->getRepository('Ecommerce:Subcategory');
+		$subcategory = $subcategory_repository->findOneBySubcategoryId($request->request->get('attribute_id'));
+
+		if(empty($subcategory))
+		{
+			return new Response($this->get('translator')->trans('flash.error-try-again'), Response::HTTP_INTERNAL_SERVER_ERROR, array(
+				'Content-Type', 'application/json; charset=utf-8'));
+		}
+
+		$subcategory->setIsActive((bool) $request->request->get('is_active'));
+		$em = $this->getDoctrine()->getEntityManager();
+		$em->flush();
 
 		$response = array(
-			'success' => TRUE,
+			'success'	 => TRUE,
+			'message'	 => $this->get('translator')->trans('flash.attribute-updated'),
 		);
 
 		return new JsonResponse($response);
@@ -370,7 +430,7 @@ class AttributeController extends Controller
 	 * Display categories attributes list
 	 * @return Response
 	 */
-	public function displayCategoryAction(Request $request)
+	public function displayCategoryAction()
 	{
 		if(!$this->isAdmin())
 		{
@@ -382,11 +442,11 @@ class AttributeController extends Controller
 			'method' => 'POST',
 		);
 
-		$category_form = $this->createForm(new Type\CategoryType(), array(), $form_attributes);
-		$attr_value_form = $this->createForm(new Type\AttributeValueType(), array(), array());
+		$category_form = $this->createForm('e_category', array(), $form_attributes);
+		$attr_value_form = $this->createForm('e_attr_value', array(), array());
 
 		$category_repository = $this->getDoctrine()->getRepository('Ecommerce:Category');
-		$categories = $category_repository->getCategories();
+		$categories = $category_repository->getViewCategories();
 
 		$view = array(
 			'head_title'		 => $this->get('translator')->trans('head_title.attribute.display-category'),
@@ -439,35 +499,60 @@ class AttributeController extends Controller
 
 	/**
 	 * Display subcategories attributes list
+	 * @param Request $request
 	 * @return Response
 	 */
-	public function displaySubcategoryAction()
+	public function displaySubcategoryAction(Request $request)
 	{
 		if(!$this->isAdmin())
 		{
 			return $this->redirectToRoute('home');
 		}
 
-		$view = array(
-			'head_title' => $this->get('translator')->trans('head_title.attribute.display-subcategory'),
-			'h1_title'	 => $this->get('translator')->trans('h1_title.attribute.display-subcategory'),
+		$category_repository = $this->getDoctrine()->getRepository('Ecommerce:Category');
+		$categories = $category_repository->getFormChoiceCategories($request->getLocale());
+
+		$initial_data = array(
+			'categories' => $categories,
 		);
 
-		return $this->render('attribute/default.html.twig', $view);
+		$form_attributes = array(
+			'action' => $this->generateUrl('attribute_add_subcategory'),
+			'method' => 'POST',
+		);
+
+		$subcategory_form = $this->createForm('e_subcategory', $initial_data, $form_attributes);
+		$attr_value_form = $this->createForm('e_attr_value', array(), array());
+
+		$subcategory_repository = $this->getDoctrine()->getRepository('Ecommerce:Subcategory');
+		$subcategories = $subcategory_repository->getViewSubcategories($request->getLocale());
+
+		$view = array(
+			'head_title'		 => $this->get('translator')->trans('head_title.attribute.display-subcategory'),
+			'h1_title'			 => $this->get('translator')->trans('h1_title.attribute.display-subcategory'),
+			'categories'		 => $categories,
+			'subcategories'		 => $subcategories,
+			'subcategory_form'	 => $subcategory_form->createView(),
+			'attr_value_form'	 => $attr_value_form->createView(),
+		);
+
+		return $this->render('attribute/subcategory.html.twig', $view);
 	}
 
 	/**
 	 * Edit an attribute_value row on POST
+	 * @param Request $request
 	 * @return Response
 	 */
 	public function editValueAction(Request $request)
 	{
 		if(!$this->isAdmin())
 		{
-			return $this->redirectToRoute('home');
+			return new Response($this->get('translator')->trans('flash.wrong-role'), Response::HTTP_UNAUTHORIZED, array(
+				'Content-Type', 'application/json; charset=utf-8'));
 		}
 
-		$attr_value_form = $this->createForm(new Type\AttributeValueType(), array(), array());
+		$attr_value_form = $this->createForm('e_attr_value', array(), array());
 		$attr_value_form->handleRequest($request);
 
 		if(!$attr_value_form->isValid())
@@ -497,6 +582,49 @@ class AttributeController extends Controller
 		$attr_value->setUrlkey($data['urlkey']);
 		$attr_value->setHash($data['name']);
 
+		$em = $this->getDoctrine()->getEntityManager();
+		$em->flush();
+
+		$response = array(
+			'success'	 => TRUE,
+			'message'	 => $this->get('translator')->trans('flash.attribute-updated'),
+		);
+
+		return new JsonResponse($response);
+	}
+
+	/**
+	 *
+	 * @param Request $request
+	 * @return Response
+	 */
+	public function switchCategoryAction(Request $request)
+	{
+		if(!$this->isAdmin())
+		{
+			return new Response($this->get('translator')->trans('flash.wrong-role'), Response::HTTP_UNAUTHORIZED, array(
+				'Content-Type', 'application/json; charset=utf-8'));
+		}
+
+		if(empty($request->request->get('category_id')) or empty($request->request->get('subcategory_id')))
+		{
+			return new Response($this->get('translator')->trans('flash.invalid-request'), Response::HTTP_BAD_REQUEST, array(
+				'Content-Type', 'application/json; charset=utf-8'));
+		}
+
+		$category_repository = $this->getDoctrine()->getRepository('Ecommerce:Category');
+		$subcategory_repository = $this->getDoctrine()->getRepository('Ecommerce:Subcategory');
+
+		$category = $category_repository->findOneByCategoryId($request->request->get('category_id'));
+		$subcategory = $subcategory_repository->findOneBySubcategoryId($request->request->get('subcategory_id'));
+
+		if(empty($category) or empty($subcategory))
+		{
+			return new Response($this->get('translator')->trans('flash.error-try-again'), Response::HTTP_INTERNAL_SERVER_ERROR, array(
+				'Content-Type', 'application/json; charset=utf-8'));
+		}
+
+		$subcategory->setCategory($category);
 		$em = $this->getDoctrine()->getEntityManager();
 		$em->flush();
 

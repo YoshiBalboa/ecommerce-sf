@@ -29,17 +29,17 @@
 							<tr>
 								<th>{{ 'view.id'|trans|upper }}</th>
 								<th>
-						<div class="phoca-flagbox small">
-							<span class="phoca-flag fr"></span>
-						</div>
-						</th>
-						<th>
-						<div class="phoca-flagbox small en">
-							<span class="phoca-flag en"></span>
-						</div>
-						</th>
-						<th>{{ 'view.active?'|trans }}</th>
-						</tr>
+									<div class="phoca-flagbox small">
+										<span class="phoca-flag fr"></span>
+									</div>
+								</th>
+								<th>
+									<div class="phoca-flagbox small en">
+										<span class="phoca-flag en"></span>
+									</div>
+								</th>
+								<th>{{ 'view.active?'|trans }}</th>
+							</tr>
 						</thead>
 						<tbody>
 							{% for category in categories %}
@@ -48,19 +48,21 @@
 										<b>{{ category.category_id }}</b>
 									</td>
 									<td>
-										{{ include('Ecommerce:Form:category_attr_value.html.twig',
+										{{ include('Ecommerce:Form:attribute_value.html.twig',
 											{
 												'form': attr_value_form,
-												'category': category,
+												'attr_id': category.category_id,
+												'type_id': category.type_id,
 												'values': category.values.fr,
 												'locale': 'fr'
 											}) }}
 									</td>
 									<td>
-										{{ include('Ecommerce:Form:category_attr_value.html.twig',
+										{{ include('Ecommerce:Form:attribute_value.html.twig',
 											{
 												'form': attr_value_form,
-												'category': category,
+												'attr_id': category.category_id,
+												'type_id': category.type_id,
 												'values': category.values.en,
 												'locale': 'en'
 											}) }}
@@ -83,7 +85,7 @@
 {% block javascripts %}
 	<script type="text/javascript">
 		//<![CDATA[
-		Ecommerce.attributeController('{{ path('attribute_delete_category') }}');
+		Ecommerce.attributeController('{{ path('home') }}', '{{ path('attribute_set_is_active_category') }}');
 		//]]>
 	</script>
 {% endblock %}

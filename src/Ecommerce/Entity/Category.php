@@ -62,11 +62,6 @@ class Category
      */
     private $type;
 
-    /**
-     * @var \AttributeValue
-     */
-	private $value;
-
 
 
     /**
@@ -192,28 +187,5 @@ class Category
     public function getType()
     {
         return $this->type;
-    }
-
-    /**
-     * Set value
-     *
-     * @param \Ecommerce\Entity\AttributeValue $value
-     * @return Category
-     */
-    public function setValue(\Ecommerce\Entity\AttributeValue $value = null)
-    {
-        $this->value = $value;
-
-        return $this;
-    }
-
-    /**
-     * Get value
-     *
-     * @return \Ecommerce\Entity\AttributeValue
-     */
-    public function getValue()
-    {
-        return $this->value;
     }
 }

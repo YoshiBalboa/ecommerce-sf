@@ -522,7 +522,7 @@ Ecommerce.accountAddressesSetDefaultAddress = function (route, $input)
 	});
 };
 
-Ecommerce.attributeController = function (route_delete_category)
+Ecommerce.attributeController = function (route_home, route_set_active, confirm_text)
 {
 	$document.on('click', 'button.display-form', function ()
 	{
@@ -548,6 +548,11 @@ Ecommerce.attributeController = function (route_delete_category)
 			data: $data,
 			error: function (jqXHR, textStatus, errorThrown)
 			{
+				if(jqXHR.status === 401)
+				{
+					window.location = route_home;
+				}
+
 				$('#error_message').html(jqXHR.responseText);
 
 				$tr.find('input').prop('disabled', false);
@@ -570,7 +575,7 @@ Ecommerce.attributeController = function (route_delete_category)
 	$document.on('change', 'input[name="is-active"]', function ()
 	{
 		$checkbox = $(this);
-		$category_id = $checkbox.val();
+		$attribute_id = $checkbox.val();
 		$tr = $(this).closest('tr');
 
 		$('#error_message').html('');
@@ -580,14 +585,71 @@ Ecommerce.attributeController = function (route_delete_category)
 		$tr.removeClass('danger').removeClass('success');
 
 		$.ajax({
-			url: route_delete_category,
+			url: route_set_active,
 			type: 'post',
 			data: {
-				category_id: $category_id,
+				attribute_id: $attribute_id,
 				is_active: (this.checked === true) ? 1 : 0
 			},
 			error: function (jqXHR, textStatus, errorThrown)
 			{
+				if(jqXHR.status === 401)
+				{
+					window.location = route_home;
+				}
+
+				$('#error_message').html(jqXHR.responseText);
+
+				$tr.find('input').prop('disabled', false);
+				$tr.find('.edit-loader button').show();
+				$tr.find('.edit-loader div').hide();
+				$tr.addClass('danger').removeClass('success');
+			},
+			success: function (data)
+			{
+				$tr.find('input').prop('disabled', false);
+				$tr.find('.edit-loader button').show();
+				$tr.find('.edit-loader div').hide();
+				$tr.removeClass('danger').addClass('success');
+			}
+		});
+
+		return false;
+	});
+
+	$document.on('change', 'form[name="switch_category"] select', function ()
+	{
+		if(confirm(confirm_text))
+		{
+			$(this).closest('form').submit();
+		}
+
+		return false;
+	});
+
+	$document.on('submit', 'form[name="switch_category"]', function ()
+	{
+		$form = $(this);
+		$tr = $form.closest('tr');
+		$data = $form.serialize();
+
+		$('#error_message').html('');
+		$tr.find('input').prop('disabled', true);
+		$tr.find('.edit-loader button').hide();
+		$tr.find('.edit-loader div').removeClass('hidden').show();
+		$tr.removeClass('danger').removeClass('success');
+
+		$.ajax({
+			url: $form.attr('action'),
+			type: 'post',
+			data: $data,
+			error: function (jqXHR, textStatus, errorThrown)
+			{
+				if(jqXHR.status === 401)
+				{
+					window.location = route_home;
+				}
+
 				$('#error_message').html(jqXHR.responseText);
 
 				$tr.find('input').prop('disabled', false);

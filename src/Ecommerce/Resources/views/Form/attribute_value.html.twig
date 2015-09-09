@@ -1,15 +1,15 @@
 <form action="{{ path('attribute_edit_value') }}" name="{{ form.vars.name }}" method="POST">
-	<label for="{{ form.name.vars.id ~ category.category_id ~ locale }}">
+	<label for="{{ form.name.vars.id ~ attr_id ~ locale }}">
 		{{ form.name.vars.label|trans }}
 	</label>
-	<input type="text" id="{{ form.name.vars.id ~ category.category_id ~ locale }}" name="{{ form.name.vars.full_name }}" value="{{ values.name }}">
+	<input type="text" id="{{ form.name.vars.id ~ attr_id ~ locale }}" name="{{ form.name.vars.full_name }}" value="{{ values.name }}">
 
 	<br>
 
-	<label for="{{ form.urlkey.vars.id ~ category.category_id ~ locale }}">
+	<label for="{{ form.urlkey.vars.id ~ attr_id ~ locale }}">
 		{{ form.urlkey.vars.label|trans }}
 	</label>
-	<input type="text" id="{{ form.urlkey.vars.id ~ category.category_id ~ locale }}" name="{{ form.urlkey.vars.full_name }}" value="{{ values.urlkey }}">
+	<input type="text" id="{{ form.urlkey.vars.id ~ attr_id ~ locale }}" name="{{ form.urlkey.vars.full_name }}" value="{{ values.urlkey }}">
 
 	<div class="edit-loader">
 		<div class="loader loader-black loader-1 hidden"></div>
@@ -18,7 +18,7 @@
 		</button>
 	</div>
 
-	<input type="hidden" name="{{ form.type_id.vars.full_name }}" value="{{ category.type_id }}">
+	<input type="hidden" name="{{ form.type_id.vars.full_name }}" value="{{ type_id }}">
 	<input type="hidden" name="{{ form.value_id.vars.full_name }}" value="{{ values.value_id }}">
 	<input type="hidden" name="{{ form.locale.vars.full_name }}" value="{{ locale }}">
 </form>
