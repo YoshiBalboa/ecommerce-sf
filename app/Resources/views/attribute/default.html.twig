@@ -4,5 +4,100 @@
 	<div class="page-header">
 		<h1>{{ h1_title }}</h1>
 	</div>
+	<div id="attribute_container" class="container-fluid">
+		<div class="row">
+			{{ 'label.select-attribute-type'|trans }}
+			{% for attr_type in attribute_types %}
+				[<a href="{{ path('attribute_display_type', {'type_id':attr_type.getTypeId()}) }}"
+					{% if (type is defined) and type.getTypeId() == attr_type.getTypeId() %}style="color:red;"{% endif %}
+				>
+					{{ attr_type.getCode() }}
+				</a>]
+			{% endfor %}
+			<hr>
+		</div>
+		<div class="row">
+			<p>
+				<button type="button" class="display-form btn btn-default">{{ 'view.add-attribute'|trans }}</button>
+			</p>
+			<div class="attribute-form">
+				<p class="form-title">{{ 'view.add-attribute'|trans }}</p>
+				{{ form_start(attribute_form) }}
+				{{ form_widget(attribute_form) }}
+				{{ form_end(attribute_form) }}
+			</div>
+			<hr>
+		</div>
 
+		{% if attributes is not defined or attributes is empty %}
+			<p>{{ 'view.nothing2display'|trans }}</p>
+		{% else %}
+			<div class="row">
+				<p id="error_message" class="text-danger">&nbsp;</p>
+				<div class="table-responsive">
+					<table class="table table-hover">
+						<thead>
+							<tr>
+								<th>{{ 'view.id'|trans|upper }}</th>
+								<th>
+									<div class="phoca-flagbox small">
+										<span class="phoca-flag fr"></span>
+									</div>
+								</th>
+								<th>
+									<div class="phoca-flagbox small en">
+										<span class="phoca-flag en"></span>
+									</div>
+								</th>
+								<th>{{ 'view.active?'|trans }}</th>
+							</tr>
+						</thead>
+						<tbody>
+							{% for attr in attributes %}
+								<tr>
+									<td>
+										<b>{{ attr.attribute_id }}</b>
+									</td>
+									<td>
+										{{ include('Ecommerce:Form:attribute_value.html.twig',
+											{
+												'form': attr_value_form,
+												'attr_id': attr.attribute_id,
+												'type_id': attr.type_id,
+												'values': attr.values.fr,
+												'locale': 'fr'
+											}) }}
+									</td>
+									<td>
+										{{ include('Ecommerce:Form:attribute_value.html.twig',
+											{
+												'form': attr_value_form,
+												'attr_id': attr.attribute_id,
+												'type_id': attr.type_id,
+												'values': attr.values.en,
+												'locale': 'en'
+											}) }}
+									</td>
+									<td class="set-is-active">
+										<div class="checkbox">
+											<input type="checkbox" name="is-active" value="{{ attr.attribute_id }}" {% if attr.is_active %}checked="checked"{% endif %}>
+										</div>
+									</td>
+								</tr>
+							{% endfor %}
+						</tbody>
+					</table>
+				</div>
+			</div>
+		{% endif %}
+	</div>
+
+{% endblock %}
+
+{% block javascripts %}
+	<script type="text/javascript">
+		//<![CDATA[
+		Ecommerce.attributeController('{{ path('home') }}', '{{ path('attribute_set_is_active_attribute') }}');
+		//]]>
+	</script>
 {% endblock %}

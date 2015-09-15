@@ -96,13 +96,7 @@ attribute_add_subcategory:
 
 attribute_create:
     path:		/attribute/create
-    defaults:	{ _controller: Ecommerce:Attribute:add }
-    requirements:
-        _method:  POST
-
-attribute_delete:
-    path:		/attribute/delete
-    defaults:	{ _controller: Ecommerce:Attribute:add }
+    defaults:	{ _controller: Ecommerce:Attribute:createAttribute }
     requirements:
         _method:  POST
 
@@ -134,6 +128,13 @@ attribute_set_is_active_category:
 attribute_set_is_active_subcategory:
     path:		/attribute/enable/subcategory
     defaults:	{ _controller: Ecommerce:Attribute:setIsActiveSubcategory }
+    requirements:
+        _method:  POST
+    condition:	"request.isXmlHttpRequest()"
+
+attribute_set_is_active_attribute:
+    path:		/attribute/enable
+    defaults:	{ _controller: Ecommerce:Attribute:setIsActiveAttribute }
     requirements:
         _method:  POST
     condition:	"request.isXmlHttpRequest()"

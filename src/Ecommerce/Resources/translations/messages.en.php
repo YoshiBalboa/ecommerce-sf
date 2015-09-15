@@ -5,6 +5,7 @@ return array(
 		'change' => 'Change',
 		'create' => 'Create',
 		'delete' => 'Delete',
+		'login'	 => 'Login',
 		'save'	 => 'Save',
 	),
 	'flash'		 => array(
@@ -80,6 +81,7 @@ return array(
 		)
 	),
 	'label'		 => array(
+		'attribute-type'			 => 'Type:',
 		'birthday'					 => 'Birthday:',
 		'category'					 => 'Category:',
 		'city'						 => 'City:',
@@ -101,6 +103,7 @@ return array(
 		'password-confirm'			 => 'Confirm password:',
 		'postcode'					 => 'Postcode:',
 		'prefix'					 => 'Prefix:',
+		'select-attribute-type'		 => "Select an attribute's type:",
 		'state'						 => 'State/Department:',
 		'street'					 => 'Street:',
 		'subcategory'				 => 'Subcategory:',
@@ -131,6 +134,7 @@ return array(
 		'active?'					 => 'Is active ?',
 		'addresses'					 => 'Addresses',
 		'add-address'				 => 'Add an address',
+		'add-attribute'				 => 'Add an attribute',
 		'add-category'				 => 'Add a category',
 		'add-subcategory'			 => 'Add a subcategory',
 		'billing'					 => 'Billing',

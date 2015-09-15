@@ -8,7 +8,7 @@ use Doctrine\ORM\Mapping as ORM;
  * Attribute
  *
  * @ORM\Table(name="attribute", indexes={@ORM\Index(name="fk_attribute_type", columns={"type_id"}), @ORM\Index(name="fk_attribute_label", columns={"label_id"})})
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="Ecommerce\Entity\Repository\AttributeRepository")
  */
 class Attribute
 {

@@ -152,6 +152,71 @@ class AttributeController extends Controller
 	}
 
 	/**
+	 * Create a new attribute
+	 * @param Request $request
+	 * @return Response
+	 */
+	public function createAttributeAction(Request $request)
+	{
+		if(!$this->isAdmin())
+		{
+			return $this->redirectToRoute('home');
+		}
+
+		$attribute_form = $this->createForm('e_attribute', array(), array());
+		$attribute_form->handleRequest($request);
+
+		if(!$attribute_form->isValid())
+		{
+			$data = $attribute_form->getData();
+			$this->addFlash('warning', $this->get('translator')->trans('flash.invalid-request'));
+			return $this->redirectToRoute('attribute_display_type', array('type_id' => empty($data['type'] ? 0 : $data['type']->getTypeId())));
+		}
+
+		$data = $attribute_form->getData();
+
+		//Search for duplicate label
+
+		$attr_value_repository = $this->getDoctrine()->getRepository('Ecommerce:AttributeValue');
+		if($attr_value_repository->existsLabel($data['type']->getTypeId(), $data['value_fr'], 'fr')
+			or $attr_value_repository->existsLabel($data['type']->getTypeId(), $data['value_en'], 'en'))
+		{
+			$this->addFlash('danger', $this->get('translator')->trans('flash.label-exists'));
+			return $this->redirectToRoute('attribute_display_type', array('type_id' => $data['type']->getTypeId()));
+		}
+
+		$em = $this->getDoctrine()->getEntityManager();
+
+
+		//Create a new attribute_label
+		$attr_label = new \Ecommerce\Entity\AttributeLabel();
+		$attr_label->setType($data['type']);
+
+		$em->persist($attr_label);
+		$em->flush();
+
+		//Create a new attribute
+		$attribute = new \Ecommerce\Entity\Attribute();
+		$attribute->setType($data['type']);
+		$attribute->setLabel($attr_label);
+		$attribute->setIsActive(TRUE);
+
+		$em->persist($attribute);
+		$em->flush();
+
+		$urlkey = $data['type']->getCode() . '_' . $attribute->getAttributeId();
+
+		//Create a new attribute_value for FR locale
+		$attr_value_repository->createAttributeValue($attr_label, 'fr', $data['value_fr'], $urlkey);
+
+		//Create a new attribute_value for EN locale
+		$attr_value_repository->createAttributeValue($attr_label, 'en', $data['value_en'], $urlkey);
+
+		$this->addFlash('success', $this->get('translator')->trans('flash.attribute-created'));
+		return $this->redirectToRoute('attribute_display_type', array('type_id' => $data['type']->getTypeId()));
+	}
+
+	/**
 	 * Set active/inactive a category attribute
 	 * @param Request $request
 	 * @return Response
@@ -227,6 +292,45 @@ class AttributeController extends Controller
 		}
 
 		$subcategory->setIsActive((bool) $request->request->get('is_active'));
+		$em = $this->getDoctrine()->getEntityManager();
+		$em->flush();
+
+		$response = array(
+			'success'	 => TRUE,
+			'message'	 => $this->get('translator')->trans('flash.attribute-updated'),
+		);
+
+		return new JsonResponse($response);
+	}
+
+	/**
+	 * Set active/inactive an attribute
+	 * @param Request $request
+	 * @return Response
+	 */
+	public function setIsActiveAttributeAction(Request $request)
+	{
+		if(!$this->isAdmin())
+		{
+			return $this->redirectToRoute('home');
+		}
+
+		if(empty($request->request->get('attribute_id')) or null === $request->request->get('is_active'))
+		{
+			return new Response($this->get('translator')->trans('flash.invalid-request'), Response::HTTP_BAD_REQUEST, array(
+				'Content-Type', 'application/json; charset=utf-8'));
+		}
+
+		$attribute_repository = $this->getDoctrine()->getRepository('Ecommerce:Attribute');
+		$attribute = $attribute_repository->findOneByAttributeId($request->request->get('attribute_id'));
+
+		if(empty($attribute))
+		{
+			return new Response($this->get('translator')->trans('flash.error-try-again'), Response::HTTP_INTERNAL_SERVER_ERROR, array(
+				'Content-Type', 'application/json; charset=utf-8'));
+		}
+
+		$attribute->setIsActive((bool) $request->request->get('is_active'));
 		$em = $this->getDoctrine()->getEntityManager();
 		$em->flush();
 
@@ -328,28 +432,43 @@ class AttributeController extends Controller
 		$type_repository = $this->getDoctrine()->getRepository('Ecommerce:AttributeType');
 		$type = $type_repository->findOneByTypeId($type_id);
 
-		$view = array(
-			'head_title' => $this->get('translator')->trans('head_title.attribute.display-attribute'),
-			'h1_title'	 => $this->get('translator')->trans('h1_title.attribute.display-attribute'),
+		$initial_data = array(
+			'type'	 => empty($type) ? NULL : $type,
 		);
 
-		if(empty($type))
+		$form_attributes = array(
+			'action' => $this->generateUrl('attribute_create'),
+			'method' => 'POST',
+		);
+
+		$attribute_form = $this->createForm('e_attribute', $initial_data, $form_attributes);
+		$attr_value_form = $this->createForm('e_attr_value', array(), array());
+
+		$view = array(
+			'head_title'		 => $this->get('translator')->trans('head_title.attribute.display-attribute'),
+			'h1_title'			 => $this->get('translator')->trans('h1_title.attribute.display-attribute'),
+			'attribute_types'	 => $type_repository->getTypes(),
+			'attribute_form'	 => $attribute_form->createView(),
+			'attr_value_form'	 => $attr_value_form->createView(),
+		);
+
+		if(!empty($type))
 		{
-			//@TODO display valid type list
-			die(implode('|', array(__METHOD__, __LINE__)));
-		}
-		elseif($type->getTypeId() == AttributeTypeRepository::TYPE_CATEGORY)
-		{
-			return $this->redirectToRoute('attribute_display_category');
-		}
-		elseif($type->getTypeId() == AttributeTypeRepository::TYPE_SUBCATEGORY)
-		{
-			return $this->redirectToRoute('attribute_display_subcategory');
-		}
-		else
-		{
-			//@TODO get attribute list of the given type
-			die(implode('|', array(__METHOD__, __LINE__)));
+			if($type->getTypeId() == AttributeTypeRepository::TYPE_CATEGORY)
+			{
+				return $this->redirectToRoute('attribute_display_category');
+			}
+			elseif($type->getTypeId() == AttributeTypeRepository::TYPE_SUBCATEGORY)
+			{
+				return $this->redirectToRoute('attribute_display_subcategory');
+			}
+			else
+			{
+				$view['type'] = $type;
+
+				$attr_repository = $this->getDoctrine()->getRepository('Ecommerce:Attribute');
+				$view['attributes'] = $attr_repository->getViewAttributes($type);
+			}
 		}
 
 		return $this->render('attribute/default.html.twig', $view);

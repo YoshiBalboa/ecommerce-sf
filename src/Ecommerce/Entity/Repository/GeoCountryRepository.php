@@ -16,7 +16,7 @@ class GeoCountryRepository extends EntityRepository
 
 		if(!$return_builder)
 		{
-			$countries->getQuery()->execute();
+			return $countries->getQuery()->execute();
 		}
 
 		return $countries;

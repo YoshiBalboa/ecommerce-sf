@@ -14,7 +14,7 @@ class AccountLoginType extends AbstractType
 		$builder
 			->add('_username', 'email', array('label' => 'label.email'))
 			->add('_password', 'password', array('label' => 'label.password'))
-			->add('Login', 'submit')
+			->add('login', 'submit', array('label' => 'button.login'))
 		;
 	}
 

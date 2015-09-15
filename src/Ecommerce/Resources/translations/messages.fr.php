@@ -5,6 +5,7 @@ return array(
 		'change' => 'Changer',
 		'create' => 'Créer',
 		'delete' => 'Supprimer',
+		'login'	 => 'Connexion',
 		'save'	 => 'Enregistrer',
 	),
 	'flash'		 => array(
@@ -80,6 +81,7 @@ return array(
 		)
 	),
 	'label'		 => array(
+		'attribute-type'			 => 'Type :',
 		'birthday'					 => 'Date de naissance :',
 		'category'					 => 'Catégorie :',
 		'city'						 => 'Ville :',
@@ -101,6 +103,7 @@ return array(
 		'password-confirm'			 => 'Confirmation :',
 		'postcode'					 => 'Code postal :',
 		'prefix'					 => 'Préfix :',
+		'select-attribute-type'		 => "Sélectionnez un type d'attribut :",
 		'state'						 => 'Département :',
 		'street'					 => 'Rue :',
 		'subcategory'				 => 'Sous-catégorie :',
@@ -131,6 +134,7 @@ return array(
 		'active?'					 => 'Activé(e) ?',
 		'addresses'					 => 'Adresses',
 		'add-address'				 => 'Ajouter une adresse',
+		'add-attribute'				 => 'Ajouter un attribut',
 		'add-category'				 => 'Ajouter une catégorie',
 		'add-subcategory'			 => 'Ajouter une sous-catégorie',
 		'billing'					 => 'Facturation',

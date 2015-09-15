@@ -8,7 +8,7 @@ use Doctrine\ORM\Mapping as ORM;
  * AttributeType
  *
  * @ORM\Table(name="attribute_type", uniqueConstraints={@ORM\UniqueConstraint(name="uk_attribute_type_code", columns={"code"})})
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="Ecommerce\Entity\Repository\AttributeTypeRepository")
  */
 class AttributeType
 {
@@ -33,7 +33,7 @@ class AttributeType
     /**
      * Get typeId
      *
-     * @return integer 
+     * @return integer
      */
     public function getTypeId()
     {
@@ -56,7 +56,7 @@ class AttributeType
     /**
      * Get code
      *
-     * @return string 
+     * @return string
      */
     public function getCode()
     {

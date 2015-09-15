@@ -40,6 +40,12 @@ services:
         tags:
             - { name: form.type, alias: e_address }
 
+    Ecommerce.form.type.attribute:
+        class: Ecommerce\Form\Type\AttributeType
+        arguments:
+        tags:
+            - { name: form.type, alias: e_attribute }
+
     Ecommerce.form.type.attr_value:
         class: Ecommerce\Form\Type\AttributeValueType
         arguments:
