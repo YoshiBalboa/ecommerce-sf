@@ -1,0 +1,65 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+	<div class="page-header">
+		<h1>{{ h1_title }}</h1>
+	</div>
+
+	<div id="attribute_container" class="container-fluid">
+		<div class="row">
+			<p>{{ 'view.add-restriction-attribute'|trans({'%attr%': attribute_name})|raw }}</p>
+
+			<div>
+				<form name="restriction" method="POST" action="{{ path('attribute_edit_restriction') }}">
+					<p class="help-block"><small>{{ 'view.help-select-multiple'|trans }}</small></p>
+					{% if subcategories|length > 20 %}
+						<div class="col-md-12">
+							<button type="submit" class="btn btn-default">{{ 'button.save'|trans }}</button>
+						</div>
+					{% endif %}
+
+					<div class="col-md-4">
+						<div class="pull-left">
+							<label for="categories">{{ 'label.category'|trans }}</label>
+							<br>
+							<select name="categories[]" id="categories" multiple="multiple" class="form-control" size="20">
+								<option value="">-----</option>
+								{% for id, name in categories %}
+									<option value="{{ id }}" {% if id in restrictions.categories %}selected="selected" class="success"{% endif %} >{{ name }}</option>
+								{% endfor %}
+							</select>
+						</div>
+						<div class="pull-right">
+							<label for="subcategories">{{ 'label.subcategory'|trans }}</label>
+							<br>
+							<select name="subcategories[]" id="subcategories" multiple="multiple" class="form-control" size="20">
+								<option value="">-----</option>
+								{% for id, name in subcategories %}
+									<option value="{{ id }}" {% if id in restrictions.subcategories %}selected="selected" class="success"{% endif %} >{{ name }}</option>
+								{% endfor %}
+							</select>
+						</div>
+					</div>
+
+					<div class="col-md-12">
+						<button type="submit" class="btn btn-default">{{ 'button.save'|trans }}</button>
+						<input type="hidden" name="attribute_id" value="{{ attribute_id }}">
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
+{% endblock %}
+
+{% block javascripts %}
+	<script type="text/javascript">
+		//<![CDATA[
+		jQuery(document).on('submit', 'form[name="restriction"]', function ()
+		{
+			return confirm('{{ 'view.confirm-modification'|trans }}');
+		});
+		//]]>
+	</script>
+{% endblock %}
+
+

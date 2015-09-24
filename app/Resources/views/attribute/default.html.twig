@@ -82,6 +82,8 @@
 										<div class="checkbox">
 											<input type="checkbox" name="is-active" value="{{ attr.attribute_id }}" {% if attr.is_active %}checked="checked"{% endif %}>
 										</div>
+										<br>
+										<p>[<a href="{{ path('attribute_display_restriction', {'attribute_id':attr.attribute_id}) }}" title="{{ 'view.restrict'|trans }}">{{ 'view.restrict'|trans }}</a>]</p>
 									</td>
 								</tr>
 							{% endfor %}

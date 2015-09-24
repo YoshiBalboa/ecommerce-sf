@@ -88,8 +88,7 @@ CREATE TABLE linked_attribute (
 	attribute_id SMALLINT(3) UNSIGNED NOT NULL,
 	category_id SMALLINT(3) UNSIGNED NOT NULL,
 	subcategory_id SMALLINT(3) UNSIGNED,
-	PRIMARY KEY (attribute_id, category_id),
-	UNIQUE KEY (attribute_id, category_id, subcategory_id),
+	UNIQUE KEY uk_linked_attribute (attribute_id, category_id, subcategory_id),
 	CONSTRAINT fk_linked_attribute_attribute FOREIGN KEY (attribute_id) REFERENCES attribute (attribute_id) ON DELETE CASCADE ON UPDATE CASCADE,
 	CONSTRAINT fk_linked_attribute_category FOREIGN KEY (category_id) REFERENCES category (category_id) ON DELETE CASCADE ON UPDATE CASCADE,
 	CONSTRAINT fk_linked_material_subcategory FOREIGN KEY (subcategory_id) REFERENCES subcategory (subcategory_id) ON DELETE CASCADE ON UPDATE CASCADE

@@ -108,6 +108,10 @@ attribute_display_subcategory:
     path:		/attribute/subcategory
     defaults:	{ _controller: Ecommerce:Attribute:displaySubcategory }
 
+attribute_display_restriction:
+    path:		/attribute/restriction/{attribute_id}
+    defaults:	{ _controller: Ecommerce:Attribute:displayRestriction }
+
 attribute_display_type:
     path:		/attribute/display/{type_id}
     defaults:	{ _controller: Ecommerce:Attribute:displayType }
@@ -115,6 +119,12 @@ attribute_display_type:
 attribute_edit_value:
     path:		/attribute/edit/value
     defaults:	{ _controller: Ecommerce:Attribute:editValue }
+    requirements:
+        _method:  POST
+
+attribute_edit_restriction:
+    path:		/attribute/edit/restriction
+    defaults:	{ _controller: Ecommerce:Attribute:editRestriction }
     requirements:
         _method:  POST
 

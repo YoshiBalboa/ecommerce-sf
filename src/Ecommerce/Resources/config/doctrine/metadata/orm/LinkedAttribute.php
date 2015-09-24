@@ -5,7 +5,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * LinkedAttribute
  *
- * @ORM\Table(name="linked_attribute", uniqueConstraints={@ORM\UniqueConstraint(name="attribute_id", columns={"attribute_id", "category_id", "subcategory_id"})}, indexes={@ORM\Index(name="fk_linked_attribute_category", columns={"category_id"}), @ORM\Index(name="fk_linked_material_subcategory", columns={"subcategory_id"}), @ORM\Index(name="IDX_EC7820F0B6E62EFA", columns={"attribute_id"})})
+ * @ORM\Table(name="linked_attribute", uniqueConstraints={@ORM\UniqueConstraint(name="uk_linked_attribute", columns={"attribute_id", "category_id", "subcategory_id"})}, indexes={@ORM\Index(name="fk_linked_attribute_category", columns={"category_id"}), @ORM\Index(name="fk_linked_material_subcategory", columns={"subcategory_id"}), @ORM\Index(name="IDX_EC7820F0B6E62EFA", columns={"attribute_id"})})
  * @ORM\Entity
  */
 class LinkedAttribute

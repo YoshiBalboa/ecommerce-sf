@@ -21,6 +21,10 @@ form .gender {
 	display: inline-block;
 }
 
+form select option.success {
+	background-color: #DFF0D8;
+}
+
 #address_delete .address-block {
 	border: solid 1px #D3D3D3;
 	overflow: auto;

@@ -3,9 +3,30 @@
 namespace Ecommerce\Entity\Repository;
 
 use Doctrine\ORM\EntityRepository;
+use Doctrine\ORM\Query\Expr\Join;
 
 class SubcategoryRepository extends EntityRepository
 {
+
+	public function getFormChoiceSubcategories($locale)
+	{
+		$qb = $this->getEntityManager()->createQueryBuilder();
+		$qb->select('c.subcategoryId as id', 'v.name')
+			->from('Ecommerce:Subcategory', 'c')
+			->innerJoin('Ecommerce:AttributeValue', 'v', Join::WITH, 'v.label = c.label AND v.locale = :locale')
+			->where('c.isActive = 1')
+			->setParameter('locale', $locale)
+			->groupBy('c.subcategoryId')
+			->orderBy('v.name', 'ASC');
+
+		$subcategories = array();
+		foreach($qb->getQuery()->getResult() as $row)
+		{
+			$subcategories[$row['id']] = $row['name'];
+		}
+
+		return $subcategories;
+	}
 
 	/**
 	 * Return subcategories entities as an array in an array

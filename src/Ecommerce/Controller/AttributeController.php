@@ -73,6 +73,10 @@ class AttributeController extends Controller
 		//Create a new attribute_value for EN locale
 		$attr_value_repository->createAttributeValue($attr_label, 'en', $data['value_en'], $urlkey);
 
+		//Generate link with existing attributes
+		$link_repository = $this->getDoctrine()->getRepository('Ecommerce:LinkedAttribute');
+		$link_repository->generateAttributeLinks($category);
+
 		$this->addFlash('success', $this->get('translator')->trans('flash.attribute-created'));
 		return $this->redirectToRoute('attribute_display_category');
 	}
@@ -211,6 +215,10 @@ class AttributeController extends Controller
 
 		//Create a new attribute_value for EN locale
 		$attr_value_repository->createAttributeValue($attr_label, 'en', $data['value_en'], $urlkey);
+
+		//Generate link with existing categories
+		$link_repository = $this->getDoctrine()->getRepository('Ecommerce:LinkedAttribute');
+		$link_repository->generateCategoryLinks($attribute);
 
 		$this->addFlash('success', $this->get('translator')->trans('flash.attribute-created'));
 		return $this->redirectToRoute('attribute_display_type', array('type_id' => $data['type']->getTypeId()));
@@ -433,7 +441,7 @@ class AttributeController extends Controller
 		$type = $type_repository->findOneByTypeId($type_id);
 
 		$initial_data = array(
-			'type'	 => empty($type) ? NULL : $type,
+			'type' => empty($type) ? NULL : $type,
 		);
 
 		$form_attributes = array(
@@ -569,6 +577,130 @@ class AttributeController extends Controller
 		);
 
 		return new JsonResponse($response);
+	}
+
+	public function displayRestrictionAction(Request $request, $attribute_id)
+	{
+		if(!$this->isAdmin())
+		{
+			return $this->redirectToRoute('home');
+		}
+
+		$attribute_repository = $this->getDoctrine()->getRepository('Ecommerce:Attribute');
+		$attribute = $attribute_repository->findOneByAttributeId($attribute_id);
+
+		if(empty($attribute))
+		{
+			$this->addFlash('warning', $this->get('translator')->trans('flash.invalid-request'));
+			return $this->redirectToRoute('attribute_display_type', array('type_id' => 0));
+		}
+
+		$attr_value_repository = $this->getDoctrine()->getRepository('Ecommerce:AttributeValue');
+		$attribute_value = $attr_value_repository->findOneBy(array(
+			'label'	 => $attribute->getLabel(),
+			'locale' => $request->getLocale()
+		));
+
+		$category_repository = $this->getDoctrine()->getRepository('Ecommerce:Category');
+		$categories = $category_repository->getFormChoiceCategories($request->getLocale());
+
+		$subcategory_repository = $this->getDoctrine()->getRepository('Ecommerce:Subcategory');
+		$subcategories = $subcategory_repository->getFormChoiceSubcategories($request->getLocale());
+
+		$links_repository = $this->getDoctrine()->getRepository('Ecommerce:LinkedAttribute');
+
+		$restrictions = array(
+			'categories'	 => $links_repository->getCategories($attribute),
+			'subcategories'	 => $links_repository->getSubcategories($attribute),
+		);
+
+		$view = array(
+			'head_title'	 => $this->get('translator')->trans('head_title.attribute.display-attribute'),
+			'h1_title'		 => $this->get('translator')->trans('h1_title.attribute.restriction'),
+			'attribute_id'	 => $attribute_id,
+			'attribute_name' => $attribute_value->getName(),
+			'restrictions'	 => $restrictions,
+			'categories'	 => $categories,
+			'subcategories'	 => $subcategories,
+		);
+
+		return $this->render('attribute/restriction.html.twig', $view);
+	}
+
+	/**
+	 * Limit an attribute to a given list of category and/or subcategory
+	 * @param Request $request
+	 * @return Response
+	 */
+	public function editRestrictionAction(Request $request)
+	{
+		if(!$this->isAdmin())
+		{
+			return $this->redirectToRoute('home');
+		}
+
+		$categories_ids = $request->request->get('categories', array());
+		$subcategories_ids = $request->request->get('subcategories', array());
+
+		$attribute_repository = $this->getDoctrine()->getRepository('Ecommerce:Attribute');
+		$attribute = $attribute_repository->findOneByAttributeId($request->request->get('attribute_id'));
+
+		if(empty($attribute))
+		{
+			$this->addFlash('warning', $this->get('translator')->trans('flash.invalid-request'));
+			return $this->redirectToRoute('attribute_display_type', array('type_id' => 0));
+		}
+
+		$em = $this->getDoctrine()->getEntityManager();
+		$category_repository = $this->getDoctrine()->getRepository('Ecommerce:Category');
+		$subcategory_repository = $this->getDoctrine()->getRepository('Ecommerce:Subcategory');
+
+		if(empty($categories_ids) and empty($subcategories_ids))
+		{
+			//Delete all linked with the given attribute, it is the same as disabled the attribute
+			$attribute->setIsActive(FALSE);
+			$em->flush();
+
+			return $this->redirectToRoute('attribute_display_type', array('type_id' => $attribute->getType()->getTypeId()));
+		}
+
+		$insert_rows = array();
+		foreach($categories_ids as $category_id)
+		{
+			$category = $category_repository->findOneByCategoryId($category_id);
+			if(empty($category))
+			{
+				continue;
+			}
+
+			$insert_rows[] = array('category' => $category, 'subcategory' => NULL);
+		}
+
+		foreach($subcategories_ids as $subcategory_id)
+		{
+			$subcategory = $subcategory_repository->findOneBySubcategoryId($subcategory_id);
+			if(empty($subcategory))
+			{
+				continue;
+			}
+
+			$insert_rows[] = array('category' => $subcategory->getCategory(), 'subcategory' => $subcategory);
+		}
+
+		if(empty($insert_rows))
+		{
+			$this->addFlash('warning', $this->get('translator')->trans('flash.error-try-again'));
+		}
+		else
+		{
+			$link_repository = $this->getDoctrine()->getRepository('Ecommerce:LinkedAttribute');
+			$link_repository->deleteLinks($attribute);
+			$link_repository->createLinks($attribute, $insert_rows);
+
+			$this->addFlash('success', $this->get('translator')->trans('flash.attribute-updated'));
+		}
+
+		return $this->redirectToRoute('attribute_display_type', array('type_id' => $attribute->getType()->getTypeId()));
 	}
 
 	/**
