@@ -1,4 +1,4 @@
-CREATE DATABASE ecommerce DEFAULT CHARACTER SET = latin1 COLLATE = latin1_general_ci;
+CREATE DATABASE ecommerce DEFAULT CHARACTER SET = utf8 COLLATE = utf8_general_ci;
 
 USE ecommerce;
 

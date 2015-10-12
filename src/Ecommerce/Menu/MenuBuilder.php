@@ -8,7 +8,6 @@ use Knp\Menu\Matcher\Voter\UriVoter;
 use Knp\Menu\Renderer\ListRenderer;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Security\Core\Authorization\AuthorizationChecker;
-use Symfony\Component\Translation\DataCollectorTranslator;
 
 class MenuBuilder
 {
@@ -20,7 +19,7 @@ class MenuBuilder
 	/**
 	 * @param FactoryInterface $factory
 	 */
-	public function __construct(FactoryInterface $factory, DataCollectorTranslator $translator)
+	public function __construct(FactoryInterface $factory, $translator)
 	{
 		$this->factory = $factory;
 		$this->translator = $translator;
